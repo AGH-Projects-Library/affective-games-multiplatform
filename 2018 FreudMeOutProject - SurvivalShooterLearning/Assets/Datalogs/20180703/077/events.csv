@@ -1,0 +1,16 @@
+1,530631E+15;UnixTime
+0;Scene;Load;0
+0;BITalino;SamplingFrequency;1000
+0;BITalino;BufferSize;2000
+0;BITalino;Channels;ECG;EMG;EDA;
+0;BITalino;Analogs;A1;A2;A3;
+0;BITalino;BaudRate;9600
+0;BITalino;Port;COM3
+0;BITalino;Parity;None
+0;BITalino;DataBits;8
+0;BITalino;StopBits;One
+7703,819;InputEnter;Name;Abżur
+10271,54;InputEnter;Number;077
+10354,38;ButtonClick;Polish
+11431,42;ButtonClick;WithAffectiveLoop
+11696,28;BITalino;StartReading

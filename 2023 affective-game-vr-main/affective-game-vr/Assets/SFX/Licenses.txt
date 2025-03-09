@@ -1,0 +1,21 @@
+This game uses these sounds from freesound:
+
+"empty-gun-failure-to-fire-trigger-pull-2" by CosmicEmbers (https://freesound.org/people/CosmicEmbers/sounds/387481/) licensed under CCBY3.0
+
+"Cannon4.wav" by Isaac200000 (https://freesound.org/people/Isaac200000/sounds/184647/) licensed under CC0 1.0
+
+"Crushing kick_1 x3(17lrs).wav" by newlocknew (https://freesound.org/people/newlocknew/sounds/593909/) licensed under CCBY4.0
+
+"Messy Splat 3" by FoolBoyMedia (https://freesound.org/people/FoolBoyMedia/sounds/237927/) licensed under CCBY4.0
+
+"goreSplat.wav" by ThefitzyG (https://freesound.org/people/ThefitzyG/sounds/414296/) licensed under CC0 1.0
+
+"Tearing_rotten_wood_6.wav" by AlienXXX (https://freesound.org/people/AlienXXX/sounds/132409/) licensed under CCBY4.0
+
+"Cartoon Scream 1.wav" by tonsil5 (https://freesound.org/people/tonsil5/sounds/416840/) licensed under CC0 1.0
+
+"Cartoon Angry Woman Scream" by bertiehs (https://freesound.org/people/bertiehs/sounds/271242/) licensed under CC0 1.0
+
+"Jingle_Win_00.wav", "Jingle_Lose_00.wav" by LittleRobotSoundFactory (https://freesound.org/people/LittleRobotSoundFactory/) licensed under CCBY4.0
+
+"TribalDrums.wav" by HerbertBoland (https://freesound.org/people/HerbertBoland/sounds/30167/) licensed under CCBYNC 4.0

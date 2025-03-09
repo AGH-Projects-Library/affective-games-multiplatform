@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1913993325409314}
+  m_IsPrefabParent: 1
+--- !u!1 &1913993325409314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4376333731733306}
+  - component: {fileID: 114416364533983744}
+  - component: {fileID: 114014893667636102}
+  - component: {fileID: 114065810925568730}
+  m_Layer: 1
+  m_Name: BITalino
+  m_TagString: BITalino
+  m_Icon: {fileID: 2800000, guid: 18636cf37987d2a4c9169479b8b8bf4a, type: 3}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4376333731733306
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913993325409314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114014893667636102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913993325409314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b4a6b94a7a3ab44fa454ca92e961830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GUIB: {fileID: 0}
+  scriptSerialPort: {fileID: 114416364533983744}
+  AnalogChannels: 000000000100000003000000
+  logFile: 1
+  logPath: C:\Users\pjemiolo\Downloads
+--- !u!114 &114065810925568730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913993325409314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4296dc568b03bb34a876033ca878d48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 114014893667636102}
+  BufferSize: 1
+  rawData: 0
+  dataFile: 1
+  dataPath: C:\Users\pjemiolo\Downloads
+--- !u!114 &114416364533983744
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1913993325409314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3378a5cc843e4514ba3bac510a00ac50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM3
+  baudRate: 9600
+  parity: 0
+  dataBits: 8
+  stopBits: 1
+  ReadTimeOut: 5000
+  WriteTimeOut: 5000

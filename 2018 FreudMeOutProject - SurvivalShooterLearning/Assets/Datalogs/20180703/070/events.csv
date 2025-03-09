@@ -1,0 +1,16 @@
+1,530627E+15;UnixTime
+0;Scene;Load;0
+0;BITalino;SamplingFrequency;1000
+0;BITalino;BufferSize;2000
+0;BITalino;Channels;ECG;EMG;EDA;
+0;BITalino;Analogs;A1;A2;A3;
+0;BITalino;BaudRate;9600
+0;BITalino;Port;COM3
+0;BITalino;Parity;None
+0;BITalino;DataBits;8
+0;BITalino;StopBits;One
+10897,36;InputEnter;Name;KPAP
+14144,44;InputEnter;Number;070
+14227,26;ButtonClick;Polish
+16579,72;ButtonClick;WithAffectiveLoop
+16845,51;BITalino;StartReading
