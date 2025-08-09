@@ -1,0 +1,29 @@
+PS D:\Repozytoria\master-thesis-2025\2023 Affective Game VR\Assets\Scripts> wsl
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2023 Affective Game VR/Assets/Scripts$ cloc .
+      59 text files.
+      27 unique files.
+      32 files ignored.
+
+github.com/AlDanial/cloc v 1.98  T=0.97 s (28.0 files/s, 5502.6 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C#                              27            765            964           3583
+-------------------------------------------------------------------------------
+SUM:                            27            765            964           3583
+-------------------------------------------------------------------------------
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2023 Affective Game VR/Assets/Scripts$ rm -rf PluxDeviceManager
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2023 Affective Game VR/Assets/Scripts$ cloc .
+      30 text files.
+      13 unique files.
+      17 files ignored.
+
+github.com/AlDanial/cloc v 1.98  T=0.22 s (59.9 files/s, 5844.6 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+C#                              13            261             77            931
+-------------------------------------------------------------------------------
+SUM:                            13            261             77            931
+-------------------------------------------------------------------------------
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2023 Affective Game VR/Assets/Scripts$

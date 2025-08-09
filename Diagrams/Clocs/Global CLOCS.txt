@@ -1,0 +1,22 @@
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2019 Freud2.0/Assets$ cloc .
+    1371 text files.
+     338 unique files.
+    1474 files ignored.
+
+github.com/AlDanial/cloc v 1.98  T=13.20 s (25.6 files/s, 19358.4 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Unity-Prefab                   110              1              0         163532
+XML                              3             13              0          50338
+C#                             178           3736           1658          15326
+CSV                              3              0              0          10525
+HLSL                            34           1408           2186           5655
+Mathematica                      1              0              0            654
+Text                             7             94              0            332
+SVG                              1              0              1             25
+JSON                             1              0              0              1
+-------------------------------------------------------------------------------
+SUM:                           338           5252           3845         246388
+-------------------------------------------------------------------------------
+kris@KrisLegion:/mnt/d/Repozytoria/master-thesis-2025/2019 Freud2.0/Assets$
