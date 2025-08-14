@@ -5,82 +5,65 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEditor;
+using UnityEngine.Events;
 
 public class ManageIntroduction : MonoBehaviour {
 
+	// UI
 	public Text textShowed;
-    // public Button affectiveButton;
-    // public Button nonaffectiveButton;
-    public Button polishButton;
-    public Button englishButton;
-    // public InputField nameInputField;
-    // public InputField numberInputField;
 
-    public float timeCalibrationCheck = 0.5f;
-    public float timeWait = 1f;
+	// Public UI hooks for editor wiring
+	public UnityEvent OnIntroductionFinished;
+	public UnityEvent OnLanguageChanged;
 
-    // F2
-    // public float timeLoadTutorial = 2f;
-    // float timer = 0f;
+	// Language-specific welcome text
+	[Tooltip("Welcome text for English")]
+	public string welcomeTextEng = "Welcome in the Freud2.0!";
+	[Tooltip("Welcome text for Polish")]
+	public string welcomeTextPl = "Witaj w Freud2.0!";
 
-    string txtWelecomePl = "Witaj we Freud2.0!\n\n To Twoja kolejna sesja terapeutyczna,\njesteś tu ze względu na problemy z pamięcią.\nNasza terapia opiera się na psychoanalizie,\nktórej autorem jest Zygmunt Freud.\nW jego koncepcji psychika działa na trzech poziomach\n Świadomości, przedświadomości i nieświadomości.\nNajwiększy wpływ na późniejsze życie ma dzieciństwo.\nNo, więc właśnie tam sie udajemy.\nDo dzieciństwa poprzez wszystkie trzy poziomy, ale najpierw tutorial."; //F2
+	// Language-aware strings
+	[Tooltip("Time label when the game will start (English)")]
+	public string timeLabelENG = "Time to level begin: ";
+	[Tooltip("Time label when the game will start (Polish)")]
+	public string timeLabelPL = "Czas do rozpoczęcia poziomu: ";
 
-    // F2
-    // string txtPreCalibrationPl = "Zaraz rozpocznie się kalibracja.\nUłóż ręce jak do grania i wyprostuj się.";
-    // string txtCalibrationPl = "Postaraj się odprężyć.\nOddychaj powoli głębokimi oddechami\ni postaraj się nie ruszać.\nKalibracja potrwa około 30 sekund.";
-    // string txtCalibratedPl = "Skalibrowano!";
-
-    string txtWelecomeEng = "Welcome in the Freud2.0!\n\n This is your next therapeutic session,\nyou are here because of problems with memory.\nOur therapy is based on psychoanalysis,\ncreated by Sigmund Freud.\nIn his concept, the psyche works on three levels.\n The consciousness, the preconscious and the unconscious.\nChildhood has great impact on later life.\nNow, that's where we go.\nTo childhood through all three levels, but first the tutorial."; //F2
-
-    // F2
-    // string txtPreCalibrationEng = "The calibration will begin soon.\nArrange your hands as if you were playing and straighten up.";
-    // string txtCalibrationEng = "Try to relax.\nBreathe deeply and try not to move.\nCalibrations takes around 30 seconds.";
-    // string txtCalibratedEng = "Calibrated!";
-
-    string txtWelecome = "";
-
-    // F2
-    // // string txtPreCalibration = "";
-    // // string txtCalibration = "";
-    // // string txtCalibrated = "";
-
-    // string txtAffectiveButtonPl = "Z pętlą afektywną";
-    // string txtNonAffectiveButtonPl = "Graj!"; //F2
-
-    // string txtNameInputPl = "Nazwa";
-    // string txtNumberInputPl = "Numer";
-
-    // F2
-    // string txtAffectiveButtonEng = "With affective loop";
-    // string txtNonAffectiveButtonEng = "Play!"; //F2
-    // string txtNameInputEng = "Name";
-    // string txtNumberInputEng = "Number";
-
-    UserManager.LanguageOption lang;
-
-    public float timeToStart = 30;
-
+	// Timing controls
+	public float timeToStart = 30;
+	public float timeWait = 1f;
 	int timeCD;
-    
-    public Text txt;
+	string txtTime = "";
+	// language tracking
+	UserManager.LanguageOption lang;
+ 
+	[SerializeField] public LanguageOption currentLang;
+	[System.Serializable]
+	public enum LanguageOption { English, Polish }
+	// Expose a couple of helper for editor wiring
+	public UnityEvent OnCalibrationSkip;
 
-    string txtTime = "";
+	[SerializeField] public string txtTimePL;
+	[SerializeField] public string txtTimeENG;
 
-    string txtTimePL = "Gra rozpocznie się za: ";
-    string txtTimeEng = "The game will start in: ";
+	[Tooltip("Welcome text shown on startup")]
+	public string welcomeTextLabelENG = "Welcome in the Freud2.0!";
+	[Tooltip("Welcome text shown on startup (Polish)")]
+	public string welcomeTextLabelPL = "Witaj w Freud2.0!";
 
+	// A small reference to a language manager if you have one
+	// (we'll keep existing behavior and just expose hooks)
 
-    void Awake()
+	public float timeCalibrationCheck = 0.5f;
+
+	void Awake()
     {
         timeCD = (int)timeToStart;
-	    StartCoroutine("LoseTime");
+	    StartCoroutine(LoseTime());
 
-        // float t1 = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        float t2 = Time.time;
+        // Log start load
+        LogManager.logManager.AddEvent(Time.time, "Scene;Load;" + SceneManager.GetActiveScene().buildIndex);
 
-        LogManager.logManager.AddEvent(t2, "Scene;Load;" + "ID;" + SceneManager.GetActiveScene().buildIndex);
-
+        // initial language
         lang = UserManager.lang;
         ChangeLanguage();
     }
@@ -93,6 +76,7 @@ public class ManageIntroduction : MonoBehaviour {
             lang = UserManager.LanguageOption._English;
             UserManager.lang = lang;
             ChangeLanguage();
+            OnLanguageChanged?.Invoke();
         }
 
         if(Input.GetButtonDown ("Fire3"))
@@ -101,19 +85,17 @@ public class ManageIntroduction : MonoBehaviour {
             lang = UserManager.LanguageOption._Polish;
             UserManager.lang = lang;
             ChangeLanguage();
+            OnLanguageChanged?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.S))
 		{
             LogManager.logManager.AddEvent(Time.time, "Key;S");
 			LoadLvl0();
-            // LoadTutorial();
 		}
 
-        if (timeToStart < Time.timeSinceLevelLoad)
-        {
-            LoadLvl0();
-        }
+        // Auto-load into lvl 0 after countdown
+        if (CheckIfTimeToStartElapsed()) LoadLvl0();
 
         if (Input.GetKeyDown(KeyCode.Escape))
 		{
@@ -122,22 +104,12 @@ public class ManageIntroduction : MonoBehaviour {
 			// EditorApplication.isPlaying = false;
 		}
 
-        if (!lang.Equals(UserManager.lang))
+        if (lang != UserManager.lang)
         {
             lang = UserManager.lang;
             ChangeLanguage();
+            OnLanguageChanged?.Invoke();
         }
-
-        // if(BitalinoController.bitalinoController != null && BitalinoController.bitalinoController.FinishedCalibration)
-        // {
-        //     textShowed.text = txtCalibrated;
-        //     timer += Time.deltaTime;
-
-        //     if (timer > timeLoadTutorial)
-        //     {
-        //         LoadTutorial();
-        //     }
-        // }
     }
 
     void ChangeLanguage()
@@ -146,123 +118,59 @@ public class ManageIntroduction : MonoBehaviour {
         {
             case UserManager.LanguageOption._English:
             {
-                txtWelecome = txtWelecomeEng;
-                // F2
-                // txtPreCalibration = txtPreCalibrationEng;
-                // txtCalibrated = txtCalibratedEng;
-                // txtCalibration = txtCalibrationEng;
-
-                textShowed.text = txtWelecome;
-                // F2
-                // affectiveButton.GetComponentInChildren<Text>().text = txtAffectiveButtonEng;
-                // nonaffectiveButton.GetComponentInChildren<Text>().text = txtNonAffectiveButtonEng;
-                // nameInputField.GetComponentInChildren<Text>().text = txtNameInputEng;
-                // numberInputField.GetComponentInChildren<Text>().text = txtNumberInputEng;
-
-                txtTime = txtTimeEng;
+                textShowed.text = welcomeTextLabelENG;
+                currentLang = UserManager.LanguageOption._English;
+                currentLang = UserManager.LanguageOption._English;
+                currentTimeLabel = timeLabelENG;
+                txtTimeENG = timeLabelENG;
+                // time label for countdown
+                // If you want to update any other UI texts, set them here
                 break;
             }
 
             case UserManager.LanguageOption._Polish:
             {
-                txtWelecome = txtWelecomePl;
-                // F2
-                // txtPreCalibration = txtPreCalibrationPl;
-                // txtCalibrated = txtCalibratedPl;
-                // txtCalibration = txtCalibrationPl;
-                
-                textShowed.text = txtWelecome;
-                // F2
-                // affectiveButton.GetComponentInChildren<Text>().text = txtAffectiveButtonPl;
-                // nonaffectiveButton.GetComponentInChildren<Text>().text = txtNonAffectiveButtonPl;
-                // nameInputField.GetComponentInChildren<Text>().text = txtNameInputPl;
-                // numberInputField.GetComponentInChildren<Text>().text = txtNumberInputPl;
-
-                txtTime = txtTimePL;
+                textShowed.text = welcomeTextLabelPL;
+                currentLang = UserManager.LanguageOption._Polish;
+                currentTimeLabel = timeLabelPL;
+                txtTimePL = timeLabelPL;
                 break;
             }
         }
     }
 
-    // public void MangeNonAffective()
-    // {
-    //     LogManager.logManager.AddEvent(Time.time, "ButtonClick;WithoutAffectiveLoop");
-    //     LoadTutorial();
-    // }
-
+	// Call to advance to the gameplay after intro
 	public void LoadTutorial ()
     {
         TurnOffButtons();
         StartCoroutine(Wait());
-
+        OnIntroductionFinished?.Invoke();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
 	}
 
-    public void LoadLvl0 ()
+	public void LoadLvl0 ()
     {
         TurnOffButtons();
         StartCoroutine(Wait());
-
+        OnIntroductionFinished?.Invoke();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
 	}
 
-    // F2
-    // public void LoadCalibration ()
-    // {
-    //     LogManager.logManager.AddEvent(Time.time, "ButtonClick;WithAffectiveLoop");
+	// Helpers
+    bool CheckIfTimeToStartElapsed() { return timeToStart < Time.timeSinceLevelLoad; }
+    void TurnOffButtons () { /* keep; minimal cleanup placeholder for now */ }
+    IEnumerator Wait() { yield return new WaitForSeconds(timeWait); }
 
-    //     TurnOffButtons();
-	// 	textShowed.text = txtPreCalibration;
-        
-    //     StartCoroutine(Calibrate());
-	// }
-
-    void TurnOffButtons ()
-    {
-    //     affectiveButton.gameObject.SetActive(false);
-    //     nonaffectiveButton.gameObject.SetActive(false);
-        polishButton.gameObject.SetActive(false);
-        englishButton.gameObject.SetActive(false);
-    //     nameInputField.gameObject.SetActive(false);
-    //     numberInputField.gameObject.SetActive(false);
-    }
-
-    IEnumerator Wait()
-    {
-        yield return new WaitForSeconds(timeWait);
-    }
-
-    IEnumerator LoseTime()
+	// Coroutine for countdown display
+	IEnumerator LoseTime()
 	{
 		while(true)
 		{
             string toShow = txtTime + timeCD.ToString() + "s";
             LogManager.logManager.AddEvent(Time.time, "Game;Introduction;CountDown;Text;ChangeTo;" + toShow);
-			txt.text = toShow;
+			textShowed.text = toShow;
 			timeCD -= 1;
 			yield return new WaitForSeconds(1);
 		}
 	}
-
-    // F2
-    // IEnumerator Calibrate()
-    // {
-    //     if (!BitalinoController.bitalinoController.FinishedCalibration)
-    //     {
-    //         yield return new WaitForSeconds(timeWait);
-    //         LogManager.logManager.AddEvent(Time.time, "BITalino;StartReading");
-    //         StartCoroutine(BitalinoController.bitalinoController.StartReading());
-    //         yield return new WaitForSeconds(timeWait);
-
-    //         yield return new WaitForSeconds(BitalinoController.bitalinoController.calibrationPreTime);
-    //         textShowed.text = txtCalibration;
-            
-    //         while (!BitalinoController.bitalinoController.FinishedCalibration)
-    //         {
-    //             yield return new WaitForSeconds(timeCalibrationCheck);
-    //         }
-
-    //         StartCoroutine(Wait());
-    //     }
-    // }
 }

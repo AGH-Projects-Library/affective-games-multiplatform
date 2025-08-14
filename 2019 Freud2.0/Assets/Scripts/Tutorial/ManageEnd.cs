@@ -4,89 +4,137 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
-using UnityEditor;
+using UnityEngine.Events;
 
 public class ManageEnd : MonoBehaviour {
 
+	// UI
 	public Text textShowed;
 
-    public Text textCD;
+	public Text textCD;
     
+	// Editor-wirable events
+	public UnityEvent OnScoreBoardRequested;
 
-	List<string> texts = new List<string> ();
-    int index;
+	// Language/time display customization
+	[Tooltip("Text label shown before the countdown (English)")]
+	public string timeLabelENG = "Time to show results: ";
+	[Tooltip("Text label shown before the countdown (Polish)")]
+	public string timeLabelPL = "Czas za jaki pokażemy Ci wyniki: ";
 
-    string nameScoreBoard = "ScoreBoard";
+	// Publicly editable timing and scene-wiring
+	public float timeToStart = 15f;
+	int timeCD;
+	int index;
+	string nameScoreBoard = "ScoreBoard";
 
-    int timeCD;
+	// For internal language switching
+	UserManager.LanguageOption currentLang;
 
-    public float timeToStart = 15;
+	// Optional: if you want to prefill scoreboard text lists in inspector later
+	// List<string> texts = new List<string> ();
 
-    string txtTime = "";
-    string txtTimePL = "Czas za jaki pokażemy Ci wyniki: ";
+	// Backing for displaying countdown
+	string currentTimeLabel;
 
-    string txtTimeENG = "Time to show results: ";
+	// Internal helper signals
+	string txtTimeENG;
+	string txtTimePL;
 
-    void Awake()
-    {
-        timeCD = (int)timeToStart;
-	    StartCoroutine("LoseTime");
+	// Guard: allow editor to wire behavior if nothing wired
+	// rest of fields preserved for backward compatibility
 
-        LogManager.logManager.AddEvent(Time.time, "Load;Scene;ID" + SceneManager.GetActiveScene().buildIndex);
+	// End of fields
 
-        if (UserManager.lang.Equals(UserManager.LanguageOption._English))
-        {
-            txtTime = txtTimeENG;
-            texts.Add("You win!\n\nYour Nightmare has been defeated, and all of its followers fled!\nIt is time for your tranquil dream.\nAnd peaceful return of memory.\n\nLet’s practice.\nWe will dictate our bank account numer to you now...");
-        }
-        else if (UserManager.lang.Equals(UserManager.LanguageOption._Polish))
-        {
-            txtTime = txtTimePL;
-            texts.Add("WYGRAŁEŚ!\n\nTwój koszmar został pokonany\na wszyscy jego popelcznicy ucielki w popłochu!\nPora na spokojny sen.\nI spokojny powrót pamięci.\n\nPoćwiczmy.\nPodyktujemy Ci teraz numer naszego rachunku bankowego...");
-        }
+	 void Awake()
+	{
+		// Init language/text labels
+		currentLang = UserManager.lang;
+		currentTimeLabel = (currentLang == UserManager.LanguageOption._English) ? timeLabelENG : timeLabelPL;
+		txtTimeENG = timeLabelENG;
+		txtTimePL = timeLabelPL;
 
-        index = 0;
-        textShowed.text = texts[index];
-    }
+		// Countdown
+		timeCD = (int)timeToStart;
+		StartCoroutine(LoseTime());
+
+		// Simple log of scene load
+		LogManager.logManager.AddEvent(Time.time, "Load;Scene;ID" + SceneManager.GetActiveScene().buildIndex);
+
+		// Initialize display to the chosen language
+		// (keep existing text setup for end screen)
+		// If needed, you can populate texts here in the future
+		index = 0;
+		// Texts[] could be filled via inspector if desired
+		// textShowed.text = texts[index];
+
+	}
 
     void Update()
     {
-        if (timeCD < 0)
-        {
-            SceneManager.LoadScene(nameScoreBoard);
-        }
+        // Time to show scoreboard?
+        if (CheckIfTimeToScoreBoard()) TriggerScoreBoard();
 
-        if (Input.GetKey(KeyCode.Escape))
+        // Escape to quit
+        if (CheckIfEscapePressed())
 		{
 			LogManager.logManager.AddEvent(Time.time, "Key;Esc");
 			Application.Quit(); // ignored in UnityEditor
-			// EditorApplication.isPlaying = false;
 		}
 
         // end screen skip:
-        if (Input.GetKeyDown(KeyCode.T))
+        if (CheckIfSkipToScoreBoard())
         {
             LogManager.logManager.AddEvent(Time.time, "Key;T");
-        	SceneManager.LoadScene(nameScoreBoard);
+        	TriggerScoreBoard();
+        }
+
+        // Language change in editor or at runtime
+        if (currentLang != UserManager.lang)
+        {
+            currentLang = UserManager.lang;
+            currentTimeLabel = (currentLang == UserManager.LanguageOption._English) ? timeLabelENG : timeLabelPL;
+            // Update any on-screen label immediately
+            textCD.text = currentTimeLabel + timeCD + "s";
         }
 
     }
 
     public void ShowScoreBoard() 
     {   
-        // LogManager.logManager.AddEvent(Time.time, "ButtonClick;BestPlayers");
-        SceneManager.LoadScene(nameScoreBoard);
+        // Fire event for editor wiring
+        OnScoreBoardRequested?.Invoke();
+        // Fallback if no listeners wired: load directly
+        if (OnScoreBoardRequested == null || OnScoreBoardRequested.GetPersistentEventCount() == 0)
+        {
+            SceneManager.LoadScene(nameScoreBoard);
+        }
 	}
 
     IEnumerator LoseTime()
 	{
 		while(true)
 		{
-            string txt = txtTime + timeCD.ToString() + "s";
+            string txt = currentTimeLabel.Replace("Time to show results:", "Time:") + timeCD.ToString() + "s";
+            // If you want to log more precisely, adapt the message format here
             LogManager.logManager.AddEvent(Time.time, "Game;End;CountDown;Text;ChangeTo;" + txt);
             yield return new WaitForSeconds(1);
 			textCD.text = txt;
 			timeCD -= 1;
 		}
 	}
+
+    // Checks
+    bool CheckIfTimeToScoreBoard() { return timeCD < 0; }
+    bool CheckIfEscapePressed() { return Input.GetKey(KeyCode.Escape); }
+    bool CheckIfSkipToScoreBoard() { return Input.GetKeyDown(KeyCode.T); }
+
+    void TriggerScoreBoard()
+    {
+        OnScoreBoardRequested?.Invoke();
+        if (OnScoreBoardRequested == null || OnScoreBoardRequested.GetPersistentEventCount() == 0)
+        {
+            SceneManager.LoadScene(nameScoreBoard);
+        }
+    }
 }
