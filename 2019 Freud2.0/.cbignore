@@ -1,0 +1,67 @@
+# .cbignore for Unity projects
+# Ignore build, cache, and user-specific files
+[L]ibrary/
+[T]emp/
+[O]bj/
+[B]uild/
+[B]uilds/
+[U]serSettings/
+# Ignore auto-generated files
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.VC.opendb
+# Ignore logs
+[L]ogs/
+*.log
+# Ignore package cache
+[P]ackageCache/
+# Ignore generated folders
+[B]ee/
+[A]rtifacts/
+# Ignore crash reports
+*.crash
+# Ignore other Unity-specific files
+*.swp
+*.bak
+*.orig
+*.old
+# Ignore Mac OS specific files
+.DS_Store
+# Ignore Windows specific files
+Thumbs.db
+# Ignore files without extension
+# Ignore files without a dot in the name (no extension)
+[^.]*
+# Ignore specific file types
+*.png
+*.fbx
+*.wav
+*.dll
+*.jpg
+*.tif
+*.pdb
+*.gif
+*.asset
+*.json
+*.dag
+*.meta
+*.prefab
+*.txt
+*.svg
+*.xml
+*.mp4
+*.unitypackage
+*.mat
+*.json
