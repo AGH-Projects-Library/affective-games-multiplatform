@@ -13,6 +13,10 @@ public class ManageScoreBoard : MonoBehaviour
 	public Text textBestPlayers;
 
 	public Text closeTxt;
+	// Key mappings (editable in inspector)
+	public KeyCode keyEscape = KeyCode.Escape;
+	public KeyCode keyR = KeyCode.R;
+	public KeyCode keyS = KeyCode.S;
 	
 	string pathScores;
 	Dictionary<int, List<string>> bestPlayers = new Dictionary<int, List<string>> ();
@@ -69,21 +73,21 @@ public class ManageScoreBoard : MonoBehaviour
             Application.Quit();
         }
 
-		if(Input.GetKeyDown(KeyCode.Escape))
+		if(Input.GetKeyDown(keyEscape))
         {
             LogManager.logManager.AddEvent(Time.time, "Key;Escape");
 			Application.Quit(); // ignored in UnityEditor
 			// EditorApplication.isPlaying = false;
         }
 
-		else if(Input.GetKeyDown(KeyCode.R))
+		else if(Input.GetKeyDown(keyR))
         {
 			LogManager.logManager.AddEvent(Time.time, "Key;R");
 			DestroyIndestructible();
 	        SceneManager.LoadScene(indexIntroduction);
         }
 
-		else if(Input.GetKeyDown(KeyCode.S))
+		else if(Input.GetKeyDown(keyS))
         {
 			LogManager.logManager.AddEvent(Time.time, "Key;S");
 	        SceneManager.LoadScene(indexFirstLevel);

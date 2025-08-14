@@ -12,6 +12,7 @@ public class PauseManager : MonoBehaviour {
 	public AudioMixerSnapshot unpaused;
 	
 	Canvas canvas;
+    public KeyCode keyEscape = KeyCode.Escape;
 	
 	void Start()
 	{
@@ -20,7 +21,7 @@ public class PauseManager : MonoBehaviour {
 	
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Escape))
+		if (Input.GetKeyDown(keyEscape))
 		{
 			canvas.enabled = !canvas.enabled;
 			Pause();

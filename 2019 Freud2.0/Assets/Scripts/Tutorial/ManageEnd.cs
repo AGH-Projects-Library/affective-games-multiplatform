@@ -12,6 +12,9 @@ public class ManageEnd : MonoBehaviour {
 	public Text textShowed;
 
 	public Text textCD;
+	// Key mappings
+	public KeyCode keyEscape = KeyCode.Escape;
+	public KeyCode keySkipToScoreBoard = KeyCode.T;
     
 	// Editor-wirable events
 	public UnityEvent OnScoreBoardRequested;
@@ -126,8 +129,8 @@ public class ManageEnd : MonoBehaviour {
 
     // Checks
     bool CheckIfTimeToScoreBoard() { return timeCD < 0; }
-    bool CheckIfEscapePressed() { return Input.GetKey(KeyCode.Escape); }
-    bool CheckIfSkipToScoreBoard() { return Input.GetKeyDown(KeyCode.T); }
+    bool CheckIfEscapePressed() { return Input.GetKey(keyEscape); }
+    bool CheckIfSkipToScoreBoard() { return Input.GetKeyDown(keySkipToScoreBoard); }
 
     void TriggerScoreBoard()
     {

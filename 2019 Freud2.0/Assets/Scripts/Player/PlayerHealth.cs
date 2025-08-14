@@ -15,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     public AudioClip deathClip;
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
+    // Key mapping for inspector-based customization
+    public KeyCode keyEscape = KeyCode.Escape;
 
 
     Animator anim;
@@ -103,7 +105,7 @@ public class PlayerHealth : MonoBehaviour
     {
 
 
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(keyEscape))
 		{
 			LogManager.logManager.AddEvent(Time.time, "Key;Escape");
 			Application.Quit(); // ignored in UnityEditor

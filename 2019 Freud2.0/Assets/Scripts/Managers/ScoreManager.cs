@@ -17,6 +17,7 @@ public class ScoreManager : MonoBehaviour
     float zeroLevelWait = 105f;
 
     UserManager.LanguageOption lang;
+    public KeyCode keyP = KeyCode.P;
 
     void Awake ()
     {
@@ -47,7 +48,7 @@ public class ScoreManager : MonoBehaviour
 
     void Update ()
     {
-        if(Input.GetKey(KeyCode.P))
+        if(Input.GetKey(keyP))
         {
             LogManager.logManager.AddEvent(Time.time, "Key;P");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);

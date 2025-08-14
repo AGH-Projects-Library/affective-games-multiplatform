@@ -15,6 +15,10 @@ public class ManageIntroduction : MonoBehaviour {
 	// Public UI hooks for editor wiring
 	public UnityEvent OnIntroductionFinished;
 	public UnityEvent OnLanguageChanged;
+	// Configurable input mappings (inspector-friendly)
+	public string fireButton2 = "Fire2"; // mapped to English welcome progression
+	public string fireButton3 = "Fire3"; // mapped to Polish progression
+	public KeyCode keyS = KeyCode.S;     // quick-load level 0 shortcut
 
 	// Language-specific welcome text
 	[Tooltip("Welcome text for English")]
@@ -70,7 +74,7 @@ public class ManageIntroduction : MonoBehaviour {
 
     void Update() 
     {
-        if(Input.GetButtonDown ("Fire2"))
+        if(Input.GetButtonDown (fireButton2)) // use public mapping for Fire2
         {
             LogManager.logManager.AddEvent(Time.time, "Key;X");
             lang = UserManager.LanguageOption._English;
@@ -79,7 +83,7 @@ public class ManageIntroduction : MonoBehaviour {
             OnLanguageChanged?.Invoke();
         }
 
-        if(Input.GetButtonDown ("Fire3"))
+        if(Input.GetButtonDown (fireButton3)) // use public mapping for Fire3
         {
             LogManager.logManager.AddEvent(Time.time, "Key;O");
             lang = UserManager.LanguageOption._Polish;
@@ -88,7 +92,7 @@ public class ManageIntroduction : MonoBehaviour {
             OnLanguageChanged?.Invoke();
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(keyS)) // use public key binding for S
 		{
             LogManager.logManager.AddEvent(Time.time, "Key;S");
 			LoadLvl0();

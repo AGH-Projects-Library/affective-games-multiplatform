@@ -13,10 +13,12 @@ public class ManageTutorials : MonoBehaviour
 
     public Text textCD;
     
-    // public Button nextButton;
-    // public Button previousButton;
-    // public Button playButton;
-
+    // Key mappings (editable in inspector)
+    public KeyCode keyS = KeyCode.S;
+    public KeyCode keyEscape = KeyCode.Escape;
+    public KeyCode keyT = KeyCode.T;
+    public KeyCode keyU = KeyCode.U;
+    
 	List<string> texts = new List<string> ();
     int index;
 
@@ -41,20 +43,11 @@ public class ManageTutorials : MonoBehaviour
     string txtTimeENG = "Time to level begin: ";
 
 
+
     public void changeText (int x) 
     {
         this.index += x;
-		textShowed.text = texts[this.index];
-
-        // float t = Time.time;
-        // if (x > 0)
-        // {
-        //     LogManager.logManager.AddEvent(t, "ButtonClick;Next");
-        // }
-        // else if (x < 0)
-        // {
-        //     LogManager.logManager.AddEvent(t, "ButtonClick;Previous");
-        // }
+		
 	}
 
     void Awake()
@@ -98,7 +91,7 @@ public class ManageTutorials : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(keyS))
 		{
             LogManager.logManager.AddEvent(Time.time, "Key;S");
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -110,7 +103,7 @@ public class ManageTutorials : MonoBehaviour
         }
 
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(keyEscape)) // use public binding for Escape
 		{
 			LogManager.logManager.AddEvent(Time.time, "Key;Escape");
 			Application.Quit(); // ignored in UnityEditor
@@ -140,13 +133,13 @@ public class ManageTutorials : MonoBehaviour
         // }
 
         // tutorial skip:
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(keyT))
         {
             LogManager.logManager.AddEvent(Time.time, "Key;T");
             StartCoroutine("CountDown");
         }
 
-        else if (Input.GetKeyDown(KeyCode.U))
+        else if (Input.GetKeyDown(keyU))
         {
             LogManager.logManager.AddEvent(Time.time, "Key;U");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
@@ -234,7 +227,7 @@ public class ManageTutorials : MonoBehaviour
         //         else if (lvl == 9)
         //         {
         //             texts.Add("Eee, sorki za te komplikacje.\nAle poszło Ci świetnie!\n Ktoś tu chce pozbyć się swoich lęków!\nI to nam się podoba!");
-        //             texts.Add("Tak, tak! Dobrze rozumiesz, Twoje problemy z pamięcią wiążą się bezpośrednio z Twoimi największymi lękami. Wiesz, co to oznacza.");
+        //             texts.Add("Tak, tak! Dobrze rozumiesz, Twoje problemy z pamięcią wiążą się bezpośrednio z Twoimi największym lękami. Wiesz, co to oznacza.");
         //             texts.Add("Pan Koszmarek.");
         //             texts.Add("Siedzi tam już od dłuższego czasu.\nPora wykurzyć go z mieszkania i zaznać trochę spokoju.");
         //             texts.Add("Kiedy będziesz z nim walczyć, pamietaj, że wszystkie potworki popierają jego rządy.\nJeśli go skrzywdzisz, przybędą mu na pomoc.");
@@ -308,7 +301,7 @@ public class ManageTutorials : MonoBehaviour
                     texts.Add("Ok, skoro już wszystko jasne, przypomnimy Ci kilka zagadnień z psychologii.\nNasza terapia opiera się na psychoanalizie, której autorem jest Zygmunt Freud.");
                     texts.Add("W jego koncepcji psychika działa na trzech poziomach. Świadomości, przedświadomości i nieświadomości.\nNajwiększy wpływ na późniejsze życie ma dzieciństwo.");
                     texts.Add("No, więc właśnie tam sie udajemy.\nDo dzieciństwa poprzez wszystkie trzy poziomy.\nOdpalaj sprzęt i lecimy, nie ma czasu! ");
-                    texts.Add("Przez cały czas będzemy w kontakcie.\nNie bój się, robiliśmy to miliony razy.");
+                    texts.Add("Przez cały czas będziemy w kontakcie.\nNie bój się, robiliśmy to miliony razy.");
                 }
 
                 else if (lvl == 3)
@@ -328,7 +321,7 @@ public class ManageTutorials : MonoBehaviour
 
                 else if (lvl == 9)
                 {
-                    texts.Add("Ktoś tu chce pozbyć się swoich lęków!\nI to nam się podoba!\nTak, tak! Dobrze rozumiesz,\nTwoje problemy z pamięcią wiążą się bezpośrednio\nz Twoimi największymi lękami.\nWiesz, co to oznacza.\nPan Koszmarek.\nSiedzi tam już od dłuższego czasu.\nPora wykurzyć go z mieszkania i zaznać trochę spokoju.\nPamietaj, że wszystkie potworki popierają jego rządy.\nJeśli go skrzywdzisz, przybędą mu na pomoc.");
+                    texts.Add("Ktoś tu chce pozbyć się swoich lęków!\nI to nam się podoba!\nTak, tak! Dobrze rozumiesz,\nTwoje problemy z pamięcią wiążą się bezpośrednio\nz Twoimi największym lękami.\nWiesz, co to oznacza.\nPan Koszmarek.\nSiedzi tam już od dłuższego czasu.\nPora wykurzyć go z mieszkania i zaznać trochę spokoju.\nPamietaj, że wszystkie potworki popierają jego rządy.\nJeśli go skrzywdzisz, przybędą mu na pomoc.");
                 }
             }
 

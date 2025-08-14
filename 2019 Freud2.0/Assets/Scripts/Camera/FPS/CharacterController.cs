@@ -1,10 +1,14 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour 
 {
 	public float speed = 10f;
 	Animator anim;
+
+	// Configurable escape key
+	public KeyCode keyEscape = KeyCode.Escape;
 
 	void Awake()
     {
@@ -31,7 +35,8 @@ public class CharacterController : MonoBehaviour
 
 		Animating(h,v);
 
-		if(Input.GetKeyDown("escape"))
+		// Use configurable keyEscape instead of hard-coded string
+		if(Input.GetKeyDown(keyEscape))
 			Cursor.lockState = CursorLockMode.None;
 		
 	}

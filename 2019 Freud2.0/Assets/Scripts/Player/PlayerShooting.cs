@@ -24,6 +24,9 @@ public class PlayerShooting : MonoBehaviour
     public Slider powerSlider;
     public Image superpowerImage;
 
+    // Configurable input binding for shooting
+    public string shootButtonR2 = "R2";
+
     float timer = 0f;
     Ray shootRay = new Ray();
     RaycastHit shootHit;
@@ -94,7 +97,7 @@ public class PlayerShooting : MonoBehaviour
         timer += Time.deltaTime;
         regenerationTimer += Time.deltaTime;
 
-		if(Input.GetButton("R2") && timer >= timeBetweenBullets && Time.timeScale != 0)
+		if(Input.GetButton(shootButtonR2) && timer >= timeBetweenBullets && Time.timeScale != 0) // configurable shoot button
         {
             LogManager.logManager.AddEvent(Time.time, "Key;" + "R2");
             Shoot ();
