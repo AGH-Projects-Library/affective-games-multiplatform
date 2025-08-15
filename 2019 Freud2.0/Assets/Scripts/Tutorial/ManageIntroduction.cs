@@ -22,7 +22,7 @@ public class ManageIntroduction : MonoBehaviour
     private int timeCD;
     private GameLanguage currentLang;
 
-    void Awake()
+    void Start()
     {
         timeCD = (int)timeToStart;
         StartCoroutine(LoseTime());

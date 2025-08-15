@@ -5,22 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour 
 {
-    public static AudioManager audioManager;
+    public static AudioManager Instance { get; private set; }
     private bool flagChecked;
 
     private void Awake() => MakeThisTheOnlyAudioManager();
 
     private void MakeThisTheOnlyAudioManager()
     {
-        if (audioManager == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            audioManager = this;
-        }
-        else if (audioManager != this)
-        {
-            Destroy (gameObject);
-        }
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
     }
 
     private void Update() 

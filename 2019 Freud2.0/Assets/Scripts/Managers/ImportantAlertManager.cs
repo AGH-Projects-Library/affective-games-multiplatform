@@ -4,24 +4,17 @@ using UnityEngine.UI;
 
 public class ImportantAlertManager : MonoBehaviour
 {
-    public static ImportantAlertManager importantAlertManager;
+    public static ImportantAlertManager Instance { get; private set; }
 
     void Awake()
     {
         MakeThisTheOnlyDontDestroyManager();
     }
 
-    void MakeThisTheOnlyDontDestroyManager()
+    private void MakeThisTheOnlyDontDestroyManager()
     {
-        if (importantAlertManager == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            importantAlertManager = this;
-        }
-        else if (importantAlertManager != this)
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
     public IEnumerator ShowAlertAndLerp(float time, string input)

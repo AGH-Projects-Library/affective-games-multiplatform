@@ -155,7 +155,7 @@ public class PlayerShooting : MonoBehaviour
             LogManager.Instance.AddEvent(Time.time, "Player;Range;DecreaseTo;" + range);
             
             timeAlpha = timePressed;
-            regenerationTimer = 0;
+            // regenerationTimer = 0;
 
             KillEnemies();
         }
@@ -211,8 +211,8 @@ public class PlayerShooting : MonoBehaviour
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
             if (i > 4)
             {
-                enemyHealth.AddScore();
-                enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
+                // enemyHealth.AddScore();
+                // enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
             }
             else
             {

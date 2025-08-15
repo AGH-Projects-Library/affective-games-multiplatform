@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
+    public static ScoreManager Instance { get; private set; }
     public static int score;
     [SerializeField] private int scoreToLevelUp = 300;
 
@@ -18,8 +19,17 @@ public class ScoreManager : MonoBehaviour
     // UserManager.Language lang;
     public KeyCode keyP = KeyCode.P;
 
-    void Awake ()
+
+    private void MakeThisTheOnlyScoreManager()
     {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
+
+    void Awake()
+    {
+        MakeThisTheOnlyScoreManager();
         LogManager.Instance.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
 
         // lang = UserManager.lang;
@@ -83,7 +93,7 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScore(int level, int newScore)
     {
-        UserManager.Instance.ScoreUpdate(level, newScore);
+        // UserManager.Instance.ScoreUpdate(level, newScore);
     }
 
     private void KillEnemiesAndPickups()
@@ -94,7 +104,7 @@ public class ScoreManager : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
+            // enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
         }
     }
 }

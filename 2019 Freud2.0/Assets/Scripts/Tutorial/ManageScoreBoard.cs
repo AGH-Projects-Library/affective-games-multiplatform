@@ -36,17 +36,17 @@ public class ManageScoreBoard : MonoBehaviour
         timeCD = (int)timeToStart;
         StartCoroutine(LoseTime());
 
-        string namePlayer = UserManager.userManager.GetUserName();
-        int scorePlayer = UserManager.userManager.GetCumulatedScore();
+        string namePlayer = UserManager.Instance.GetUserName();
+        // int scorePlayer = UserManager.Instance.GetCumulatedScore();
 
         string localizedTemplate = LocalizationManager.Instance.GetText(keyCloseText);
-        string closeText = string.Format(localizedTemplate, namePlayer, scorePlayer);
+        // string closeText = string.Format(localizedTemplate, namePlayer, scorePlayer);
 
         ReadBestPlayers();
-        AddNewPlayer(namePlayer, scorePlayer);
+        // AddNewPlayer(namePlayer, scorePlayer);
         PrintBestPlayers();
-        UserManager.userManager.ScoreZero();
-        closeTxt.text = closeText;
+        // UserManager.Instance.ScoreZero();
+        // closeTxt.text = closeText;
     }
 
     void Update()

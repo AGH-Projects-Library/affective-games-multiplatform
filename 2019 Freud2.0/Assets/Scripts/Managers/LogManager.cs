@@ -6,15 +6,14 @@ using UnityEngine;
 public class LogManager : MonoBehaviour
 {
     public static LogManager Instance { get; private set; }
-
     [SerializeField] private string _fileName = "events.csv";
 
     private double _startTime;
 
-    private struct LogEvent
+    public struct LogEvent
     {
         public float Time;
-        string eventType;
+        public string eventType;
 
         public LogEvent(float t, string eT)
         {
@@ -26,18 +25,16 @@ public class LogManager : MonoBehaviour
     private List<LogEvent> _events = new List<LogEvent>();
 
     private void Awake()
-    { _startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(); }
-
-    private void Start()
-    { MakeThisTheOnlyDontDestroyManager(); }
-
-    private bool IsSingleton()
-    { return Instance == null || Instance == this; }
-
-    private void MakeThisTheOnlyDontDestroyManager()
     {
-        if (IsSingleton()) { DontDestroyOnLoad(gameObject); Instance = this; }
-        else { Destroy(gameObject); }
+        MakeThisTheOnlyLogManager();
+        _startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    }
+
+    private void MakeThisTheOnlyLogManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
     }
 
     private void OnDestroy()

@@ -3,26 +3,35 @@ using UnityEngine;
 
 public class AffectiveEnemyManager : MonoBehaviour
 {
-    [SerializeField] private int affectiveSpawnTimeMedium = 60;
-    [SerializeField] private int affectiveSpawnTimeMediumMax = 80;
-    [SerializeField] private int affectiveSpawnTimeHard = 90;
-    [SerializeField] private int affectiveSpawnTimeHardMax = 180;
-    [SerializeField] private int preparationTime = 5;
-    [SerializeField] private float spawnTime = 3f;
-    [SerializeField] private float invokeTime = 5f;
-    [SerializeField] private PlayerHealth playerHealth;
-    [SerializeField] private GameObject[] enemy;
-    [SerializeField] private Transform[] spawnPoints;
+    public static AffectiveEnemyManager Instance { get; private set; }
+    [SerializeField] public int affectiveSpawnTimeMedium = 60;
+    [SerializeField] public int affectiveSpawnTimeMediumMax = 80;
+    [SerializeField] public int affectiveSpawnTimeHard = 90;
+    [SerializeField] public int affectiveSpawnTimeHardMax = 180;
+    [SerializeField] public int preparationTime = 5;
+    [SerializeField] public float spawnTime = 3f;
+    [SerializeField] public float invokeTime = 5f;
+    [SerializeField] public PlayerHealth playerHealth;
+    [SerializeField] public GameObject[] enemy;
+    [SerializeField] public Transform[] spawnPoints;
 
-    [SerializeField] private float alertTime = 5f;
-    [SerializeField] private string keyAlertNonAffective = "alert.moreMonsters";
+    [SerializeField] public float alertTime = 5f;
+    [SerializeField] public string keyAlertNonAffective = "alert.moreMonsters";
 
-    private bool checkedMedium = false;
-    private bool checkedHard = false;
-    private float timerSpawnMax = 0f;
-    private float remainTime = 5f;
+    public bool checkedMedium = false;
+    public bool checkedHard = false;
+    public float timerSpawnMax = 0f;
+    public float remainTime = 5f;
 
-    private void Awake() { /* nothing needed here now */ }
+    private void Awake()
+    {
+        MakeThisTheOnlyAffectiveEnemyManager();
+    }
+
+    private void MakeThisTheOnlyAffectiveEnemyManager()
+    {
+        Instance = this;
+    }
 
     private void Start() => InvokeRepeating("Spawn", invokeTime, spawnTime);
 
@@ -37,7 +46,7 @@ public class AffectiveEnemyManager : MonoBehaviour
 
     private void Spawn()
     {
-        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= EnemyManager.maxEnemies) return;
+        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= EnemyManager.Instance.maxEnemies) return;
         int enemyIndex = Random.Range(0, enemy.Length);
         if (Time.timeSinceLevelLoad >= affectiveSpawnTimeMedium)
             SpawnEnemy(enemyIndex, Random.Range(0, spawnPoints.Length), "AdditionalMediumSpawn");
@@ -53,6 +62,6 @@ public class AffectiveEnemyManager : MonoBehaviour
 
     private void ShowAlert(string message, bool checkedFlag)
     {
-        StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, message));
+        StartCoroutine(ImportantAlertManager.Instance.ShowAlertAndLerp(alertTime, message));
     }
 }

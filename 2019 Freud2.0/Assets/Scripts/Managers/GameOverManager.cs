@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameOverManager : MonoBehaviour
 {
+    public static GameOverManager Instance { get; private set; }
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private Text textGO;
     [SerializeField] private string keyGameOverText = "gameover.text";
@@ -16,8 +17,16 @@ public class GameOverManager : MonoBehaviour
     private Animator anim;
     private bool flagUsed = false;
 
+    private void MakeThisTheOnlyGameOverManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
+
     void Awake()
     {
+        MakeThisTheOnlyGameOverManager();
         anim = GetComponent<Animator>();
         textGO.text = LocalizationManager.Instance.GetText(keyGameOverText);
     }
@@ -34,7 +43,7 @@ public class GameOverManager : MonoBehaviour
 
     private void RestartLevel()
     {
-        UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
+        // UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -48,7 +57,7 @@ public class GameOverManager : MonoBehaviour
 
     private void GoToScoreBoard()
     {
-        UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
+        // UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
         SceneManager.LoadScene(nameScoreBoard);
     }
 

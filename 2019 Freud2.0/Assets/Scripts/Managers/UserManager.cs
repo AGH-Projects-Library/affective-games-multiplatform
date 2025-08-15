@@ -10,6 +10,7 @@ public class UserManager : MonoBehaviour
     public enum Language { English, Polish };
 
     [SerializeField] public Language language = Language.Polish;
+
     string userName;
     string userID;
     string persDataPath;
@@ -17,6 +18,18 @@ public class UserManager : MonoBehaviour
     int lvls = 0;
     int[] scoreLvl;
     bool used;
+
+    private void Awake()
+    {
+        MakeThisTheOnlyUserManager();
+    }
+
+    private void MakeThisTheOnlyUserManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
 
     void Start () 
     {
@@ -47,8 +60,6 @@ public class UserManager : MonoBehaviour
         Array.Clear(scoreLvl, 0, scoreLvl.Length);
 
         used = false;
-
-        MakeThisTheOnlyUserManager();
     }
     
     void Update()
@@ -62,9 +73,19 @@ public class UserManager : MonoBehaviour
         }
     }
 
-    private void MakeThisTheOnlyUserManager() => Instance == null ? (DontDestroyOnLoad(gameObject), Instance = this) : Instance != this && Destroy(gameObject);
     public void ResetScore() => Array.Clear(scoreLvl, 0, scoreLvl.Length);
-    public void UpdateScore(int index, int score) => score > scoreLvl[index] && (scoreLvl[index] = score);
+    public void UpdateScore(int index, int score) 
+    {
+        if (index < scoreLvl.Length)
+        {
+            scoreLvl[index] += score;
+            LogManager.Instance.AddEvent(Time.time, $"Score;Update;Level;{index};Value;{score}");
+        }
+        else
+        {
+            Debug.LogWarning("Index out of bounds for scoreLvl array.");
+        }
+    }
     public int GetTotalScore() => (scoreLvl.Sum());
     public string GetUserName() => userName;
     public string GetUserNumber() => userID;

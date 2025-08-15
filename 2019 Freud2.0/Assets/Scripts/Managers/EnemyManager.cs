@@ -3,11 +3,17 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
+    public static EnemyManager Instance { get; private set; }
     public float spawnTime = 3f;
     public float invokeTime = 5f;
     public PlayerHealth playerHealth;
     public GameObject enemy;
     public Transform[] spawnPoints;
+
+    private void Awake()
+    {
+        MakeThisTheOnlyEnemyManager();
+    }
 
     [SerializeField] private int _maxEnemies = 8;
     public int maxEnemies
@@ -16,6 +22,13 @@ public class EnemyManager : MonoBehaviour
         set => maxEnemies = value;
     }
     
+    private void MakeThisTheOnlyEnemyManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
+
     void Start()
     {
         if (File.Exists(Application.persistentDataPath + "\\enemiesAmount.txt"))

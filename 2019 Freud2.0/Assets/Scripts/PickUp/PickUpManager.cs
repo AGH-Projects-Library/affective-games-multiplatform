@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class PickUpManager : MonoBehaviour
 {
+    public static PickUpManager Instance { get; private set; }
     [SerializeField] private float spawnDelay = 7f;
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private GameObject pickUp;
     [SerializeField] private Transform[] spawnPoints;
+
+    private void Awake()
+    {
+        MakeThisTheOnlyPickUpManager();
+    }
 
     private int currentSpawnPointIndex;
 
@@ -15,8 +21,15 @@ public class PickUpManager : MonoBehaviour
     private void Start()
     {
         RandomizeArray(spawnPoints);
+        MakeThisTheOnlyPickUpManager();
         currentSpawnPointIndex = 0;
         StartCoroutine(SpawnPickUps());
+    }
+
+    private void MakeThisTheOnlyPickUpManager()
+    {
+        if (Instance == null)
+            Instance = this;
     }
 
     private IEnumerator SpawnPickUps()

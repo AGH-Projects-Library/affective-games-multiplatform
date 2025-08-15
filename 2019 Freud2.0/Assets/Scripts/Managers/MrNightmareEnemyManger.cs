@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MrNightmareEnemyManager : MonoBehaviour
 {
+    public static MrNightmareEnemyManager Instance { get; private set; }
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private EnemyHealth mrNightmareHealth;
     [SerializeField] private AffectiveEnemyManager affectiveEnemyManager;
@@ -22,7 +23,17 @@ public class MrNightmareEnemyManager : MonoBehaviour
     private List<float> timers = new List<float> { 0f, 0f, 0f, 0f };
     private bool enemySpeedFlag, affectiveSpawnMediumFlag, affectiveSpawnHardFlag;
 
-    private void Awake() { /* no language init here now */ }
+    private void Awake()
+    {
+        MakeThisTheOnlyMrNightmareEnemyManager();
+    }
+
+    private void MakeThisTheOnlyMrNightmareEnemyManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Update()
     {
@@ -54,7 +65,7 @@ public class MrNightmareEnemyManager : MonoBehaviour
     {
         usedLevels[level] = true;
         StartCoroutine(CallForHelp(helpNumbers[level], helpWaits[level], "MrNightmareSpawn"));
-        StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, LocalizationManager.Instance.GetText(keyNightmareSupportAlert)));
+        StartCoroutine(ImportantAlertManager.Instance.ShowAlertAndLerp(alertTime, LocalizationManager.Instance.GetText(keyNightmareSupportAlert)));
     }
 
     private IEnumerator CallForHelp(int number, float waitTime, string mechanic)

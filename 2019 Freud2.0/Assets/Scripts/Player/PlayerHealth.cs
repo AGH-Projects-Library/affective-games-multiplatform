@@ -112,7 +112,7 @@ public class PlayerHealth : MonoBehaviour
         LogManager.Instance.AddEvent(Time.time, $"Player;Death;PositionX;{gameObject.transform.position.x};PositionY;{gameObject.transform.position.y};PositionZ;{gameObject.transform.position.z};RotationX;{gameObject.transform.rotation.x};RotationY;{gameObject.transform.rotation.y};RotationZ;{gameObject.transform.rotation.z};RotationW;{gameObject.transform.rotation.w}");
         
         isDead = true;
-        playerShooting.DisableEffects();
+        // playerShooting.DisableEffects();
         anim.SetTrigger("Die");
         playerAudio.clip = deathClip;
         playerAudio.Play();
