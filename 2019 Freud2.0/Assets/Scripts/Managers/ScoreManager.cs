@@ -15,14 +15,14 @@ public class ScoreManager : MonoBehaviour
     int zeroLevel = 2;
     [SerializeField] private float zeroLevelWait = 105f;
 
-    UserManager.LanguageOption lang;
+    // UserManager.Language lang;
     public KeyCode keyP = KeyCode.P;
 
     void Awake ()
     {
         LogManager.logManager.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
 
-        lang = UserManager.lang;
+        // lang = UserManager.lang;
 
         text = GetComponent<Text>();
 

@@ -18,7 +18,7 @@ public class ManageScoreBoard : MonoBehaviour
 	public KeyCode keyR = KeyCode.R;
 	public KeyCode keyS = KeyCode.S;
 	
-	string pathScores;
+	string pathScores = Path.Combine(UserManager.Instance.GetUserPath(), "Scores.csv");
 	Dictionary<int, List<string>> bestPlayers = new Dictionary<int, List<string>> ();
 
 	string tagIndestructible = "DontDestroyObject";
@@ -46,22 +46,22 @@ public class ManageScoreBoard : MonoBehaviour
 		string namePlayer = UserManager.userManager.GetUserName();
 		int scorePlayer = UserManager.userManager.GetCumulatedScore();
 
-		if(UserManager.lang == UserManager.LanguageOption._English)
+		if(UserManager.Instance.language == UserManager.Language.English)
 		{
 			closeText = String.Format("<color=red>Your name: {0}.\n Your score: {1}.\n</color> The game will end in: ", namePlayer, scorePlayer);
 		}
 
-		else if(UserManager.lang == UserManager.LanguageOption._Polish)
+		else if(UserManager.Instance.language == UserManager.Language.Polish)
 		{
 			closeText = String.Format("<color=red>Twoja nazwa: {0}.\n Twój wynik: {1}.\n</color> Gra zakończy się za: ", namePlayer, scorePlayer);
 		}
 
-		ReadBestPlayers();
-		AddNewPlayer(namePlayer, scorePlayer);
-		PrintBestPlayers();
-		UserManager.userManager.ScoreZero();
+		ReadBestPlayers(UserManager.Instance.language);
+		AddNewPlayer(namePlayer, scorePlayer, UserManager.Instance.language);
+		PrintBestPlayers(UserManager.Instance.language);
+		UserManager.userManager.ResetScore();
 		LogManager.logManager.AddEvent(Time.time, "ScoreBoard;Show");
-		WriteBestPlayers();
+		WriteBestPlayers(UserManager.Instance.language);
 
 		
 	}
@@ -105,7 +105,7 @@ public class ManageScoreBoard : MonoBehaviour
 		Destroy(GameObject.FindWithTag(tagBITalino));
 	}
 
-	void ReadBestPlayers()
+	void ReadBestPlayers(UserManager.Language lang)
 	{
 		if (File.Exists(pathScores))
 		{
@@ -132,7 +132,7 @@ public class ManageScoreBoard : MonoBehaviour
 	}
 
 
-	void AddNewPlayer(string cN, int cS)
+	void AddNewPlayer(string cN, int cS, UserManager.Language lang)
 	{
 	    // F2
 		// bool bitalinoUse = BitalinoController.bitalinoController.bitalinoUse;
@@ -140,7 +140,7 @@ public class ManageScoreBoard : MonoBehaviour
 		string currentName = cN; // + " (" + use + ")";     // F2
 		int currentScore = cS;
 
-		if (!bestPlayers.ContainsKey(currentScore))
+		if (!bestPlayers.ContainsKey(currentScore) || lang != UserManager.Instance.language)
 		{
 			List<string> players = new List<string> ();
 			players.Add(currentName);
@@ -158,7 +158,7 @@ public class ManageScoreBoard : MonoBehaviour
 	}
 
 
-	void PrintBestPlayers()
+	void PrintBestPlayers(UserManager.Language lang)
 	{
 		string bests = "";
 		int i = 0;
@@ -180,7 +180,7 @@ public class ManageScoreBoard : MonoBehaviour
 	}
 
 
-	void WriteBestPlayers()
+	void WriteBestPlayers(UserManager.Language lang)
 	{
 		if(File.Exists(pathScores))
 		{
@@ -188,7 +188,7 @@ public class ManageScoreBoard : MonoBehaviour
 		}
 
 		StreamWriter writer = new StreamWriter(pathScores);
-
+        
 		List<int> keyList = bestPlayers.Keys.ToList();
 		foreach (int key in keyList)
 		{
@@ -204,7 +204,7 @@ public class ManageScoreBoard : MonoBehaviour
 			writer.WriteLine(line);
 		}
 
-		writer.Close();
+		writer.Dispose();
 	}
 
 	IEnumerator LoseTime()

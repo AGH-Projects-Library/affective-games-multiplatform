@@ -21,11 +21,11 @@ public class AffectiveEnemyManager : MonoBehaviour
     private float alertTime = 5f;
     private string alertMessageNonAffectivePl = "Nadchodzą kolejne potwory!\nUważaj!";
     private string alertMessageNonAffectiveEng = "More and more monsters are coming!\nWatch out!";
-    private string alertMessageNonAffective = "";
+    private string alertMessageNonAffective = UserManager.Instance.language == UserManager.Language.English ? alertMessageNonAffectiveEng : alertMessageNonAffectivePl;
 
     private void Awake()
     {
-        alertMessageNonAffective = UserManager.lang.Equals(UserManager.LanguageOption._English) ? alertMessageNonAffectiveEng : alertMessageNonAffectivePl;
+        alertMessageNonAffective = UserManager.Instance.language == UserManager.Language.English ? alertMessageNonAffectiveEng : alertMessageNonAffectivePl;
     }
 
     private void Start() => InvokeRepeating("Spawn", invokeTime, spawnTime);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ManageEnd : MonoBehaviour {
     [Header("UI")]
@@ -26,7 +27,7 @@ public class ManageEnd : MonoBehaviour {
 	[SerializeField] private string nameScoreBoard = "ScoreBoard";
 
 	private int timeCD;
-	private UserManager.LanguageOption currentLang;
+	private UserManager.Language currentLang = UserManager.Instance.language;
 
 	// Backing for displaying countdown
 	string currentTimeLabel;
@@ -34,8 +35,8 @@ public class ManageEnd : MonoBehaviour {
 	 void Awake()
 	{
 		// Init language/text labels
-		currentLang = UserManager.lang;
-		currentTimeLabel = (currentLang == UserManager.LanguageOption._English) ? timeLabelENG : timeLabelPL;
+		currentLang = UserManager.Instance.language;
+		currentTimeLabel = (currentLang == UserManager.Language.English) ? timeLabelENG : timeLabelPL;
 
 		// Countdown
 		timeCD = (int)timeToStart;
@@ -59,9 +60,9 @@ public class ManageEnd : MonoBehaviour {
     {   
         // Fire event for editor wiring
         OnScoreBoardRequested?.Invoke();
-        if (currentLang != UserManager.lang)
+        if (currentLang != UserManager.Instance.language)
         {
-            UpdateLanguage();
+            UpdateLanguage(UserManager.Instance.language);
         }
         // Fallback if no listeners wired: load directly
         if (OnScoreBoardRequested == null || OnScoreBoardRequested.GetPersistentEventCount() == 0)
@@ -70,10 +71,10 @@ public class ManageEnd : MonoBehaviour {
         }
 	}
 
-    private void UpdateLanguage()
+    private void UpdateLanguage(UserManager.Language lang)
     {
-        currentLang = UserManager.lang;
-        currentTimeLabel = (currentLang == UserManager.LanguageOption._English) ? timeLabelENG : timeLabelPL;
+        currentLang = lang;
+        currentTimeLabel = (currentLang == UserManager.Language.English) ? timeLabelENG : timeLabelPL;
         textCD.text = currentTimeLabel + timeCD + "s";
     }
 

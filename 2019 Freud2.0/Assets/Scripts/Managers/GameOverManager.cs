@@ -11,7 +11,6 @@ public class GameOverManager : MonoBehaviour
     
     [SerializeField] private string textGOvPL = "Przegrałeś!\nRestart poziomu za: ";
     [SerializeField] private string textGOvENG = "You lost!\nThe level will restart in: ";
-    [SerializeField] private UserManager.LanguageOption lang;
 
     Animator anim;
     [SerializeField] private string animationName = "GameOver";
@@ -28,7 +27,7 @@ public class GameOverManager : MonoBehaviour
 
     private string GetGameOverText()
     {
-        return lang == UserManager.LanguageOption._Polish ? textGOvPL : textGOvENG;
+        return UserManager.Instance.language == UserManager.Language.Polish ? textGOvPL : textGOvENG;
     }
 
 
@@ -44,7 +43,7 @@ public class GameOverManager : MonoBehaviour
 
     private void UpdateScoreAndRestartLevel()
     {
-        UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
+        UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
         LogManager.logManager.AddEvent(Time.time, "Score;PlayerDeath;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + ScoreManager.score);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

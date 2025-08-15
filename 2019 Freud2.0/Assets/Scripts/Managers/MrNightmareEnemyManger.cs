@@ -18,7 +18,7 @@ public class MrNightmareEnemyManager : MonoBehaviour
 
     [field: SerializeField] public float AlertTime { get; private set; } = 5f;
     [SerializeField] private string[] alertMessages = { "Przyzwano sojuszników! Uważaj!", "Supporters are coming! Watch out!" };
-    private string alertMessage;
+    private string alertMessage = UserManager.Instance.language == UserManager.Language.English ? alertMessages[1] : alertMessages[0];
 
     [SerializeField] private List<float> timers = new List<float> { 0f, 0f, 0f, 0f };
 
@@ -72,7 +72,7 @@ public class MrNightmareEnemyManager : MonoBehaviour
         }
     }
 
-    private void Awake() => alertMessage = UserManager.lang.Equals(UserManager.LanguageOption._English) ? alertMessages[1] : alertMessages[0];
+    private void Awake() => alertMessage = UserManager.Instance.language == UserManager.Language.English ? alertMessages[1] : alertMessages[0];
 
     private bool ShouldSpawnHardEnemies()
     {
@@ -82,9 +82,9 @@ public class MrNightmareEnemyManager : MonoBehaviour
     private void SpawnHardEnemies()
     {
         affectiveSpawnHardFlag = true;
-        affectiveEnemyManager.invokeTime = 0f;
-        affectiveEnemyManager.affectiveSpawnTimeHard = (int)Time.timeSinceLevelLoad;
-        affectiveEnemyManager.affectiveSpawnTimeHardMax = (int)Time.timeSinceLevelLoad + 20;
+        // affectiveEnemyManager.invokeTime = 0f;
+        // affectiveEnemyManager.affectiveSpawnTimeHard = (int)Time.timeSinceLevelLoad;
+        // affectiveEnemyManager.affectiveSpawnTimeHardMax = (int)Time.timeSinceLevelLoad + 20;
     }
 
     private bool ShouldSpawnEnemiesAtLevel3()

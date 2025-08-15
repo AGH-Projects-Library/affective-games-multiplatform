@@ -37,12 +37,10 @@ public class ManageIntroduction : MonoBehaviour {
 	public float timeWait = 1f;
 	int timeCD;
 	string txtTime = "";
-	// language tracking
-	UserManager.LanguageOption lang;
  
-	[SerializeField] public LanguageOption currentLang;
+	[SerializeField] public Language currentLang;
 	[System.Serializable]
-	public enum LanguageOption { English, Polish }
+	public enum Language { English, Polish }
 	// Expose a couple of helper for editor wiring
 	public UnityEvent OnCalibrationSkip;
 
@@ -66,82 +64,79 @@ public class ManageIntroduction : MonoBehaviour {
 
         // Log start load
         LogManager.logManager.AddEvent(Time.time, "Scene;Load;" + SceneManager.GetActiveScene().buildIndex);
-
-        // initial language
-        lang = UserManager.lang;
-        ChangeLanguage();
+        
+        // ChangeLanguage();
     }
 
-    void Update() 
-    {
-        if(Input.GetButtonDown (fireButton2)) // use public mapping for Fire2
-        {
-            LogManager.logManager.AddEvent(Time.time, "Key;X");
-            lang = UserManager.LanguageOption._English;
-            UserManager.lang = lang;
-            ChangeLanguage();
-            OnLanguageChanged?.Invoke();
-        }
-
-        if(Input.GetButtonDown (fireButton3)) // use public mapping for Fire3
-        {
-            LogManager.logManager.AddEvent(Time.time, "Key;O");
-            lang = UserManager.LanguageOption._Polish;
-            UserManager.lang = lang;
-            ChangeLanguage();
-            OnLanguageChanged?.Invoke();
-        }
-
-        if (Input.GetKeyDown(keyS)) // use public key binding for S
-		{
-            LogManager.logManager.AddEvent(Time.time, "Key;S");
-			LoadLvl0();
-		}
-
-        // Auto-load into lvl 0 after countdown
-        if (CheckIfTimeToStartElapsed()) LoadLvl0();
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			LogManager.logManager.AddEvent(Time.time, "Key;Escape");
-			Application.Quit(); // ignored in UnityEditor
-			// EditorApplication.isPlaying = false;
-		}
-
-        if (lang != UserManager.lang)
-        {
-            lang = UserManager.lang;
-            ChangeLanguage();
-            OnLanguageChanged?.Invoke();
-        }
-    }
-
-    void ChangeLanguage()
-    {
-        switch(lang)
-        {
-            case UserManager.LanguageOption._English:
-            {
-                textShowed.text = welcomeTextLabelENG;
-                currentLang = UserManager.LanguageOption._English;
-                currentLang = UserManager.LanguageOption._English;
-                currentTimeLabel = timeLabelENG;
-                txtTimeENG = timeLabelENG;
-                // time label for countdown
-                // If you want to update any other UI texts, set them here
-                break;
-            }
-
-            case UserManager.LanguageOption._Polish:
-            {
-                textShowed.text = welcomeTextLabelPL;
-                currentLang = UserManager.LanguageOption._Polish;
-                currentTimeLabel = timeLabelPL;
-                txtTimePL = timeLabelPL;
-                break;
-            }
-        }
-    }
+  //   void Update() 
+  //   {
+  //       if(Input.GetButtonDown (fireButton2)) // use public mapping for Fire2
+  //       {
+  //           LogManager.logManager.AddEvent(Time.time, "Key;X");
+  //           // lang = UserManager.Language.English;
+  //           UserManager.Instance.language = lang;
+  //           ChangeLanguage();
+  //           OnLanguageChanged?.Invoke();
+  //       }
+  //
+  //       if(Input.GetButtonDown (fireButton3)) // use public mapping for Fire3
+  //       {
+  //           LogManager.logManager.AddEvent(Time.time, "Key;O");
+  //           // lang = UserManager.Language.Polish;
+  //           UserManager.Instance.language = lang;
+  //           ChangeLanguage();
+  //           OnLanguageChanged?.Invoke();
+  //       }
+  //
+  //       if (Input.GetKeyDown(keyS)) // use public key binding for S
+		// {
+  //           LogManager.logManager.AddEvent(Time.time, "Key;S");
+		// 	LoadLvl0();
+		// }
+  //
+  //       // Auto-load into lvl 0 after countdown
+  //       if (CheckIfTimeToStartElapsed()) LoadLvl0();
+  //
+  //       if (Input.GetKeyDown(KeyCode.Escape))
+		// {
+		// 	LogManager.logManager.AddEvent(Time.time, "Key;Escape");
+		// 	Application.Quit(); // ignored in UnityEditor
+		// 	// EditorApplication.isPlaying = false;
+		// }
+  //
+  //       if (lang != UserManager.Instance.language)
+  //       {
+  //           lang = UserManager.Instance.language;
+  //           ChangeLanguage();
+  //           OnLanguageChanged?.Invoke();
+  //       }
+  //   }
+  //
+  //   void ChangeLanguage()
+  //   {
+  //       switch(UserManager.Instance.language)
+  //       {
+  //           case UserManager.Language.English:
+  //           {
+  //               textShowed.text = welcomeTextLabelENG;
+  //               currentLang = UserManager.Language.English;
+  //               currentTimeLabel = timeLabelENG;
+  //               txtTimeENG = timeLabelENG;
+  //               // time label for countdown
+  //               // If you want to update any other UI texts, set them here
+  //               break;
+  //           }
+  //   
+  //           case UserManager.Language.Polish:
+  //           {
+  //               textShowed.text = welcomeTextLabelPL;
+  //               currentLang = UserManager.Language.Polish;
+  //               currentTimeLabel = timeLabelPL;
+  //               txtTimePL = timeLabelPL;
+  //               break;
+  //           }
+  //       }
+  //   }
 
 	// Call to advance to the gameplay after intro
 	public void LoadTutorial ()

@@ -24,38 +24,38 @@ public class ManageZeroLvl : MonoBehaviour
 	string tagTurnOff = "TurnOff";
 	GameObject [] elementsHUD;
 
-	UserManager.LanguageOption lang;
+	UserManager.Language lang = UserManager.Instance.language;
 
 	void Awake () 
 	{
 		timer -= startTime;
 		i = 0;
 
-		lang = UserManager.lang;
+		lang = UserManager.Instance.language;
 
-        if (lang.Equals(UserManager.LanguageOption._English))
+        if (lang == UserManager.Language.English)
         {
-            alerts.Add("Hello, it’s us again! \nWe’ll explain some things to you.");
+            alerts.Add("Hello, it's us again! \nWe'll explain some things to you.");
             alerts.Add("This element indicates your health.");
             alerts.Add("This one shows your score.");
             alerts.Add("And here you can see your Superpower level.\nBut more on this later.");
             alerts.Add("We now unlock your movement.\nUse the analogue sticks!");
             alerts.Add("Left stick is for movement, \nright is for turning around.");
-            alerts.Add("Go on, get moving! \nJust don’t break anything!");
+            alerts.Add("Go on, get moving! \nJust don't break anything!");
             alerts.Add("In order to collect points you can pick up\n yellow shiny stars. \nJust walk through them.");
             alerts.Add("You can also kill the enemies.");
             alerts.Add("Just press \nR2 on the back of the game pad (right trigger). \nTo finish them off, shoot a few times.");
-            alerts.Add("Remember, it’s all in your head. \nYou’ll never run out of ammo.");
+            alerts.Add("Remember, it's all in your head. \nYou'll never run out of ammo.");
             alerts.Add("You get less points for stars than \nfor killing the enemies.");
             alerts.Add("And pay attention to the score. \nIt keeps changing, you know.");
             alerts.Add("To get to the next level, \nyou need to collect required points.");
-            alerts.Add("We won’t tell you how many exactly, though.");
+            alerts.Add("We won't tell you how many exactly, though.");
             alerts.Add("To complete the training, collect all stars \nor kill all enemies.");
             alerts.Add("These ones are harmless. \nBut you better watch out for the real ones!");
             alerts.Add("The darker they are,\nthe stronger they hit you.");
             alerts.Add("Good luck and see you soon!");
         }
-        else if (lang.Equals(UserManager.LanguageOption._Polish))
+        else if (lang == UserManager.Language.Polish)
         {
             alerts.Add("Cześć, to znowu my!\nWyjaśnimy Ci kilka kwestii.");
 			alerts.Add("Ten element wskazuje Twoje życie.");
@@ -105,11 +105,11 @@ public class ManageZeroLvl : MonoBehaviour
 			elementsHUD[2].GetComponent<Text>().text = "0";
 
 			// F2
-			// if (lang.Equals(UserManager.LanguageOption._English))
+			// if (lang.Equals(UserManager.Language._English))
 			// {
 			// 	elementsHUD[2].GetComponent<Text>().text = "TRAGIC";
 			// }
-			// else if (lang.Equals(UserManager.LanguageOption._Polish))
+			// else if (lang.Equals(UserManager.Language._Polish))
 			// {
 			// 	elementsHUD[2].GetComponent<Text>().text = "TRAGICZNIE";
 			// }
@@ -143,7 +143,7 @@ public class ManageZeroLvl : MonoBehaviour
 
 	void ShowAlerts(float time, string alert)
 	{
-		if (timer > startTime && !used)
+		if (timer > startTime && !used && UserManager.Instance.language == lang)
 		{
 			LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + time + ";Content;" + alert.Replace("\n", ""));
 			StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(time, alert));

@@ -16,10 +16,10 @@ public class ManageTutorials : MonoBehaviour
     public KeyCode skipTutorialKey = KeyCode.U;
     public KeyCode quitKey = KeyCode.Escape;
     
-    [SerializeField] private List<string> texts = new List<string> ();
+    [SerializeField] private List<string> texts = new List<string>();
     int index;
 
-    [SerializeField] private UserManager.LanguageOption lang;
+    [SerializeField] private UserManager.Language lang = UserManager.Instance.language;
 
     string txtNextButtonPl = "Następny";
     string txtPreviousButtonPl = "Poprzedni";
@@ -38,8 +38,8 @@ public class ManageTutorials : MonoBehaviour
 
     private void Awake()
     {
-        LogManager.logManager.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
-        lang = UserManager.lang;
+        LogManager.logManager.AddEvent(Time.time, "Scene;Load;ID;"+SceneManager.GetActiveScene().buildIndex);
+        lang = UserManager.Instance.language;
 
         timeCD = (int)timeToStart;
 	    StartCoroutine("LoseTime");
@@ -47,7 +47,7 @@ public class ManageTutorials : MonoBehaviour
         this.index = 0;
 
         texts = new List<string> ();
-        int currentSceneNumber = SceneManager.GetActiveScene().buildIndex;
+        int currentSceneNumber = SceneManager.GetActiveScene().buildIndex; 
         UpdateTexts(currentSceneNumber);
         textShowed.text = texts[this.index];
     }
@@ -110,7 +110,7 @@ public class ManageTutorials : MonoBehaviour
 
     private void UpdateTexts(int lvl)
     {
-        if(lang.Equals(UserManager.LanguageOption._Polish))
+        if(UserManager.Instance.language == UserManager.Language.Polish)
         {
             txtTime = txtTimePL;
 
@@ -146,7 +146,7 @@ public class ManageTutorials : MonoBehaviour
             }
         }
 
-        else if(lang.Equals(UserManager.LanguageOption._English))
+        else if(UserManager.Instance.language == UserManager.Language.English)
         {
             txtTime = txtTimeENG;
 
@@ -185,7 +185,7 @@ public class ManageTutorials : MonoBehaviour
 
     private bool IsTimeToStartNextLevel()
     {
-        return timeToStart < Time.timeSinceLevelLoad;
+        return timeToStart < Time.timeSinceLevelLoad && UserManager.Instance.language == lang;
     }
 
     private IEnumerator LoseTime()

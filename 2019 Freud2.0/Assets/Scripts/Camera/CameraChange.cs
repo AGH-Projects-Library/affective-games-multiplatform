@@ -29,7 +29,7 @@ public class CameraChange : MonoBehaviour {
 	bool dontChange;
 
 	void Awake() {
-		SetLanguageStrings();
+		SetLanguageStrings(UserManager.Instance.language);
 		elementsHUD = GameObject.FindGameObjectsWithTag(turnOffTag);
 		currentSceneNumber = SceneManager.GetActiveScene().buildIndex;
 		timer = cameraTime - waitBeginTime;
@@ -67,15 +67,16 @@ public class CameraChange : MonoBehaviour {
 		imageCrossHair.gameObject.GetComponent<Image>().enabled = fps;
 	}
 
-	void SetLanguageStrings() {
-		if (UserManager.lang.Equals(UserManager.LanguageOption._English)) {
+	void SetLanguageStrings(UserManager.Language lang) {
+		if (lang == UserManager.Language.English) {
 			firstAlertFPS = firstAlertFPSEng;
 			secondAlertFPS = secondAlertFPSEng;
 			thirdAlertFPS = thirdAlertFPSEng;
 			firstAlert = firstAlertEng;
 			secondAlert = secondAlertEng;
 			thirdAlert = thirdAlertEng;
-		} else if (UserManager.lang.Equals(UserManager.LanguageOption._Polish)) {
+		}
+		else if (lang == UserManager.Language.Polish) {
 			firstAlertFPS = firstAlertFPSPl;
 			secondAlertFPS = secondAlertFPSPl;
 			thirdAlertFPS = thirdAlertFPSPl;

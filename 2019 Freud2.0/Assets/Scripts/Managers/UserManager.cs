@@ -9,7 +9,7 @@ public class UserManager : MonoBehaviour
     public static UserManager Instance { get; private set; }
     public enum Language { English, Polish };
 
-    [SerializeField] private Language _language = Language.Polish;
+    [SerializeField] public Language language = Language.Polish;
     string userName;
     string userID;
     string persDataPath;
@@ -69,7 +69,7 @@ public class UserManager : MonoBehaviour
     public string GetUserName() => userName;
     public string GetUserNumber() => userID;
     public string GetUserPath() => userPath;
-    public void ChangeLanguage(int x) => _language = (Language)x;
+    public void ChangeLanguage(int x) => language = (Language)x;
     private bool IsGameEnded() => Time.time > 1200;
 
     private System.Collections.Generic.List<String> _stimuliMinus = new System.Collections.Generic.List<string>();
