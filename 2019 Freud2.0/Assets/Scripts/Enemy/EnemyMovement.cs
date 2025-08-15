@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class EnemyMovement : MonoBehaviour
 {
-    Transform player;
-    PlayerHealth playerHealth;
-    EnemyHealth enemyHealth;
-    UnityEngine.AI.NavMeshAgent nav;
-
-    int zeroLvlIndex = 2;
-
+    public float speed = 3f;
+    private Transform player;
+    private PlayerHealth playerHealth;
+    private EnemyHealth enemyHealth;
+    private UnityEngine.AI.NavMeshAgent nav;
 
     void Awake ()
     {
@@ -20,33 +17,18 @@ public class EnemyMovement : MonoBehaviour
 
         nav = GetComponent <UnityEngine.AI.NavMeshAgent> ();
 
-        if (SceneManager.GetActiveScene().buildIndex == zeroLvlIndex)
-        {
-            nav.speed = 0f; // should not move in the begining of tutorial
-        }
-        else 
-        {
-            nav.speed = 3f;
-        }
+        nav.speed = SceneManager.GetActiveScene().buildIndex == 2 ? 0f : speed;
     }
-
 
     void Update ()
     {
-
-        if(enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
-        {
-            nav.SetDestination (player.position);
-        }
-        
+        if (IsEnemyAndPlayerAlive())
+            nav.SetDestination(player.position);
         else
-        {
-           nav.enabled = false;
-        }
+            nav.enabled = false;
     }
 
-    public void SetSpeed(float x)
-    {
-        nav.speed = x;
-    }
+    private bool IsEnemyAndPlayerAlive() => enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0;
+
+    public void SetSpeed(float x) => nav.speed = x;
 }

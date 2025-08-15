@@ -1,60 +1,45 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CamMouseLook : MonoBehaviour {
+    public float turnSpeed = 3f;
+    public float limitUp = 30f;
+    public float limitDown = 30f;
+    public float limitThree = 60f;
+    private GameObject parentObj;
+    private Vector3 angles;
 
-    public float speed = 5f;
-    public float turn = 3f;
-    public float limit_up = 30;
-    public float limit_down = 30;
-    public float limit_three = 60;
-    GameObject parentObj;
-
-    // F2 
-    // Rigidbody otherRb;
-    Vector3 angles;
- 
-    void Awake () 
-    {
+    void Awake() {
         Cursor.lockState = CursorLockMode.Locked;
         parentObj = this.transform.parent.gameObject;
-        
-        // F2
-        // otherRb = parentObj.GetComponent <Rigidbody> ();
-        // float xstart = Input.mousePosition.x;
-        // float ystart = Input.mousePosition.y;
     }
 
-    void FixedUpdate () 
-    {
+    void FixedUpdate() {
         float xturn = Input.GetAxis("Mouse X");
-        float yturn = Input.GetAxis ("Mouse Y");
+        float yturn = Input.GetAxis("Mouse Y");
 
-        parentObj.transform.Rotate (0f, xturn * turn, 0f);
-        if (angles.x <= limit_up && angles.x >= limit_down) 
-        {
-            transform.Rotate (-yturn * turn, 0f, 0f);
+        parentObj.transform.Rotate(0f, xturn * turnSpeed, 0f);
+
+        if (IsWithinLimits(angles.x)) {
+            transform.Rotate(-yturn * turnSpeed, 0f, 0f);
         }
-        else if(angles.x < limit_down) 
-        {
-            angles.x = limit_down + 1;
+        else if (angles.x < limitDown) {
+            angles.x = limitDown + 1;
             transform.localEulerAngles = angles;
         }
-
-        else if (angles.x < limit_three) 
-        {
-            angles.x = limit_up - 1;
-            transform.localEulerAngles= angles;
+        else if (angles.x < limitThree) {
+            angles.x = limitUp - 1;
+            transform.localEulerAngles = angles;
         }
-
-        else
-        {
-            angles.x = limit_down + 1;
+        else {
+            angles.x = limitDown + 1;
             transform.localEulerAngles = angles;
         }
 
         angles = transform.localEulerAngles;
+    }
 
+    private bool IsWithinLimits(float angle) {
+        return angle <= limitUp && angle >= limitDown;
     }
 }

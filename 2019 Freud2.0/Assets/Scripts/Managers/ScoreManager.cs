@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using UnityEngine.SceneManagement;
-using UnityEditor;
+
 public class ScoreManager : MonoBehaviour
 {
-    public static int score;
-    public int scoreToLvlUp = 300;
+    public int score;
+    [SerializeField] private int scoreToLevelUp = 300;
 
     Text text;
 
@@ -14,7 +13,7 @@ public class ScoreManager : MonoBehaviour
     float waitTime = 3f;
 
     int zeroLevel = 2;
-    float zeroLevelWait = 105f;
+    [SerializeField] private float zeroLevelWait = 105f;
 
     UserManager.LanguageOption lang;
     public KeyCode keyP = KeyCode.P;
@@ -25,30 +24,20 @@ public class ScoreManager : MonoBehaviour
 
         lang = UserManager.lang;
 
-        text = GetComponent <Text> ();
-        
-        // F2
-        // if(lang.Equals(UserManager.LanguageOption._English))
-        // {
-        //     text.text = "TRAGIC";
-        // }
-        // else if (lang.Equals(UserManager.LanguageOption._Polish))
-        // {
-        //     text.text = "TRAGICZNIE";
-        // }
+        text = GetComponent<Text>();
 
         if (SceneManager.GetActiveScene().buildIndex > 2)
         {
-            scoreToLvlUp = Random.Range((scoreToLvlUp - 100), scoreToLvlUp);
-            LogManager.logManager.AddEvent(Time.time, "Score;ToLevelUp;Value;" + scoreToLvlUp);
+            scoreToLevelUp = Random.Range((scoreToLevelUp - 100), scoreToLevelUp);
+            LogManager.logManager.AddEvent(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
         }
 
         score = 0;
     }
 
-    void Update ()
+    void Update()
     {
-        if(Input.GetKey(keyP))
+        if (Input.GetKey(keyP))
         {
             LogManager.logManager.AddEvent(Time.time, "Key;P");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -56,106 +45,56 @@ public class ScoreManager : MonoBehaviour
 
         text.text = score.ToString();
 
-        // F2
-        // string current = text.text;
-
-        // if(score < (1 * scoreToLvlUp / 5))
-        // {
-        //     if(lang.Equals(UserManager.LanguageOption._English))
-        //     {
-        //         text.text = "TRAGIC";
-        //     }
-        //     else if (lang.Equals(UserManager.LanguageOption._Polish))
-        //     {
-        //         text.text = "TRAGICZNIE";
-        //     }   
-        // }
-        
-        // else if(score < (2 * scoreToLvlUp / 5))
-        // {
-        //     if(lang.Equals(UserManager.LanguageOption._English))
-        //     {
-        //         text.text = "POORLY";
-        //     }
-        //     else if (lang.Equals(UserManager.LanguageOption._Polish))
-        //     {
-        //         text.text = "KIEPSKO";
-        //     }   
-        // }
-
-        // else if(score < (3 * scoreToLvlUp / 5))
-        // {
-        //     if(lang.Equals(UserManager.LanguageOption._English))
-        //     {
-        //         text.text = "DECENTLY";
-        //     }
-        //     else if (lang.Equals(UserManager.LanguageOption._Polish))
-        //     {
-        //         text.text = "PRZYZWOICIE";
-        //     }   
-        // }
-
-        // else if(score < (4 * scoreToLvlUp / 5))
-        // {
-        //     if(lang.Equals(UserManager.LanguageOption._English))
-        //     {
-        //         text.text = "GREAT";
-        //     }
-        //     else if (lang.Equals(UserManager.LanguageOption._Polish))
-        //     {
-        //         text.text = "WSPANIALE";
-        //     }   
-        // }
-
-        // else if(score < (5 * scoreToLvlUp / 5))
-        // {
-        //     if(lang.Equals(UserManager.LanguageOption._English))
-        //     {
-        //         text.text = "FANTASTIC";
-        //     }
-        //     else if (lang.Equals(UserManager.LanguageOption._Polish))
-        //     {
-        //         text.text = "FANTASTYCZNIE";
-        //     }   
-        // }
-
-        // else
-        // {
-        if (SceneManager.GetActiveScene().buildIndex != zeroLevel && score >= scoreToLvlUp)
+        if (ShouldLevelUp())
         {
-            GameObject [] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach (GameObject enemy in enemies)
-            {
-                EnemyHealth enemyHealth = enemy.GetComponent <EnemyHealth> ();
-                enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
-            }
+            KillEnemiesAndPickups();
 
             timer += Time.deltaTime;
 
             if(timer > waitTime)
             {
-                UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, score);
-                LogManager.logManager.AddEvent(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + ScoreManager.score);
+                UpdateScore(SceneManager.GetActiveScene().buildIndex, score);
+                LogManager.logManager.AddEvent(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
         }
 
-        if (SceneManager.GetActiveScene().buildIndex == zeroLevel && Time.timeSinceLevelLoad > zeroLevelWait)
+        if (ShouldLoadNextLevel())
         {
-            GameObject [] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            GameObject [] pickups = GameObject.FindGameObjectsWithTag("PickUp");
-            
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            GameObject[] pickups = GameObject.FindGameObjectsWithTag("PickUp");
+
             if (enemies.Length == 0 || pickups.Length == 0)
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
-
         }
+    }
 
-        // F2
-        // if (!current.Equals(text.text))
-        // {
-        //     LogManager.logManager.AddEvent(Time.time, "TextScore;ChangeTo;" + text.text);
-        // }
+    private bool ShouldLevelUp()
+    {
+        return SceneManager.GetActiveScene().buildIndex != zeroLevel && score >= scoreToLevelUp;
+    }
+
+    private bool ShouldLoadNextLevel()
+    {
+        return SceneManager.GetActiveScene().buildIndex == zeroLevel && Time.timeSinceLevelLoad > zeroLevelWait;
+    }
+
+    private void UpdateScore(int level, int newScore)
+    {
+        UserManager.userManager.ScoreUpdate(level, newScore);
+    }
+
+    private void KillEnemiesAndPickups()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] pickups = GameObject.FindGameObjectsWithTag("PickUp");
+
+        foreach (GameObject enemy in enemies)
+        {
+            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
+        }
     }
 }

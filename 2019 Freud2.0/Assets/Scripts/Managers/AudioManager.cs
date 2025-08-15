@@ -5,40 +5,29 @@ using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour 
 {
-	public static AudioManager audioManager;
+    public static AudioManager audioManager;
+    private bool flagChecked;
 
-	bool flagChecked = false;
+    private void Awake() => MakeThisTheOnlyAudioManager();
 
-     void Awake () 
-	 {
-         MakeThisTheOnlyAudioManager();
-     }
- 
-     void MakeThisTheOnlyAudioManager()
-	 {
+    private void MakeThisTheOnlyAudioManager()
+    {
+        if (audioManager == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            audioManager = this;
+        }
+        else if (audioManager != this)
+        {
+            Destroy (gameObject);
+        }
+    }
 
-         if(audioManager == null)
-		 {
-             DontDestroyOnLoad(gameObject);
-             audioManager = this;
-         }
-
-         else
-		 {
-             if(audioManager != this)
-			 {
-                 Destroy (gameObject);
-             }
-         }
-	}
-
-	void Update () 
-	{
-		if ((SceneManager.GetActiveScene().buildIndex >= 1) && !flagChecked)
-		{
-			// LogManager.logManager.AddEvent(Time.time, "BackgroundMusic;Start");
-			// gameObject.GetComponent<AudioSource>().enabled = true;
-			flagChecked = true;
-		}
-	}
+    private void Update() 
+    {
+        if ((SceneManager.GetActiveScene().buildIndex >= 1) && !flagChecked)
+        {
+            flagChecked = true;
+        }
+    }
 }

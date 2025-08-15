@@ -1,83 +1,53 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LogManager : MonoBehaviour
 {
-    public static LogManager logManager;
+    public static LogManager Instance { get; private set; }
 
-    string fileName = "events.csv";
+    [SerializeField] private string _fileName = "events.csv";
 
-    double t1 = 0f;
+    private double _startTime;
 
-    struct FmOEvent
+    private struct LogEvent
     {
-        float time;
+        public float Time;
         string eventType;
 
-        public FmOEvent(float t, string eT)
+        public LogEvent(float t, string eT)
         {
-            time = t;
+            Time = t;
             eventType = eT;
         }
-
-        public float GetTime()
-        {
-            return time;
-        }
-
-        public string GetEventType()
-        {
-            return eventType;
-        }
     }
 
-    List<FmOEvent> events = new List<FmOEvent>();
+    private List<LogEvent> _events = new List<LogEvent>();
 
-    void Awake () 
-	{
-        t1 = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    private void Awake()
+    { _startTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(); }
 
-        MakeThisTheOnlyDontDestroyManager();
-    }
- 
-    void MakeThisTheOnlyDontDestroyManager()
-	{
-        if(logManager == null)
-		{
-            DontDestroyOnLoad(gameObject);
-            logManager = this;
-        }
+    private void Start()
+    { MakeThisTheOnlyDontDestroyManager(); }
 
-        else
-		{
-            if(logManager != this)
-			{
-                Destroy (gameObject);
-            }
-        }
-	}
+    private bool IsSingleton()
+    { return Instance == null || Instance == this; }
 
-    void OnDestroy()
+    private void MakeThisTheOnlyDontDestroyManager()
     {
-        StreamWriter writer = File.AppendText(UserManager.userManager.GetUserPath() + fileName);
+        if (IsSingleton()) { DontDestroyOnLoad(gameObject); Instance = this; }
+        else { Destroy(gameObject); }
+    }
 
-        writer.WriteLine(t1.ToString() + ";" + "UnixTime");
-
-        foreach (FmOEvent e in events)
-        {
-            writer.WriteLine((e.GetTime()) + ";" + e.GetEventType());
-        }
-
+    private void OnDestroy()
+    {
+        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + _fileName);
+        writer.WriteLine(_startTime.ToString() + ";" + "UnixTime");
+        foreach (var e in _events) { writer.WriteLine(e.Time + ";" + e.eventType); }
         writer.Close();
     }
 
     public void AddEvent(float time, string eventType)
-    {
-        FmOEvent newEvent = new FmOEvent((time * 1000), eventType); // *1000 to get time in miliseconds
-        events.Add(newEvent);
-    }
+    { _events.Add(new LogEvent(time * 1000, eventType)); }
 }

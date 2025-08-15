@@ -2,10 +2,10 @@
 
 public class EnemyHealth : MonoBehaviour
 {
-    public int startingHealth = 100;
+    [SerializeField] private int startingHealth = 100;
     public int currentHealth;
-    public float sinkSpeed = 0.07f;
-    public int scoreValue = 10;
+    [SerializeField] private float sinkSpeed = 0.07f;
+    [SerializeField] private int scoreValue = 10;
     public AudioClip deathClip;
 
 
@@ -13,7 +13,7 @@ public class EnemyHealth : MonoBehaviour
     AudioSource enemyAudio;
     ParticleSystem hitParticles;
     CapsuleCollider capsuleCollider;
-    public bool isDead;
+    private bool isDead;
     bool isSinking;
 
     float destroyTime = 3f;
@@ -30,13 +30,9 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    void Update ()
-    {
-        if (isSinking)
-        {
-            transform.Translate (-Vector3.up * sinkSpeed * Time.deltaTime);
-        }
-    }
+    private void Update() { if (isSinking) transform.Translate(-Vector3.up * sinkSpeed * Time.deltaTime); }
+
+    private bool IsDead() => isDead;
 
     public void TakeDamageSuper (int amount)
     {
@@ -47,7 +43,7 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth -= amount;
 
-        if(currentHealth <= 0)
+        if(currentHealth <= 0 && !IsDead())
         {
             LogManager.logManager.AddEvent(Time.time, "Enemy;Death;By;SuperPower;ID;" + gameObject.GetInstanceID() + ";PositionX;" + gameObject.transform.position.x + ";PositionY;" + gameObject.transform.position.y + ";PositionZ;" + gameObject.transform.position.z + ";RotationX;" + gameObject.transform.rotation.x + ";RotationY;" + gameObject.transform.rotation.y + ";RotationZ;" + gameObject.transform.rotation.z + ";RotationW;" + gameObject.transform.rotation.w);
             TypicalDeath ();
@@ -55,7 +51,7 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    public void TakeDamageLvlEnd (int amount)
+    public void TakeDamageLevelEnd (int amount)
     {
         if(isDead)
             return;
@@ -64,7 +60,7 @@ public class EnemyHealth : MonoBehaviour
 
         currentHealth -= amount;
 
-        if(currentHealth <= 0)
+        if(currentHealth <= 0 && !IsDead())
         {
             LogManager.logManager.AddEvent(Time.time, "Enemy;Death;By;LevelEnd;ID;" + gameObject.GetInstanceID() + ";PositionX;" + gameObject.transform.position.x + ";PositionY;" + gameObject.transform.position.y + ";PositionZ;" + gameObject.transform.position.z + ";RotationX;" + gameObject.transform.rotation.x + ";RotationY;" + gameObject.transform.rotation.y + ";RotationZ;" + gameObject.transform.rotation.z + ";RotationW;" + gameObject.transform.rotation.w);
             Death ();
@@ -72,6 +68,8 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
+
+    private bool CanTakeDamage() => !IsDead();
 
     public void TakeDamage (int amount, Vector3 hitPoint)
     {
@@ -95,7 +93,7 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void TypicalDeath ()
+    private void TypicalDeath()
     {
         isDead = true;
 
@@ -106,7 +104,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    void Death ()
+    private void Death()
     {
         isDead = true;
 
@@ -116,7 +114,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
 
-    public void StartSinking ()
+    private void StartSinking()
     {
         GetComponent <UnityEngine.AI.NavMeshAgent> ().enabled = false;
         GetComponent <Rigidbody> ().isKinematic = true;
@@ -132,7 +130,7 @@ public class EnemyHealth : MonoBehaviour
         Destroy (gameObject, destroyTimeMax);
     }
 
-    public void AddScore()
+    private void AddScore()
     {
         ScoreManager.score += scoreValue;
         LogManager.logManager.AddEvent(Time.time, "Score;Update;Value;" + scoreValue);
