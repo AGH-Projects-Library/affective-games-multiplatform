@@ -13,8 +13,7 @@ public class ManageIntroduction : MonoBehaviour
     [SerializeField] private string fireButton3 = "Fire3";
     [SerializeField] private KeyCode keyS = KeyCode.S;
 
-    [SerializeField] private string keyWelcomeEng = "intro.welcome.eng";
-    [SerializeField] private string keyWelcomePl = "intro.welcome.pl";
+    [SerializeField] private string keyWelcome = "intro.welcome";
     [SerializeField] private string keyTimeLabel = "intro.timeLabel";
 
     [SerializeField] private float timeToStart = 30;
@@ -57,9 +56,7 @@ public class ManageIntroduction : MonoBehaviour
     void ChangeLanguage()
     {
         currentLang = LocalizationManager.Instance.CurrentLanguage;
-        string welcome = currentLang == GameLanguage.English ?
-            LocalizationManager.Instance.GetText(keyWelcomeEng) :
-            LocalizationManager.Instance.GetText(keyWelcomePl);
+        string welcome = LocalizationManager.Instance.GetText(keyWelcome);
         textShowed.text = welcome;
     }
 

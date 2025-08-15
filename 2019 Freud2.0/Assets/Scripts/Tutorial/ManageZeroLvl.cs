@@ -19,7 +19,7 @@ public class ManageZeroLvl : MonoBehaviour
     private List<string> alerts = new List<string>();
     private GameObject[] elementsHUD;
 
-    void Awake()
+    void Start()
     {
         timer -= startTime;
         i = 0;

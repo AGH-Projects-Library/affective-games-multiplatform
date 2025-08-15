@@ -23,7 +23,7 @@ public partial class LocalizationData : ScriptableObject
         return lang == GameLanguage.English ? entry.english : entry.polish;
     }
 
-    public void AddOrUpdate(string key, string english, string polish)
+    public void AddOrUpdate(string key, string polish, string english)
     {
         var entry = entries.Find(e => e.key == key);
         if (entry == null)

@@ -49,6 +49,7 @@
     <Compile Include="Assets\BITalino\Scripts\BITalino Unity\BitalinoSerialPort.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino C# SDK\BITalinoDevice.cs" />
     <Compile Include="Assets\Scripts\Managers\AffectiveEnemyManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\All Scripts Containing Localized Data.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino C# SDK\BITalinoFrameDecoder.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
     <Compile Include="Assets\Scripts\PickUp\PickUpCollect.cs" />
