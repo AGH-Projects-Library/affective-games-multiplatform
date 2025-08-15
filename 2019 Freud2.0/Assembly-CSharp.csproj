@@ -57,6 +57,9 @@
     <Compile Include="Assets\Scripts\Enemy\EnemyAttack.cs" />
     <Compile Include="Assets\Scripts\Managers\ImportantAlertManager.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino Unity\BlinkBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Localization\LocalizationManager.cs" />
+    <Compile Include="Assets\Scripts\Localization\LocalizationData.cs" />
+    <Compile Include="Assets\Scripts\Localization\LocalizationData.Populate.cs" />
     <Compile Include="Assets\Scripts\Managers\GameOverManager.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino C# SDK\IBITalinoCommunication.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino C# SDK\BITalinoCommunicationSocket.cs" />

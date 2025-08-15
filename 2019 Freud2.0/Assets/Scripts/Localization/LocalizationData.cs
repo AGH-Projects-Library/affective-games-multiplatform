@@ -1,0 +1,37 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+public enum GameLanguage { English, Polish }
+
+[System.Serializable]
+public class LocalizationEntry
+{
+    public string key;
+    [TextArea(2, 10)] public string english;
+    [TextArea(2, 10)] public string polish;
+}
+
+[CreateAssetMenu(fileName = "LocalizationData", menuName = "Localization/Data")]
+public partial class LocalizationData : ScriptableObject
+{
+    [SerializeField] private List<LocalizationEntry> entries = new List<LocalizationEntry>();
+
+    public string GetText(string key, GameLanguage lang)
+    {
+        var entry = entries.Find(e => e.key == key);
+        if (entry == null) return $"[MISSING:{key}]";
+        return lang == GameLanguage.English ? entry.english : entry.polish;
+    }
+
+    public void AddOrUpdate(string key, string english, string polish)
+    {
+        var entry = entries.Find(e => e.key == key);
+        if (entry == null)
+            entries.Add(new LocalizationEntry { key = key, english = english, polish = polish });
+        else
+        {
+            entry.english = english;
+            entry.polish = polish;
+        }
+    }
+}

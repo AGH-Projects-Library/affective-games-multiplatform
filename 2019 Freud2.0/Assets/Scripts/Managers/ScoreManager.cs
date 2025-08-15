@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
-    public int score;
+    public static int score;
     [SerializeField] private int scoreToLevelUp = 300;
 
     Text text;
@@ -20,7 +20,7 @@ public class ScoreManager : MonoBehaviour
 
     void Awake ()
     {
-        LogManager.logManager.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
+        LogManager.Instance.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
 
         // lang = UserManager.lang;
 
@@ -29,7 +29,7 @@ public class ScoreManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex > 2)
         {
             scoreToLevelUp = Random.Range((scoreToLevelUp - 100), scoreToLevelUp);
-            LogManager.logManager.AddEvent(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
+            LogManager.Instance.AddEvent(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
         }
 
         score = 0;
@@ -39,7 +39,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (Input.GetKey(keyP))
         {
-            LogManager.logManager.AddEvent(Time.time, "Key;P");
+            LogManager.Instance.AddEvent(Time.time, "Key;P");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
@@ -54,7 +54,7 @@ public class ScoreManager : MonoBehaviour
             if(timer > waitTime)
             {
                 UpdateScore(SceneManager.GetActiveScene().buildIndex, score);
-                LogManager.logManager.AddEvent(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
+                LogManager.Instance.AddEvent(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
         }
@@ -83,7 +83,7 @@ public class ScoreManager : MonoBehaviour
 
     private void UpdateScore(int level, int newScore)
     {
-        UserManager.userManager.ScoreUpdate(level, newScore);
+        UserManager.Instance.ScoreUpdate(level, newScore);
     }
 
     private void KillEnemiesAndPickups()

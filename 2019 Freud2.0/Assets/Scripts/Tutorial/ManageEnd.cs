@@ -1,92 +1,53 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
-public class ManageEnd : MonoBehaviour {
+public class ManageEnd : MonoBehaviour
+{
     [Header("UI")]
+    [SerializeField] private Text textCD;
 
-	public Text textCD;
-	// Key mappings
-	public KeyCode keyEscape = KeyCode.Escape;
-	public KeyCode keySkipToScoreBoard = KeyCode.T;
-    
-	// Editor-wirable events
-	public UnityEvent OnScoreBoardRequested = new UnityEvent();
+    [SerializeField] private KeyCode keyEscape = KeyCode.Escape;
+    [SerializeField] private KeyCode keySkipToScoreBoard = KeyCode.T;
+    [SerializeField] private UnityEvent OnScoreBoardRequested = new UnityEvent();
 
-	// Language/time display customization
-	[Tooltip("Text label shown before the countdown (English)")]
-	public string timeLabelENG = "Time to show results: ";
-	[Tooltip("Text label shown before the countdown (Polish)")]
-	public string timeLabelPL = "Czas za jaki pokażemy Ci wyniki: ";
+    [SerializeField] private string keyTimeLabel = "end.timeLabel";
 
-	// Publicly editable timing and scene-wiring
-	[SerializeField] private float timeToStart = 15f;
-	[SerializeField] private string nameScoreBoard = "ScoreBoard";
+    [SerializeField] private float timeToStart = 15f;
+    [SerializeField] private string nameScoreBoard = "ScoreBoard";
 
-	private int timeCD;
-	private UserManager.Language currentLang = UserManager.Instance.language;
+    private int timeCD;
 
-	// Backing for displaying countdown
-	string currentTimeLabel;
-
-	 void Awake()
-	{
-		// Init language/text labels
-		currentLang = UserManager.Instance.language;
-		currentTimeLabel = (currentLang == UserManager.Language.English) ? timeLabelENG : timeLabelPL;
-
-		// Countdown
-		timeCD = (int)timeToStart;
-		StartCoroutine(LoseTime());
-
-		LogManager.logManager.AddEvent(Time.time, "Load;Scene;ID" + SceneManager.GetActiveScene().buildIndex);
-	}
+    void Awake()
+    {
+        timeCD = (int)timeToStart;
+        StartCoroutine(LoseTime());
+    }
 
     void Update()
     {
-        if (CheckIfTimeToScoreBoard()) TriggerScoreBoard();
-        if (CheckIfEscapePressed()) Application.Quit();
-        if (CheckIfSkipToScoreBoard()) TriggerScoreBoard();
+        if (timeCD < 0) TriggerScoreBoard();
+        if (Input.GetKey(keyEscape)) Application.Quit();
+        if (Input.GetKeyDown(keySkipToScoreBoard)) TriggerScoreBoard();
     }
 
-    private bool CheckIfTimeToScoreBoard() => timeCD < 0;
-    private bool CheckIfEscapePressed() => Input.GetKey(keyEscape);
-    private bool CheckIfSkipToScoreBoard() => Input.GetKeyDown(keySkipToScoreBoard);
-
-    public void ShowScoreBoard() 
-    {   
-        // Fire event for editor wiring
-        OnScoreBoardRequested?.Invoke();
-        if (currentLang != UserManager.Instance.language)
-        {
-            UpdateLanguage(UserManager.Instance.language);
-        }
-        // Fallback if no listeners wired: load directly
-        if (OnScoreBoardRequested == null || OnScoreBoardRequested.GetPersistentEventCount() == 0)
-        {
-            SceneManager.LoadScene(nameScoreBoard);
-        }
-	}
-
-    private void UpdateLanguage(UserManager.Language lang)
+    public void TriggerScoreBoard()
     {
-        currentLang = lang;
-        currentTimeLabel = (currentLang == UserManager.Language.English) ? timeLabelENG : timeLabelPL;
-        textCD.text = currentTimeLabel + timeCD + "s";
+        OnScoreBoardRequested?.Invoke();
+        if (OnScoreBoardRequested.GetPersistentEventCount() == 0)
+            SceneManager.LoadScene(nameScoreBoard);
     }
 
     IEnumerator LoseTime()
-	{
-		while(true)
-		{
-            string txt = currentTimeLabel.Replace("Time to show results:", "Time:") + timeCD + "s";
-            LogManager.logManager.AddEvent(Time.time, "Game;End;CountDown;Text;ChangeTo;" + txt);
+    {
+        while (true)
+        {
+            string txt = LocalizationManager.Instance.GetText(keyTimeLabel) + timeCD + "s";
+            textCD.text = txt;
+            timeCD -= 1;
             yield return new WaitForSeconds(1);
-			textCD.text = txt;
-			timeCD -= 1;
-		}
-	}
+        }
+    }
 }

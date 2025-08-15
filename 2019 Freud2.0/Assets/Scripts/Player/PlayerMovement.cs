@@ -29,8 +29,8 @@ public class PlayerMovement : MonoBehaviour
         float r = Input.GetAxisRaw("Mouse X");
         float t = Input.GetAxisRaw("Mouse Y");
 
-        LogManager.logManager.AddEvent(Time.time, "Joystick;Left;Horizontal;" + h + ";Vertical;" + v);
-        LogManager.logManager.AddEvent(Time.time, "Joystick;Right;Horizontal;" + r + ";Vertical;" + t);
+        LogManager.Instance.AddEvent(Time.time, "Joystick;Left;Horizontal;" + h + ";Vertical;" + v);
+        LogManager.Instance.AddEvent(Time.time, "Joystick;Right;Horizontal;" + r + ";Vertical;" + t);
         
         TurningAndMoving(r, t, h, v);
         Animating(h, v);

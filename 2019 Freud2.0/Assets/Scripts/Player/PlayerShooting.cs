@@ -61,63 +61,63 @@ public class PlayerShooting : MonoBehaviour
         gunAudio = GetComponent<AudioSource> ();
         powerSlider.value = ultraPower;
         
-        LogManager.logManager.AddEvent(Time.time, "Player;Range;StartingValue;" + range);
-        LogManager.logManager.AddEvent(Time.time, "Player;TimeBetweenTwoBullets;StartingValue;" + timeBetweenBullets);
-        LogManager.logManager.AddEvent(Time.time, "Player;DamagePerShot;StartingValue;" + damagePerShot);
-        LogManager.logManager.AddEvent(Time.time, "Player;SuperPower;StartingValue;" + ultraPower);
-        LogManager.logManager.AddEvent(Time.time, "Slider;SuperPower;StartingValue;" + ultraPower);
+        LogManager.Instance.AddEvent(Time.time, "Player;Range;StartingValue;" + range);
+        LogManager.Instance.AddEvent(Time.time, "Player;TimeBetweenTwoBullets;StartingValue;" + timeBetweenBullets);
+        LogManager.Instance.AddEvent(Time.time, "Player;DamagePerShot;StartingValue;" + damagePerShot);
+        LogManager.Instance.AddEvent(Time.time, "Player;SuperPower;StartingValue;" + ultraPower);
+        LogManager.Instance.AddEvent(Time.time, "Slider;SuperPower;StartingValue;" + ultraPower);
     }
 
 
-    void Update ()
-    {
-        timer += Time.deltaTime;
-        regenerationTimer += Time.deltaTime;
-
-		if(IsShootButtonPressed() && CanShoot() && Time.timeScale != 0)
-        {
-            LogManager.logManager.AddEvent(Time.time, "Key;" + "R2");
-            Shoot ();
-        }
-
-        if(timer >= timeBetweenBullets * effectsDisplayTime)
-        {
-            DisableGunEffects ();
-        }
-
-        if(regenerationTimer > regenerationTime && ultraPower < ultraPowerMax)
-        {
-            ultraPower += ultraPowerRegeneration;
-            if(ultraPower > ultraPowerMax)
-            {
-                ultraPower = ultraPowerMax;
-            }
-            UpdatePowerSlider();
-            LogManager.logManager.AddEvent(Time.time, "Slider;SuperPower;IncreaseTo;" + ultraPower);
-            damagePerShot += damagePerShotRegeneration;
-            if(damagePerShot > damagePerShotMax)
-            {
-                damagePerShot = damagePerShotMax;
-            }
-            LogManager.logManager.AddEvent(Time.time, "Player;DamagePerShot;IncreaseTo;" + damagePerShot);
-
-            range += rangeRegeneration;
-            if(range > rangeMax)
-            {
-                range = rangeMax;
-            }
-            LogManager.logManager.AddEvent(Time.time, "Player;Range;IncreaseTo;" + range);
-
-            regenerationTimer = 0f;
-        }
-
-        if (IsInSecondLevel())
-        {
-            UpdateButtonPressedTimer();
-            UseSuperPower();
-            isButtonPressed = false;
-        }
-    }
+  //   void Update ()
+  //   {
+  //       timer += Time.deltaTime;
+  //       regenerationTimer += Time.deltaTime;
+  //
+		// if(IsShootButtonPressed() && CanShoot() && Time.timeScale != 0)
+  //       {
+  //           LogManager.Instance.AddEvent(Time.time, "Key;" + "R2");
+  //           Shoot ();
+  //       }
+  //
+  //       if(timer >= timeBetweenBullets * effectsDisplayTime)
+  //       {
+  //           DisableGunEffects ();
+  //       }
+  //
+  //       if(regenerationTimer > regenerationTime && ultraPower < ultraPowerMax)
+  //       {
+  //           ultraPower += ultraPowerRegeneration;
+  //           if(ultraPower > ultraPowerMax)
+  //           {
+  //               ultraPower = ultraPowerMax;
+  //           }
+  //           UpdatePowerSlider();
+  //           LogManager.Instance.AddEvent(Time.time, "Slider;SuperPower;IncreaseTo;" + ultraPower);
+  //           damagePerShot += damagePerShotRegeneration;
+  //           if(damagePerShot > damagePerShotMax)
+  //           {
+  //               damagePerShot = damagePerShotMax;
+  //           }
+  //           LogManager.Instance.AddEvent(Time.time, "Player;DamagePerShot;IncreaseTo;" + damagePerShot);
+  //
+  //           range += rangeRegeneration;
+  //           if(range > rangeMax)
+  //           {
+  //               range = rangeMax;
+  //           }
+  //           LogManager.Instance.AddEvent(Time.time, "Player;Range;IncreaseTo;" + range);
+  //
+  //           regenerationTimer = 0f;
+  //       }
+  //
+  //       if (IsInSecondLevel())
+  //       {
+  //           UpdateButtonPressedTimer();
+  //           UseSuperPower();
+  //           isButtonPressed = false;
+  //       }
+  //   }
 
     private bool IsShootButtonPressed()
     {
@@ -133,26 +133,26 @@ public class PlayerShooting : MonoBehaviour
     {
         if(IsSuperPowerButtonPressed(timePressed, timePressedMax) && ultraPower > 0)
         {
-            LogManager.logManager.AddEvent(Time.time, "Player;SuperPower;Time;" + timePressed);
+            LogManager.Instance.AddEvent(Time.time, "Player;SuperPower;Time;" + timePressed);
 
             float ultraPowerused = ultraPower * (Math.Min(timePressed, timePressedMax) / timePressedMax);
             ultraPower -= ultraPowerused;
             UpdatePowerSlider();
-            LogManager.logManager.AddEvent(Time.time, "Slider;SuperPower;DecreaseTo;" + ultraPower);
+            LogManager.Instance.AddEvent(Time.time, "Slider;SuperPower;DecreaseTo;" + ultraPower);
 
             damagePerShot -= damagePerShotRegeneration;
             if(damagePerShot < damagePerShotMin)
             {
                 damagePerShot = damagePerShotMin;
             }
-            LogManager.logManager.AddEvent(Time.time, "Player;DamagePerShot;DecreaseTo;" + damagePerShot);
+            LogManager.Instance.AddEvent(Time.time, "Player;DamagePerShot;DecreaseTo;" + damagePerShot);
 
             range -= rangeRegeneration;
             if(range < rangeMin)
             {
                 range = rangeMin;
             }
-            LogManager.logManager.AddEvent(Time.time, "Player;Range;DecreaseTo;" + range);
+            LogManager.Instance.AddEvent(Time.time, "Player;Range;DecreaseTo;" + range);
             
             timeAlpha = timePressed;
             regenerationTimer = 0;
@@ -163,7 +163,7 @@ public class PlayerShooting : MonoBehaviour
         if(timeAlpha > 0)
         {
             float alpha = Math.Min(timeAlpha, timePressedMax) / timePressedMax;
-            LogManager.logManager.AddEvent(Time.time, "Player;SuperPower;Alpha;" + alpha);
+            LogManager.Instance.AddEvent(Time.time, "Player;SuperPower;Alpha;" + alpha);
             Color flashColour = new Color(1f, 0.588235f, 0f, alpha);
             superpowerImage.color = flashColour;
             StartCoroutine(LerpColor());
@@ -195,7 +195,7 @@ public class PlayerShooting : MonoBehaviour
         {
             timePressed = Time.time - timePressed;
             isButtonPressed = true;
-            LogManager.logManager.AddEvent(Time.time, "Key;L2;Time;" + timePressed);
+            LogManager.Instance.AddEvent(Time.time, "Key;L2;Time;" + timePressed);
         }
     }
 
@@ -203,7 +203,7 @@ public class PlayerShooting : MonoBehaviour
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         int killed = UnityEngine.Random.Range(0, Math.Min(2 * (int)(ultraPower / ultraPowerMax * 100), enemies.Length));
-        LogManager.logManager.AddEvent(Time.time, "Player;SuperPower;Killed;" + killed);
+        LogManager.Instance.AddEvent(Time.time, "Player;SuperPower;Killed;" + killed);
 
         for(int i = 0; i < killed; i++)
         {

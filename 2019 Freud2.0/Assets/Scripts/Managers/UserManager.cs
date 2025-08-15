@@ -37,8 +37,8 @@ public class UserManager : MonoBehaviour
             readtext.Close();
         }
         
-        LogManager.logManager.AddEvent(Time.time, "UserName;" + userName);
-        LogManager.logManager.AddEvent(Time.time, "UserID;" + userID);
+        LogManager.Instance.AddEvent(Time.time, "UserName;" + userName);
+        LogManager.Instance.AddEvent(Time.time, "UserID;" + userID);
 
         userPath += userID + "\\";
         Directory.CreateDirectory(userPath);
@@ -57,7 +57,7 @@ public class UserManager : MonoBehaviour
         {   
             used = true;
             UpdateScore(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
-            LogManager.logManager.AddEvent(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.score}");
+            LogManager.Instance.AddEvent(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.score}");
             SceneManager.LoadScene("ScoreBoard");
         }
     }
@@ -65,7 +65,7 @@ public class UserManager : MonoBehaviour
     private void MakeThisTheOnlyUserManager() => Instance == null ? (DontDestroyOnLoad(gameObject), Instance = this) : Instance != this && Destroy(gameObject);
     public void ResetScore() => Array.Clear(scoreLvl, 0, scoreLvl.Length);
     public void UpdateScore(int index, int score) => score > scoreLvl[index] && (scoreLvl[index] = score);
-    public int GetTotalScore() => (scoreLvl[2] = 0, scoreLvl.Sum());
+    public int GetTotalScore() => (scoreLvl.Sum());
     public string GetUserName() => userName;
     public string GetUserNumber() => userID;
     public string GetUserPath() => userPath;

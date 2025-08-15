@@ -87,8 +87,8 @@ public class BitalinoController : MonoBehaviour
 
     void Awake () 
 	{
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;SamplingFrequency;" + bitalinoManager.SamplingFrequency);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;BufferSize;" + bitalinoReader.BufferSize);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;SamplingFrequency;" + bitalinoManager.SamplingFrequency);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;BufferSize;" + bitalinoReader.BufferSize);
         
         string channels = "";
         string analogs = "";
@@ -102,13 +102,13 @@ public class BitalinoController : MonoBehaviour
         channels.Remove(channels.Length - 1);
         analogs.Remove(analogs.Length - 1);
 
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;Channels;" + channels);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;Analogs;" + analogs);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;BaudRate;" + bitalinoManager.scriptSerialPort.baudRate);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;Port;" + bitalinoManager.scriptSerialPort.portName);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;Parity;" + bitalinoManager.scriptSerialPort.parity);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;DataBits;" + bitalinoManager.scriptSerialPort.dataBits);
-        // LogManager.logManager.AddEvent(Time.time, "BITalino;StopBits;" + bitalinoManager.scriptSerialPort.stopBits);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;Channels;" + channels);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;Analogs;" + analogs);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;BaudRate;" + bitalinoManager.scriptSerialPort.baudRate);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;Port;" + bitalinoManager.scriptSerialPort.portName);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;Parity;" + bitalinoManager.scriptSerialPort.parity);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;DataBits;" + bitalinoManager.scriptSerialPort.dataBits);
+        // LogManager.Instance.AddEvent(Time.time, "BITalino;StopBits;" + bitalinoManager.scriptSerialPort.stopBits);
 
         MakeThisTheOnlyDontDestroyManager();
     }
@@ -135,7 +135,7 @@ public class BitalinoController : MonoBehaviour
 	{
         if (FinishedCalibration && usedFlag)
         {
-            // LogManager.logManager.AddEvent(Time.time, "BITalino;Calibration;Done;Baseline");
+            // LogManager.Instance.AddEvent(Time.time, "BITalino;Calibration;Done;Baseline");
             usedFlag = true;
         }
 
@@ -333,7 +333,7 @@ public class BitalinoController : MonoBehaviour
 
     void Save(List<float> values, List<float> times, string name)
     {
-        StreamWriter writer = File.AppendText(UserManager.userManager.GetUserPath() + name + ".csv");
+        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + name + ".csv");
         for(int i = 0; i < Mathf.Min(values.Count, times.Count); i++)
         {
             writer.WriteLine((times[i] * 1000).ToString() + ";" + values[i].ToString());
@@ -343,7 +343,7 @@ public class BitalinoController : MonoBehaviour
 
     void SaveStatistics(string s)
     {
-        StreamWriter writer = File.AppendText(UserManager.userManager.GetUserPath() + s + ".csv");
+        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + s + ".csv");
         
         writer.WriteLine(String.Format("HRCalibrated;{0}", HRCalibrated));
         writer.WriteLine(String.Format("HRMax;{0}", HRMax));

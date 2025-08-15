@@ -1,222 +1,136 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
-public class ManageScoreBoard : MonoBehaviour 
+public class ManageScoreBoard : MonoBehaviour
 {
-	public Text textBestPlayers;
+    [SerializeField] private Text textBestPlayers;
+    [SerializeField] private Text closeTxt;
 
-	public Text closeTxt;
-	// Key mappings (editable in inspector)
-	public KeyCode keyEscape = KeyCode.Escape;
-	public KeyCode keyR = KeyCode.R;
-	public KeyCode keyS = KeyCode.S;
-	
-	string pathScores = Path.Combine(UserManager.Instance.GetUserPath(), "Scores.csv");
-	Dictionary<int, List<string>> bestPlayers = new Dictionary<int, List<string>> ();
+    [SerializeField] private KeyCode keyEscape = KeyCode.Escape;
+    [SerializeField] private KeyCode keyR = KeyCode.R;
+    [SerializeField] private KeyCode keyS = KeyCode.S;
 
-	string tagIndestructible = "DontDestroyObject";
-	string tagBITalino = "BITalino";
+    [SerializeField] private string keyCloseText = "scoreboard.close";
 
-	int indexIntroduction = 0;
-	int indexFirstLevel = 3;
+    private string pathScores;
+    private Dictionary<int, List<string>> bestPlayers = new Dictionary<int, List<string>>();
 
-	public float timeToStart = 15;
+    private int indexIntroduction = 0;
+    private int indexFirstLevel = 3;
 
-	float timeCD;
+    [SerializeField] private float timeToStart = 15;
+    private float timeCD;
 
-	string closeText = "";
+    private string persDataPath;
 
-	string persDataPath;
+    void Awake()
+    {
+        persDataPath = Application.persistentDataPath;
+        pathScores = Path.Combine(persDataPath, "Scores.csv");
 
-	void Awake()
-	{
-		persDataPath = Application.persistentDataPath;
-		pathScores = persDataPath + "\\Scores.csv";
-		
-		timeCD = (int)timeToStart;
-	    StartCoroutine("LoseTime");
+        timeCD = (int)timeToStart;
+        StartCoroutine(LoseTime());
 
-		string namePlayer = UserManager.userManager.GetUserName();
-		int scorePlayer = UserManager.userManager.GetCumulatedScore();
+        string namePlayer = UserManager.userManager.GetUserName();
+        int scorePlayer = UserManager.userManager.GetCumulatedScore();
 
-		if(UserManager.Instance.language == UserManager.Language.English)
-		{
-			closeText = String.Format("<color=red>Your name: {0}.\n Your score: {1}.\n</color> The game will end in: ", namePlayer, scorePlayer);
-		}
+        string localizedTemplate = LocalizationManager.Instance.GetText(keyCloseText);
+        string closeText = string.Format(localizedTemplate, namePlayer, scorePlayer);
 
-		else if(UserManager.Instance.language == UserManager.Language.Polish)
-		{
-			closeText = String.Format("<color=red>Twoja nazwa: {0}.\n Twój wynik: {1}.\n</color> Gra zakończy się za: ", namePlayer, scorePlayer);
-		}
+        ReadBestPlayers();
+        AddNewPlayer(namePlayer, scorePlayer);
+        PrintBestPlayers();
+        UserManager.userManager.ScoreZero();
+        closeTxt.text = closeText;
+    }
 
-		ReadBestPlayers(UserManager.Instance.language);
-		AddNewPlayer(namePlayer, scorePlayer, UserManager.Instance.language);
-		PrintBestPlayers(UserManager.Instance.language);
-		UserManager.userManager.ResetScore();
-		LogManager.logManager.AddEvent(Time.time, "ScoreBoard;Show");
-		WriteBestPlayers(UserManager.Instance.language);
+    void Update()
+    {
+        if (timeCD < 0) Application.Quit();
 
-		
-	}
-
-	void Update()
-	{
-		if (timeCD < 0)
+        if (Input.GetKeyDown(keyEscape)) Application.Quit();
+        else if (Input.GetKeyDown(keyR))
         {
-            Application.Quit();
+            DestroyIndestructible();
+            SceneManager.LoadScene(indexIntroduction);
         }
-
-		if(Input.GetKeyDown(keyEscape))
+        else if (Input.GetKeyDown(keyS))
         {
-            LogManager.logManager.AddEvent(Time.time, "Key;Escape");
-			Application.Quit(); // ignored in UnityEditor
-			// EditorApplication.isPlaying = false;
+            SceneManager.LoadScene(indexFirstLevel);
         }
+    }
 
-		else if(Input.GetKeyDown(keyR))
+    void DestroyIndestructible()
+    {
+        var indestructible = GameObject.FindGameObjectsWithTag("DontDestroyObject");
+        foreach (var i in indestructible) Destroy(i);
+        var bitalino = GameObject.FindWithTag("BITalino");
+        if (bitalino != null) Destroy(bitalino);
+    }
+
+    void ReadBestPlayers()
+    {
+        if (File.Exists(pathScores))
         {
-			LogManager.logManager.AddEvent(Time.time, "Key;R");
-			DestroyIndestructible();
-	        SceneManager.LoadScene(indexIntroduction);
+            using (var reader = new StreamReader(pathScores))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] elements = line.Split(';');
+                    if (!int.TryParse(elements[0], out int score)) continue;
+                    var names = elements.Skip(1).Where(e => !string.IsNullOrEmpty(e)).ToList();
+                    bestPlayers[score] = names;
+                }
+            }
         }
+    }
 
-		else if(Input.GetKeyDown(keyS))
+    void AddNewPlayer(string name, int score)
+    {
+        if (!bestPlayers.ContainsKey(score)) bestPlayers[score] = new List<string>();
+        bestPlayers[score].Add(name);
+    }
+
+    void PrintBestPlayers()
+    {
+        var bests = "";
+        int i = 0;
+        foreach (var kvp in bestPlayers.OrderByDescending(k => k.Key))
         {
-			LogManager.logManager.AddEvent(Time.time, "Key;S");
-	        SceneManager.LoadScene(indexFirstLevel);
+            foreach (var player in kvp.Value)
+            {
+                i++;
+                bests += $"{i}. {player} {kvp.Key}\n";
+            }
         }
-	}
+        textBestPlayers.text = bests;
+    }
 
-	void DestroyIndestructible()
-	{
-		GameObject [] indestructible = GameObject.FindGameObjectsWithTag(tagIndestructible);
-		foreach (GameObject i in indestructible)
-		{
-			Destroy(i);
-		}
+    void WriteBestPlayers()
+    {
+        using (var writer = new StreamWriter(pathScores, false))
+        {
+            foreach (var kvp in bestPlayers)
+            {
+                string line = $"{kvp.Key};" + string.Join(";", kvp.Value) + ";";
+                writer.WriteLine(line);
+            }
+        }
+    }
 
-		Destroy(GameObject.FindWithTag(tagBITalino));
-	}
-
-	void ReadBestPlayers(UserManager.Language lang)
-	{
-		if (File.Exists(pathScores))
-		{
-			StreamReader reader = new StreamReader(pathScores);
-			string line;
-			while((line = reader.ReadLine()) != null)  
-			{
-				string[] elements = line.Split(';');
-
-				int score = 0;
-				Int32.TryParse(elements[0], out score);
-
-				List<string> names = new List<string> ();
-				for (int i = 1; i < (elements.Length - 1); i++)
-				{
-					names.Add(elements[i]);
-				}
-
-				bestPlayers.Add(score, names);
-			}
-
-			reader.Close();
-		}
-	}
-
-
-	void AddNewPlayer(string cN, int cS, UserManager.Language lang)
-	{
-	    // F2
-		// bool bitalinoUse = BitalinoController.bitalinoController.bitalinoUse;
-		// string use = bitalinoUse ? "1" : "0";
-		string currentName = cN; // + " (" + use + ")";     // F2
-		int currentScore = cS;
-
-		if (!bestPlayers.ContainsKey(currentScore) || lang != UserManager.Instance.language)
-		{
-			List<string> players = new List<string> ();
-			players.Add(currentName);
-			bestPlayers.Add(currentScore, players);
-		}
-
-		else
-		{
-			List<string> players = new List<string> ();
-			players = bestPlayers[currentScore];
-			bestPlayers.Remove(currentScore);
-			players.Add(currentName);
-			bestPlayers.Add(currentScore, players);
-		}
-	}
-
-
-	void PrintBestPlayers(UserManager.Language lang)
-	{
-		string bests = "";
-		int i = 0;
-
-		List<int> keyList = bestPlayers.Keys.ToList();
-		keyList.Sort();
-		keyList.Reverse();
-		
-		foreach (int key in keyList)
-		{
-			foreach (string el in bestPlayers[key])
-			{
-				i++;
-				bests += String.Format("{0}. {1} {2}\n" , i, el, key); 
-			}
-		}
-
-		textBestPlayers.text = bests;
-	}
-
-
-	void WriteBestPlayers(UserManager.Language lang)
-	{
-		if(File.Exists(pathScores))
-		{
-			File.Delete(pathScores);
-		}
-
-		StreamWriter writer = new StreamWriter(pathScores);
-        
-		List<int> keyList = bestPlayers.Keys.ToList();
-		foreach (int key in keyList)
-		{
-			string bests = "";
-			foreach (string el in bestPlayers[key])
-			{
-				bests += String.Format("{0};", el);
-			}
-
-			string line = String.Format("{0};", key);
-			line += bests;
-			
-			writer.WriteLine(line);
-		}
-
-		writer.Dispose();
-	}
-
-	IEnumerator LoseTime()
-	{
-		while(true)
-		{
-			string txt = closeText + timeCD.ToString() + "s";
-			LogManager.logManager.AddEvent(Time.time, "Game;ScoreBoard;CountDown;Text;ChangeTo;" + txt);
-
+    private System.Collections.IEnumerator LoseTime()
+    {
+        while (true)
+        {
+            closeTxt.text = closeTxt.text.Split(new[] { timeCD + "s" }, StringSplitOptions.None)[0] + timeCD + "s";
+            timeCD -= 1;
             yield return new WaitForSeconds(1);
-			closeTxt.text = txt;
-			timeCD -= 1;
-		}
-	}
+        }
+    }
 }

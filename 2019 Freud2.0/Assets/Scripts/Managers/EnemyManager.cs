@@ -9,8 +9,13 @@ public class EnemyManager : MonoBehaviour
     public GameObject enemy;
     public Transform[] spawnPoints;
 
-    [SerializeField] private int maxEnemies = 8;
-
+    [SerializeField] private int _maxEnemies = 8;
+    public int maxEnemies
+    {
+        get => maxEnemies;
+        set => maxEnemies = value;
+    }
+    
     void Start()
     {
         if (File.Exists(Application.persistentDataPath + "\\enemiesAmount.txt"))
@@ -35,6 +40,6 @@ public class EnemyManager : MonoBehaviour
         int spawnPointIndex = Random.Range(0, spawnPoints.Length);
 
         Instantiate(enemy, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        LogManager.logManager.AddEvent(Time.time, "Enemy;Spawn;Type;" + "-1" + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "RegularSpawn");
+        LogManager.Instance.AddEvent(Time.time, "Enemy;Spawn;Type;" + "-1" + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "RegularSpawn");
     }
 }

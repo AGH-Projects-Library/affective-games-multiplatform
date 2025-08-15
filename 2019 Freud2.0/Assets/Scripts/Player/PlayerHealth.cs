@@ -4,24 +4,24 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int healthRegeneration = 5;
-    [SerializeField] private float regenerationTime = 10f;
+    [SerializeField] public int maxHealth = 100;
+    [SerializeField] public int healthRegeneration = 5;
+    [SerializeField] public float regenerationTime = 10f;
     public Slider healthSlider;
-    [SerializeField] private Image damageImage;
+    [SerializeField] public Image damageImage;
     public AudioClip deathClip;
     public float flashSpeed = 5f;
     public Color flashColour = new Color(1f, 0f, 0f, 0.1f);
 
-    Animator anim;
-    AudioSource playerAudio;
+    public Animator anim;
+    public AudioSource playerAudio;
     [SerializeField] private PlayerMovement playerMovement;
-    PlayerShooting playerShooting;
+    public PlayerShooting playerShooting;
     public bool isDead;
-    bool damaged;
+    public bool damaged;
 
-    float timer;
-    int currentHealth;
+    public float timer;
+    public int currentHealth;
 
     void Awake ()
     {
@@ -30,14 +30,14 @@ public class PlayerHealth : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerShooting = GetComponentInChildren<PlayerShooting>();
         currentHealth = maxHealth;
-        LogManager.logManager.AddEvent(Time.time, "Slider;Health;StartingValue;" + currentHealth);
+        LogManager.Instance.AddEvent(Time.time, "Slider;Health;StartingValue;" + currentHealth);
     }
 
     void Update ()
     {
         if (IsEscapePressed)
         {
-            LogManager.logManager.AddEvent(Time.time, "Key;Escape");
+            LogManager.Instance.AddEvent(Time.time, "Key;Escape");
             Application.Quit(); // ignored in UnityEditor
         }
 
@@ -48,8 +48,8 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = Mathf.Min(currentHealth, maxHealth);
             UpdateHealthSlider();
 
-            LogManager.logManager.AddEvent(Time.time, "Player;Health;IncreaseTo;" + currentHealth);
-            LogManager.logManager.AddEvent(Time.time, "Slider;Health;DecreaseTo;" + currentHealth);
+            LogManager.Instance.AddEvent(Time.time, "Player;Health;IncreaseTo;" + currentHealth);
+            LogManager.Instance.AddEvent(Time.time, "Slider;Health;DecreaseTo;" + currentHealth);
 
             timer = 0f;
         }
@@ -70,13 +70,13 @@ public class PlayerHealth : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                LogManager.logManager.AddEvent(Time.time, "Key;R");
+                LogManager.Instance.AddEvent(Time.time, "Key;R");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1); // load tutorial of current level
             }
 
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                LogManager.logManager.AddEvent(Time.time, "Key;C");
+                LogManager.Instance.AddEvent(Time.time, "Key;C");
                 Application.Quit(); // ignored in UnityEditor
             }
         }
@@ -92,7 +92,7 @@ public class PlayerHealth : MonoBehaviour
         ResetTimer();
         SetDamaged(true);
         currentHealth -= amount;
-        LogManager.logManager.AddEvent(Time.time, $"Player;Health;DecreaseTo;{currentHealth};By;Enemy;ID;{i}");
+        LogManager.Instance.AddEvent(Time.time, $"Player;Health;DecreaseTo;{currentHealth};By;Enemy;ID;{i}");
         UpdateHealthSlider();
 
         if (IsDead)
@@ -109,7 +109,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Death()
     {
-        LogManager.logManager.AddEvent(Time.time, $"Player;Death;PositionX;{gameObject.transform.position.x};PositionY;{gameObject.transform.position.y};PositionZ;{gameObject.transform.position.z};RotationX;{gameObject.transform.rotation.x};RotationY;{gameObject.transform.rotation.y};RotationZ;{gameObject.transform.rotation.z};RotationW;{gameObject.transform.rotation.w}");
+        LogManager.Instance.AddEvent(Time.time, $"Player;Death;PositionX;{gameObject.transform.position.x};PositionY;{gameObject.transform.position.y};PositionZ;{gameObject.transform.position.z};RotationX;{gameObject.transform.rotation.x};RotationY;{gameObject.transform.rotation.y};RotationZ;{gameObject.transform.rotation.z};RotationW;{gameObject.transform.rotation.w}");
         
         isDead = true;
         playerShooting.DisableEffects();
