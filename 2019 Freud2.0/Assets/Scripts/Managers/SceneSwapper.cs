@@ -1,40 +1,23 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class SceneSwapper : MonoBehaviour
 {
     public static SceneSwapper Instance { get; private set; }
 
-    public UnityAction<int> OnSceneLoadRequested;
-
+    public const int MainMenuSceneIndex = 0;
+    public const int EndGameSceneIndex = 11;
+    public const int ScoreBoardSceneIndex = 12;
     private void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        else { Destroy(gameObject); return; }
+
+        DontDestroyOnLoad(gameObject);
     }
 
-    public void LoadNextScene() => LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-
-    public void LoadScene(int buildIndex)
-    {
-        OnSceneLoadRequested?.Invoke(buildIndex);
-        SceneManager.LoadScene(buildIndex);
-    }
+    public static void LoadNextScene() => LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    public static void LoadScene(int buildIndex) => SceneManager.LoadScene(buildIndex);
+    public static void LoadEndGameScene() => SceneManager.LoadScene(EndGameSceneIndex);
 }
-
-// Below code is used to paste to the LLM so that it knows how to generate other classes that will be compatible with this one
-
-// List all the public and private variables, methods (with parameters if any), and properties
-/***
-@startuml
-class SceneSwapper {
-    +Instance: SceneSwapper
-    +OnSceneLoadRequested: UnityAction<int>
-
-    +Awake(): void
-    +LoadNextScene(): void
-    +LoadScene(buildIndex: int): void
-}
-@enduml
-***/

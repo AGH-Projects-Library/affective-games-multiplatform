@@ -29,7 +29,7 @@ public class GameOverManager : MonoBehaviour
     {
         MakeThisTheOnlyGameOverManager();
         anim = GetComponent<Animator>();
-        textGO.text = LocalizationManager.Instance.GetText(keyGameOverText);
+        textGO.text = LocalizationManager.GetText(keyGameOverText);
     }
 
     void Update()
@@ -66,7 +66,7 @@ public class GameOverManager : MonoBehaviour
     {
         while (true)
         {
-            string txt = LocalizationManager.Instance.GetText(keyGameOverText) + timeCD + "s";
+            string txt = LocalizationManager.GetText(keyGameOverText) + timeCD + "s";
             textGO.text = txt;
             yield return new WaitForSeconds(1);
             timeCD -= 1;

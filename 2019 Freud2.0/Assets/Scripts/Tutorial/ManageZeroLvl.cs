@@ -29,7 +29,7 @@ public class ManageZeroLvl : MonoBehaviour
         for (int idx = 1; ; idx++)
         {
             string key = $"{keyAlertPrefix}{idx}";
-            string localized = LocalizationManager.Instance.GetText(key);
+            string localized = LocalizationManager.GetText(key);
             if (localized.StartsWith("[MISSING:]"))
             {
                 LogManager.Log(Time.time, $"Found {idx - 1} alerts for zero level tutorial.");

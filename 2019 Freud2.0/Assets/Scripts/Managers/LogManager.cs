@@ -39,7 +39,7 @@ public class LogManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + _fileName);
+        StreamWriter writer = File.AppendText(_fileName);
         writer.WriteLine(_startTime.ToString() + ";" + "UnixTime");
         foreach (var e in _events) { writer.WriteLine(e.Time + ";" + e.eventType); }
         writer.Close();

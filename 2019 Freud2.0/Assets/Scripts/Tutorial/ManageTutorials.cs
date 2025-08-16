@@ -66,7 +66,7 @@ public class ManageTutorials : MonoBehaviour
         for (int i = 1; ; i++)
         {
             string key = $"tutorial.level{lvl}.line{i}";
-            string localized = LocalizationManager.Instance.GetText(key);
+            string localized = LocalizationManager.GetText(key);
             if (localized.StartsWith("[MISSING:")) break;
             texts.Add(localized);
         }
@@ -76,7 +76,7 @@ public class ManageTutorials : MonoBehaviour
     {
         while (true)
         {
-            string txt = LocalizationManager.Instance.GetText(keyTimeLabel) + timeCD + "s";
+            string txt = LocalizationManager.GetText(keyTimeLabel) + timeCD + "s";
             textCD.text = txt;
             timeCD -= 1;
             yield return new WaitForSeconds(1);

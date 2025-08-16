@@ -132,7 +132,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void AddScore()
     {
-        ScoreManager.score += scoreValue;
+        ScoreManager.AddScore(scoreValue);
         LogManager.Log(Time.time, "Score;Update;Value;" + scoreValue);
     }
 }

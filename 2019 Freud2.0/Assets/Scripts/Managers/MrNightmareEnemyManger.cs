@@ -59,7 +59,7 @@ public class MrNightmareEnemyManager : MonoBehaviour
     {
         phase.Triggered = true;
         StartCoroutine(SpawnEnemies(phase.SpawnCount, phase.SpawnDelay));
-        HudPopupTextManager.ShowAlert(LocalizationManager.Instance.GetText(keyNightmareSupportAlert), alertTime);
+        HudPopupTextManager.ShowAlert(LocalizationManager.GetText(keyNightmareSupportAlert), alertTime);
 
         switch (phase.Event)
         {

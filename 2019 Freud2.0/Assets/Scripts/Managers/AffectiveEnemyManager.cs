@@ -48,7 +48,7 @@ public class AffectiveEnemyManager : MonoBehaviour
 
     private void ShowAlert()
     {
-        HudPopupTextManager.ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), alertTime);
+        HudPopupTextManager.ShowAlert(LocalizationManager.GetText(keyAlertNonAffective), alertTime);
     }
 }
 

@@ -333,7 +333,7 @@ public class BitalinoController : MonoBehaviour
 
     void Save(List<float> values, List<float> times, string name)
     {
-        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + name + ".csv");
+        StreamWriter writer = File.AppendText( name + ".csv");
         for(int i = 0; i < Mathf.Min(values.Count, times.Count); i++)
         {
             writer.WriteLine((times[i] * 1000).ToString() + ";" + values[i].ToString());
@@ -343,7 +343,7 @@ public class BitalinoController : MonoBehaviour
 
     void SaveStatistics(string s)
     {
-        StreamWriter writer = File.AppendText(UserManager.Instance.GetUserPath() + s + ".csv");
+        StreamWriter writer = File.AppendText(s + ".csv");
         
         writer.WriteLine(String.Format("HRCalibrated;{0}", HRCalibrated));
         writer.WriteLine(String.Format("HRMax;{0}", HRMax));
