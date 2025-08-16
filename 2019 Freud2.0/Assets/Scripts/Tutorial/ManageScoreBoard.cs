@@ -39,8 +39,7 @@ public class ManageScoreBoard : MonoBehaviour
 
         // string namePlayer = UserManager.Instance.GetUserName();
         // int scorePlayer = UserManager.Instance.GetCumulatedScore();
-
-        string localizedTemplate = LocalizationManager.GetText(keyCloseText);
+        string localizedTemplate = LocalizationManager.TryGetText(keyCloseText, out var temp) ? temp : keyCloseText;
         // string closeText = string.Format(localizedTemplate, namePlayer, scorePlayer);
 
         ReadBestPlayers();

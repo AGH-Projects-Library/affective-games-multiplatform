@@ -22,7 +22,7 @@ public class GameOverManager : iSingleton<GameOverManager>
     {
         InitInstance();
         if (!anim) anim = GetComponent<Animator>();
-        textGO.text = LocalizationManager.TryGetText(keyGameOverText, out string localizedText) ? localizedText : keyGameOverText;
+        // textGO.text = LocalizationManager.TryGetText(keyGameOverText, out string localizedText) ? localizedText : keyGameOverText;
     }
 
     void Update()

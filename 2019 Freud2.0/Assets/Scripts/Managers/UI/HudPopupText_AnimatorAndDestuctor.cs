@@ -1,9 +1,10 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HudPopupText_AnimatorAndDestuctor : MonoBehaviour
 {
-    [SerializeField] private Text _alertText;
+    [SerializeField] private TMP_Text _alertText;
     [SerializeField] private float _duration = 2f;
     [SerializeField] private AnimationCurve _transparencyCurve = AnimationCurve.Linear(0, 1, 1, 0);
     private float _startTime;

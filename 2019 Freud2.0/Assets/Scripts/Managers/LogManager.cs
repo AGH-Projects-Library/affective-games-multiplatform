@@ -17,6 +17,12 @@ public class LogManager : iSingleton<LogManager>
 
     private System.Collections.Generic.List<LogEvent> _events = new System.Collections.Generic.List<LogEvent>();
 
+    private new void Awake()
+    {
+        base.Awake();
+        DontDestroyOnLoad(gameObject);
+    }
+    
     public static void Log(float time,string eventType)
     {
         if(!InstanceExists()) return;

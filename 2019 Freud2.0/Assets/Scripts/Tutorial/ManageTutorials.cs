@@ -22,7 +22,7 @@ public class ManageTutorials : MonoBehaviour
 
     private void Awake()
     {
-        timeCD = (int)timeToStart;
+        timeCD = (int) timeToStart;
         StartCoroutine(LoseTime());
         index = 0;
         UpdateTexts(SceneManager.GetActiveScene().buildIndex);
@@ -63,11 +63,10 @@ public class ManageTutorials : MonoBehaviour
     private void UpdateTexts(int lvl)
     {
         texts.Clear();
-        for (int i = 1; ; i++)
+        for (int i = 1;; i++)
         {
             string key = $"tutorial.level{lvl}.line{i}";
-            string localized = LocalizationManager.GetText(key);
-            if (localized.StartsWith("[MISSING:")) break;
+            if (!LocalizationManager.TryGetText(key, out string localized)) break;
             texts.Add(localized);
         }
     }
@@ -76,7 +75,8 @@ public class ManageTutorials : MonoBehaviour
     {
         while (true)
         {
-            string txt = LocalizationManager.GetText(keyTimeLabel) + timeCD + "s";
+            LocalizationManager.TryGetText(keyTimeLabel, out string label);
+            string txt = label + timeCD + "s";
             textCD.text = txt;
             timeCD -= 1;
             yield return new WaitForSeconds(1);

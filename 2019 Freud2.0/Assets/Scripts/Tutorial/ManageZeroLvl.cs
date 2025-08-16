@@ -67,6 +67,7 @@ public class ManageZeroLvl : MonoBehaviour
         if (timer > startTime && !used)
         {
             // StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(time, alert));
+            HudPopupTextManager.ShowAlert(alert, time);
             i++;
             used = true;
         }
