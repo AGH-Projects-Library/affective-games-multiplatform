@@ -47,4 +47,10 @@ public class LogManager : MonoBehaviour
 
     public void AddEvent(float time, string eventType)
     { _events.Add(new LogEvent(time * 1000, eventType)); }
+    
+    public static void Log(float time,string eventType)
+    {
+        if (Instance == null) { Debug.LogError("LogManager instance is not initialized."); return; }
+        Instance.AddEvent(time, eventType);
+    }
 }
