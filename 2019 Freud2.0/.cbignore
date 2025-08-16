@@ -6,6 +6,10 @@
 [B]uild/
 [B]uilds/
 [U]serSettings/
+[P]rojectSettings/
+[P]ackages/
+[P]lugins/
+**/ProjectSettings/**
 # Ignore auto-generated files
 *.csproj
 *.unityproj
@@ -64,13 +68,10 @@ Thumbs.db
 *.mp4
 *.unitypackage
 *.mat
-*.json
 *.anim
 *.controller
 *.mixer
 *.unity
-*.prefab
-*.asset
 *.giparams
 *.physicmaterial
 *.pdf
@@ -79,17 +80,11 @@ Thumbs.db
 *.ttf
 *.csv
 *.wlt
-*.prefab (Unity prefab files)
-*.mat (Unity material files)
-*.fbx (3D model files)
-*.wav (audio files)
-*.ttf (font files)
-*.png (image files)
-*.jpg (image files)
-*.meta (Unity metadata files)
-*.asset (Unity asset files)
-*.anim (Unity animation files)
-*.controller (Unity animator controller files)
-*.physicsMaterial (Unity physics material files)
-*.dll (dynamic link library files)
-*.json (JSON data files)
+*.physicsMaterial
+*.csproj
+*.asset
+*.txt
+**/Assets/Gems Ultimate Pack/**
+**/Assets/TutorialInfo/**
+**/Assets/Standard Assets/**
+**/Assets/BITalino/Scripts/**
