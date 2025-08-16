@@ -2,67 +2,53 @@
 using Localization;
 using UnityEngine;
 
+using System.Collections;
+using UnityEngine;
+using Localization;
+
 public class AffectiveEnemyManager : MonoBehaviour
 {
-    public static AffectiveEnemyManager Instance { get; private set; }
-    [SerializeField] public int affectiveSpawnTimeMedium = 60;
-    [SerializeField] public int affectiveSpawnTimeMediumMax = 80;
-    [SerializeField] public int affectiveSpawnTimeHard = 90;
-    [SerializeField] public int affectiveSpawnTimeHardMax = 180;
-    [SerializeField] public int preparationTime = 5;
-    [SerializeField] public float spawnTime = 3f;
-    [SerializeField] public float invokeTime = 5f;
-    [SerializeField] public PlayerHealth playerHealth;
-    [SerializeField] public GameObject[] enemy;
-    [SerializeField] public Transform[] spawnPoints;
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private GameObject[] enemyPrefabs;
+    [SerializeField] private Transform[] spawnPoints;
 
-    [SerializeField] public float alertTime = 5f;
-    [SerializeField] public string keyAlertNonAffective = "alert.moreMonsters";
+    [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private float alertTime = 5f;
+    [SerializeField] private string keyAlertNonAffective = "alert.moreMonsters";
 
-    public bool checkedMedium = false;
-    public bool checkedHard = false;
-    public float timerSpawnMax = 0f;
-    public float remainTime = 5f;
-
-    private void Awake()
+    public void SpawnMediumWave()
     {
-        MakeThisTheOnlyAffectiveEnemyManager();
+        ShowAlert();
+        StartCoroutine(SpawnWave("AdditionalMediumSpawn"));
     }
 
-    private void MakeThisTheOnlyAffectiveEnemyManager()
+    public void SpawnHardWave()
     {
-        Instance = this;
+        ShowAlert();
+        StartCoroutine(SpawnWave("AdditionalHardSpawn"));
     }
 
-    private void Start() => InvokeRepeating("Spawn", invokeTime, spawnTime);
-
-    private void Update()
+    private IEnumerator SpawnWave(string mechanic)
     {
-        if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - remainTime)) timerSpawnMax += Time.deltaTime;
-        if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - preparationTime) && !checkedMedium)
-            ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), checkedMedium = true);
-        else if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeHard - preparationTime) && !checkedHard)
-            ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), checkedHard = true);
+        int enemyCount = Random.Range(3, 6); // configurable range
+        for (int i = 0; i < enemyCount; i++)
+        {
+            if (playerHealth.currentHealth <= 0f) yield break;
+            if (GameObject.FindGameObjectsWithTag("Enemy").Length >= EnemyManager.Instance.maxEnemies) yield break;
+
+            int enemyIndex = Random.Range(0, enemyPrefabs.Length);
+            int spawnIndex = Random.Range(0, spawnPoints.Length);
+
+            Instantiate(enemyPrefabs[enemyIndex], spawnPoints[spawnIndex].position, spawnPoints[spawnIndex].rotation);
+            LogManager.Log(Time.time, $"Enemy;Spawn;Type;{enemyIndex};SpawnPoint;{spawnPoints[spawnIndex].name};Mechanic;{mechanic}");
+
+            yield return new WaitForSeconds(spawnInterval);
+        }
     }
 
-    private void Spawn()
+    private void ShowAlert()
     {
-        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= EnemyManager.Instance.maxEnemies) return;
-        int enemyIndex = Random.Range(0, enemy.Length);
-        if (Time.timeSinceLevelLoad >= affectiveSpawnTimeMedium)
-            SpawnEnemy(enemyIndex, Random.Range(0, spawnPoints.Length), "AdditionalMediumSpawn");
-        if (Time.timeSinceLevelLoad >= affectiveSpawnTimeHard)
-            SpawnEnemy(enemyIndex, Random.Range(0, spawnPoints.Length), "AdditionalHardSpawn");
-    }
-
-    private void SpawnEnemy(int enemyIndex, int spawnPointIndex, string mechanic)
-    {
-        Instantiate(enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        LogManager.Log(Time.time, $"Enemy;Spawn;Type;{enemyIndex};SpawnPoint;{spawnPoints[spawnPointIndex].name};Mechanic;{mechanic}");
-    }
-
-    private void ShowAlert(string message, bool checkedFlag)
-    {
-        StartCoroutine(ImportantAlertManager.Instance.ShowAlertAndLerp(alertTime, message));
+        HudPopupTextManager.ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), alertTime);
     }
 }
+

@@ -1,110 +1,106 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance { get; private set; }
-    public static int score;
+    public static int Score { get; private set; }
+
+    public static event UnityAction<int> OnScoreUpdated;
+
+    [Header("Level Settings")]
     [SerializeField] private int scoreToLevelUp = 300;
-
-    Text text;
-
-    float timer = 0f;
-    float waitTime = 3f;
-
-    int zeroLevel = 2;
+    [SerializeField] private int zeroLevel = 2;
     [SerializeField] private float zeroLevelWait = 105f;
+    [SerializeField] private float levelUpDelay = 3f;
 
-    // UserManager.Language lang;
-    public KeyCode keyP = KeyCode.P;
+    [Header("Controls")]
+    [SerializeField] private KeyCode skipLevelKey = KeyCode.P;
 
+    private float levelUpTimer;
 
-    private void MakeThisTheOnlyScoreManager()
+    private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        Score = 0;
+
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex > 2)
+            scoreToLevelUp = Random.Range(scoreToLevelUp - 100, scoreToLevelUp);
+
+        LogManager.Log(Time.time, $"Score;ToLevelUp;Value;{scoreToLevelUp}");
     }
 
-    void Awake()
+    private void Update()
     {
-        MakeThisTheOnlyScoreManager();
-        LogManager.Log(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
-
-        // lang = UserManager.lang;
-
-        text = GetComponent<Text>();
-
-        if (SceneManager.GetActiveScene().buildIndex > 2)
-        {
-            scoreToLevelUp = Random.Range((scoreToLevelUp - 100), scoreToLevelUp);
-            LogManager.Log(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
-        }
-
-        score = 0;
+        if (Input.GetKey(skipLevelKey)) SceneSwapper.Instance.LoadNextScene();
+        if (IsLevelUpConditionMet()) HandleLevelUp();
+        if (IsZeroLevelTimeout()) TryLoadNextLevelForZeroLevel();
     }
-
-    void Update()
+    private bool IsLevelUpConditionMet() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex != zeroLevel && Score >= scoreToLevelUp;
+    private void HandleLevelUp()
     {
-        if (Input.GetKey(keyP))
-        {
-            LogManager.Log(Time.time, "Key;P");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-
-        text.text = score.ToString();
-
-        if (ShouldLevelUp())
-        {
-            KillEnemiesAndPickups();
-
-            timer += Time.deltaTime;
-
-            if(timer > waitTime)
-            {
-                UpdateScore(SceneManager.GetActiveScene().buildIndex, score);
-                LogManager.Log(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            }
-        }
-
-        if (ShouldLoadNextLevel())
-        {
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            GameObject[] pickups = GameObject.FindGameObjectsWithTag("PickUp");
-
-            if (enemies.Length == 0 || pickups.Length == 0)
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            }
-        }
+        DestroyAllEnemiesAndPickups();
+        levelUpTimer += Time.deltaTime;
+        if (levelUpTimer > levelUpDelay) FinishLevelUp();
     }
-
-    private bool ShouldLevelUp()
+    private void FinishLevelUp()
     {
-        return SceneManager.GetActiveScene().buildIndex != zeroLevel && score >= scoreToLevelUp;
+        SaveScore();
+        SceneSwapper.Instance.LoadNextScene();
     }
-
-    private bool ShouldLoadNextLevel()
+    private bool IsZeroLevelTimeout() => UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex == zeroLevel && Time.timeSinceLevelLoad > zeroLevelWait;
+    private void TryLoadNextLevelForZeroLevel()
     {
-        return SceneManager.GetActiveScene().buildIndex == zeroLevel && Time.timeSinceLevelLoad > zeroLevelWait;
+        if (GameObject.FindGameObjectsWithTag("Enemy").Length == 0 ||
+            GameObject.FindGameObjectsWithTag("PickUp").Length == 0)
+            SceneSwapper.Instance.LoadNextScene();
     }
-
-    private void UpdateScore(int level, int newScore)
+    private void DestroyAllEnemiesAndPickups()
     {
-        // UserManager.Instance.ScoreUpdate(level, newScore);
+        DestroyGameObjectsWithTag("Enemy");
+        DestroyGameObjectsWithTag("PickUp");
     }
-
-    private void KillEnemiesAndPickups()
+    private void DestroyGameObjectsWithTag(string tag)
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject[] pickups = GameObject.FindGameObjectsWithTag("PickUp");
-
-        foreach (GameObject enemy in enemies)
-        {
-            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            // enemyHealth.TakeDamageLvlEnd(enemyHealth.currentHealth);
-        }
+        foreach (var obj in GameObject.FindGameObjectsWithTag(tag))
+            Destroy(obj);
+    }
+    private void SaveScore() => LogManager.Log(Time.time, $"Score;LvlEnd;Level;{UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex};Value;{Score}");
+    public static void AddScore(int value)
+    {
+        Score += value;
+        OnScoreUpdated?.Invoke(Score);
     }
 }
+
+// Below code is used to paste to the LLM so that it knows how to generate other classes that will be compatible with this one
+
+// List all the public and private variables, methods (with parameters if any), and properties
+/***
+class ScoreManager {
+    +Instance: ScoreManager
+    +Score: int
+    +OnScoreUpdated: UnityAction\<int>
+    -scoreToLevelUp: int
+    -zeroLevel: int
+    -zeroLevelWait: float
+    -levelUpDelay: float
+    -skipLevelKey: KeyCode
+    -levelUpTimer: float
+
+    +Awake(): void
+    +Update(): void
+    -IsLevelUpConditionMet(): bool
+    -HandleLevelUp(): void
+    -FinishLevelUp(): void
+    -IsZeroLevelTimeout(): bool
+    -TryLoadNextLevelForZeroLevel(): void
+    -DestroyAllEnemiesAndPickups(): void
+    -DestroyGameObjectsWithTag(tag: string): void
+    -SaveScore(): void
+    +AddScore(value: int): void
+}
+@enduml
+***/

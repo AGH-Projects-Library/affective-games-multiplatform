@@ -32,7 +32,8 @@ public class PickUpCollect : MonoBehaviour {
         if (col.gameObject.name == "Player" && !IsCollected())
         {
             pickUpAudio.Play();
-            ScoreManager.score += scoreValue;
+            ScoreManager.AddScore(scoreValue);
+            HudPopupTextManager.ShowAlert("+" + scoreValue + " Score", 0.5f);
             LogManager.Log(Time.time, "Score;Update;Value;" + scoreValue);
             LogManager.Log(Time.time, "PickUp;Collected;ID;" + gameObject.GetInstanceID());
             SetCollected(true);

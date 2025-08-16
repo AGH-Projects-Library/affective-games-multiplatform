@@ -67,8 +67,8 @@ public class UserManager : MonoBehaviour
         if (IsGameEnded() && !used)
         {   
             used = true;
-            UpdateScore(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
-            LogManager.Log(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.score}");
+            UpdateScore(SceneManager.GetActiveScene().buildIndex, ScoreManager.Score);
+            LogManager.Log(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.Score}");
             SceneManager.LoadScene("ScoreBoard");
         }
     }
