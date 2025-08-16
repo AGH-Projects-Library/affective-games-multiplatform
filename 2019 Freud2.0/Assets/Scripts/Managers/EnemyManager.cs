@@ -1,19 +1,13 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : iSingleton<EnemyManager>
 {
-    public static EnemyManager Instance { get; private set; }
     public float spawnTime = 3f;
     public float invokeTime = 5f;
     public PlayerHealth playerHealth;
     public GameObject enemy;
     public Transform[] spawnPoints;
-
-    private void Awake()
-    {
-        MakeThisTheOnlyEnemyManager();
-    }
 
     [SerializeField] private int _maxEnemies = 8;
     public int maxEnemies
@@ -22,26 +16,15 @@ public class EnemyManager : MonoBehaviour
         set => maxEnemies = value;
     }
     
-    private void MakeThisTheOnlyEnemyManager()
+    private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else Destroy(gameObject);
+        InitInstance();
     }
 
     void Start()
     {
-        if (File.Exists(Application.persistentDataPath + "\\enemiesAmount.txt"))
-        {
-            StreamReader readtext = new StreamReader(Application.persistentDataPath + "\\enemiesAmount.txt");
-            maxEnemies = int.Parse(readtext.ReadLine());
-            readtext.Close();
-        }
-        else
-        {
-            maxEnemies = 8;
-        }
-
+        if (!InstanceExists())
+            return;
         InvokeRepeating(nameof(Spawn), invokeTime, spawnTime);
     }
 

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Localization;
 
-public class MrNightmareEnemyManager : MonoBehaviour
+public class MrNightmareEnemyManager : iSingleton<MrNightmareEnemyManager>
 {
-    public static MrNightmareEnemyManager Instance { get; private set; }
-
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private EnemyHealth mrNightmareHealth;
     [SerializeField] private AffectiveEnemyManager affectiveEnemyManager;
@@ -18,14 +16,18 @@ public class MrNightmareEnemyManager : MonoBehaviour
 
     private List<BossPhase> phases = new List<BossPhase>();
 
-    private void Awake()
+    public new void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
-
+        base.Awake();
         InitPhases();
     }
-
+    private void InitPhases()
+    {
+        phases.Add(new BossPhase(900, 5, 3f, SpecialEvent.None));
+        phases.Add(new BossPhase(600, 7, 2f, SpecialEvent.MediumSpawn));
+        phases.Add(new BossPhase(300, 9, 4f, SpecialEvent.SpeedUp));
+        phases.Add(new BossPhase(30, 11, 1f, SpecialEvent.HardSpawn));
+    }
     private void Update()
     {
         if (playerHealth.currentHealth <= 0 || mrNightmareHealth.currentHealth <= 0) return;
@@ -38,15 +40,7 @@ public class MrNightmareEnemyManager : MonoBehaviour
 
         UpdatePhaseTimers();
     }
-
-    private void InitPhases()
-    {
-        phases.Add(new BossPhase(900, 5, 3f, SpecialEvent.None));
-        phases.Add(new BossPhase(600, 7, 2f, SpecialEvent.MediumSpawn));
-        phases.Add(new BossPhase(300, 9, 4f, SpecialEvent.SpeedUp));
-        phases.Add(new BossPhase(30, 11, 1f, SpecialEvent.HardSpawn));
-    }
-
+    
     private BossPhase GetNextPhase(float currentHealth)
     {
         foreach (var phase in phases)

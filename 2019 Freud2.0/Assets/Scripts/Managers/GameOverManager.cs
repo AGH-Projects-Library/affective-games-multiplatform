@@ -1,12 +1,12 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverManager : MonoBehaviour
+public class GameOverManager : iSingleton<GameOverManager>
 {
-    public static GameOverManager Instance { get; private set; }
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private Text textGO;
     [SerializeField] private string keyGameOverText = "gameover.text";
@@ -18,17 +18,10 @@ public class GameOverManager : MonoBehaviour
     private Animator anim;
     private bool flagUsed = false;
 
-    private void MakeThisTheOnlyGameOverManager()
+    private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else Destroy(gameObject);
-    }
-
-    void Awake()
-    {
-        MakeThisTheOnlyGameOverManager();
-        anim = GetComponent<Animator>();
+        InitInstance();
+        if(!anim) anim = GetComponent<Animator>();
         textGO.text = LocalizationManager.GetText(keyGameOverText);
     }
 
@@ -61,7 +54,7 @@ public class GameOverManager : MonoBehaviour
         // UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
         SceneManager.LoadScene(nameScoreBoard);
     }
-
+    
     private IEnumerator LoseTime()
     {
         while (true)

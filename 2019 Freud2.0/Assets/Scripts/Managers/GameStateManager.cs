@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : iSingleton<GameStateManager>
 {
     [SerializeField] private int zeroLevel = 2;
     [SerializeField] private float zeroLevelWait = 105f;
@@ -10,8 +10,9 @@ public class GameStateManager : MonoBehaviour
     private float levelUpTimer;
     private bool zeroLevelTriggered;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         ScoreManager.OnLevelUpReached += HandleLevelUp;
     }
 
