@@ -21,7 +21,7 @@ public class PickUpCollect : MonoBehaviour {
             transform.Translate(Vector3.up * speedUp * Time.deltaTime, Space.World);
             if (transform.position.y >= transformPoint)
             {
-                LogManager.Instance.AddEvent(Time.time, "PickUp;Destroyed;ID;" + gameObject.GetInstanceID());
+                LogManager.Log(Time.time, "PickUp;Destroyed;ID;" + gameObject.GetInstanceID());
                 Destroy(gameObject);
             }
         }
@@ -33,8 +33,8 @@ public class PickUpCollect : MonoBehaviour {
         {
             pickUpAudio.Play();
             ScoreManager.score += scoreValue;
-            LogManager.Instance.AddEvent(Time.time, "Score;Update;Value;" + scoreValue);
-            LogManager.Instance.AddEvent(Time.time, "PickUp;Collected;ID;" + gameObject.GetInstanceID());
+            LogManager.Log(Time.time, "Score;Update;Value;" + scoreValue);
+            LogManager.Log(Time.time, "PickUp;Collected;ID;" + gameObject.GetInstanceID());
             SetCollected(true);
         }
     }

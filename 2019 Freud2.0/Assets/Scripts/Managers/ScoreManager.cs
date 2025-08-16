@@ -30,7 +30,7 @@ public class ScoreManager : MonoBehaviour
     void Awake()
     {
         MakeThisTheOnlyScoreManager();
-        LogManager.Instance.AddEvent(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
+        LogManager.Log(Time.time, "Scene;Load;ID;" + SceneManager.GetActiveScene().buildIndex);
 
         // lang = UserManager.lang;
 
@@ -39,7 +39,7 @@ public class ScoreManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex > 2)
         {
             scoreToLevelUp = Random.Range((scoreToLevelUp - 100), scoreToLevelUp);
-            LogManager.Instance.AddEvent(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
+            LogManager.Log(Time.time, "Score;ToLevelUp;Value;" + scoreToLevelUp);
         }
 
         score = 0;
@@ -49,7 +49,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (Input.GetKey(keyP))
         {
-            LogManager.Instance.AddEvent(Time.time, "Key;P");
+            LogManager.Log(Time.time, "Key;P");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
 
@@ -64,7 +64,7 @@ public class ScoreManager : MonoBehaviour
             if(timer > waitTime)
             {
                 UpdateScore(SceneManager.GetActiveScene().buildIndex, score);
-                LogManager.Instance.AddEvent(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
+                LogManager.Log(Time.time, "Score;LvlEnd;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + score);
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             }
         }

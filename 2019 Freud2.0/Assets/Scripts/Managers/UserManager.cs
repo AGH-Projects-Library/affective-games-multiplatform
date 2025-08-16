@@ -50,8 +50,8 @@ public class UserManager : MonoBehaviour
             readtext.Close();
         }
         
-        LogManager.Instance.AddEvent(Time.time, "UserName;" + userName);
-        LogManager.Instance.AddEvent(Time.time, "UserID;" + userID);
+        LogManager.Log(Time.time, "UserName;" + userName);
+        LogManager.Log(Time.time, "UserID;" + userID);
 
         userPath += userID + "\\";
         Directory.CreateDirectory(userPath);
@@ -68,7 +68,7 @@ public class UserManager : MonoBehaviour
         {   
             used = true;
             UpdateScore(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
-            LogManager.Instance.AddEvent(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.score}");
+            LogManager.Log(Time.time, $"Score;GameEnd;Level;{SceneManager.GetActiveScene().buildIndex};Value;{ScoreManager.score}");
             SceneManager.LoadScene("ScoreBoard");
         }
     }
@@ -79,7 +79,7 @@ public class UserManager : MonoBehaviour
         if (index < scoreLvl.Length)
         {
             scoreLvl[index] += score;
-            LogManager.Instance.AddEvent(Time.time, $"Score;Update;Level;{index};Value;{score}");
+            LogManager.Log(Time.time, $"Score;Update;Level;{index};Value;{score}");
         }
         else
         {

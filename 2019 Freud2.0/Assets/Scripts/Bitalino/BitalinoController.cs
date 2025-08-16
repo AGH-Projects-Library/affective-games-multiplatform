@@ -87,8 +87,8 @@ public class BitalinoController : MonoBehaviour
 
     void Awake () 
 	{
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;SamplingFrequency;" + bitalinoManager.SamplingFrequency);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;BufferSize;" + bitalinoReader.BufferSize);
+        // LogManager.Log(Time.time, "BITalino;SamplingFrequency;" + bitalinoManager.SamplingFrequency);
+        // LogManager.Log(Time.time, "BITalino;BufferSize;" + bitalinoReader.BufferSize);
         
         string channels = "";
         string analogs = "";
@@ -102,13 +102,13 @@ public class BitalinoController : MonoBehaviour
         channels.Remove(channels.Length - 1);
         analogs.Remove(analogs.Length - 1);
 
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;Channels;" + channels);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;Analogs;" + analogs);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;BaudRate;" + bitalinoManager.scriptSerialPort.baudRate);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;Port;" + bitalinoManager.scriptSerialPort.portName);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;Parity;" + bitalinoManager.scriptSerialPort.parity);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;DataBits;" + bitalinoManager.scriptSerialPort.dataBits);
-        // LogManager.Instance.AddEvent(Time.time, "BITalino;StopBits;" + bitalinoManager.scriptSerialPort.stopBits);
+        // LogManager.Log(Time.time, "BITalino;Channels;" + channels);
+        // LogManager.Log(Time.time, "BITalino;Analogs;" + analogs);
+        // LogManager.Log(Time.time, "BITalino;BaudRate;" + bitalinoManager.scriptSerialPort.baudRate);
+        // LogManager.Log(Time.time, "BITalino;Port;" + bitalinoManager.scriptSerialPort.portName);
+        // LogManager.Log(Time.time, "BITalino;Parity;" + bitalinoManager.scriptSerialPort.parity);
+        // LogManager.Log(Time.time, "BITalino;DataBits;" + bitalinoManager.scriptSerialPort.dataBits);
+        // LogManager.Log(Time.time, "BITalino;StopBits;" + bitalinoManager.scriptSerialPort.stopBits);
 
         MakeThisTheOnlyDontDestroyManager();
     }
@@ -135,7 +135,7 @@ public class BitalinoController : MonoBehaviour
 	{
         if (FinishedCalibration && usedFlag)
         {
-            // LogManager.Instance.AddEvent(Time.time, "BITalino;Calibration;Done;Baseline");
+            // LogManager.Log(Time.time, "BITalino;Calibration;Done;Baseline");
             usedFlag = true;
         }
 

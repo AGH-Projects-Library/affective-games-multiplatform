@@ -38,7 +38,7 @@ public class PickUpManager : MonoBehaviour
         while (IsPlayerAlive)
         {
             SpawnPickUp();
-            LogManager.Instance.AddEvent(Time.time, "PickUp;Spawn;ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[currentSpawnPointIndex].name);
+            LogManager.Log(Time.time, "PickUp;Spawn;ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[currentSpawnPointIndex].name);
             currentSpawnPointIndex = (currentSpawnPointIndex + 1) % spawnPoints.Length;
 
             yield return new WaitForSeconds(spawnDelay);

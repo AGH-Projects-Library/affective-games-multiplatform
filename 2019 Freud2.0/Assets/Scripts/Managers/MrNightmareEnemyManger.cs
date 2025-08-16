@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Localization;
 using UnityEngine;
 
 public class MrNightmareEnemyManager : MonoBehaviour

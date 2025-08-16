@@ -30,14 +30,14 @@ public class PlayerHealth : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerShooting = GetComponentInChildren<PlayerShooting>();
         currentHealth = maxHealth;
-        LogManager.Instance.AddEvent(Time.time, "Slider;Health;StartingValue;" + currentHealth);
+        LogManager.Log(Time.time, "Slider;Health;StartingValue;" + currentHealth);
     }
 
     void Update ()
     {
         if (IsEscapePressed)
         {
-            LogManager.Instance.AddEvent(Time.time, "Key;Escape");
+            LogManager.Log(Time.time, "Key;Escape");
             Application.Quit(); // ignored in UnityEditor
         }
 
@@ -48,8 +48,8 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = Mathf.Min(currentHealth, maxHealth);
             UpdateHealthSlider();
 
-            LogManager.Instance.AddEvent(Time.time, "Player;Health;IncreaseTo;" + currentHealth);
-            LogManager.Instance.AddEvent(Time.time, "Slider;Health;DecreaseTo;" + currentHealth);
+            LogManager.Log(Time.time, "Player;Health;IncreaseTo;" + currentHealth);
+            LogManager.Log(Time.time, "Slider;Health;DecreaseTo;" + currentHealth);
 
             timer = 0f;
         }
@@ -70,13 +70,13 @@ public class PlayerHealth : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                LogManager.Instance.AddEvent(Time.time, "Key;R");
+                LogManager.Log(Time.time, "Key;R");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1); // load tutorial of current level
             }
 
             else if (Input.GetKeyDown(KeyCode.C))
             {
-                LogManager.Instance.AddEvent(Time.time, "Key;C");
+                LogManager.Log(Time.time, "Key;C");
                 Application.Quit(); // ignored in UnityEditor
             }
         }
@@ -92,7 +92,7 @@ public class PlayerHealth : MonoBehaviour
         ResetTimer();
         SetDamaged(true);
         currentHealth -= amount;
-        LogManager.Instance.AddEvent(Time.time, $"Player;Health;DecreaseTo;{currentHealth};By;Enemy;ID;{i}");
+        LogManager.Log(Time.time, $"Player;Health;DecreaseTo;{currentHealth};By;Enemy;ID;{i}");
         UpdateHealthSlider();
 
         if (IsDead)
@@ -109,7 +109,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Death()
     {
-        LogManager.Instance.AddEvent(Time.time, $"Player;Death;PositionX;{gameObject.transform.position.x};PositionY;{gameObject.transform.position.y};PositionZ;{gameObject.transform.position.z};RotationX;{gameObject.transform.rotation.x};RotationY;{gameObject.transform.rotation.y};RotationZ;{gameObject.transform.rotation.z};RotationW;{gameObject.transform.rotation.w}");
+        LogManager.Log(Time.time, $"Player;Death;PositionX;{gameObject.transform.position.x};PositionY;{gameObject.transform.position.y};PositionZ;{gameObject.transform.position.z};RotationX;{gameObject.transform.rotation.x};RotationY;{gameObject.transform.rotation.y};RotationZ;{gameObject.transform.rotation.z};RotationW;{gameObject.transform.rotation.w}");
         
         isDead = true;
         // playerShooting.DisableEffects();

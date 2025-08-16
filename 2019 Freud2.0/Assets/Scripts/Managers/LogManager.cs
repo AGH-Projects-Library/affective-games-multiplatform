@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LogManager : MonoBehaviour
 {
-    public static LogManager Instance { get; private set; }
+    private static LogManager Instance { get; set; }
     [SerializeField] private string _fileName = "events.csv";
 
     private double _startTime;
@@ -45,7 +45,7 @@ public class LogManager : MonoBehaviour
         writer.Close();
     }
 
-    public void AddEvent(float time, string eventType)
+    private void AddEvent(float time, string eventType)
     { _events.Add(new LogEvent(time * 1000, eventType)); }
     
     public static void Log(float time,string eventType)

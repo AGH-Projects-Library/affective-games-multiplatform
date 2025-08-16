@@ -44,6 +44,7 @@ public class BitalinoReader : MonoBehaviour {
     /// </summary>
     private void start()
     {
+        return;
         readThread = new Thread(Read);
         while (manager.IsReady == false)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Localization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

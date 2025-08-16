@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Localization;
 using UnityEngine;
 
 public class AffectiveEnemyManager : MonoBehaviour
@@ -57,7 +58,7 @@ public class AffectiveEnemyManager : MonoBehaviour
     private void SpawnEnemy(int enemyIndex, int spawnPointIndex, string mechanic)
     {
         Instantiate(enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        LogManager.Instance.AddEvent(Time.time, $"Enemy;Spawn;Type;{enemyIndex};SpawnPoint;{spawnPoints[spawnPointIndex].name};Mechanic;{mechanic}");
+        LogManager.Log(Time.time, $"Enemy;Spawn;Type;{enemyIndex};SpawnPoint;{spawnPoints[spawnPointIndex].name};Mechanic;{mechanic}");
     }
 
     private void ShowAlert(string message, bool checkedFlag)
