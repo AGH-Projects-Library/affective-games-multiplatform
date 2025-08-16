@@ -1,176 +1,91 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-public class ManageIntroduction : MonoBehaviour {
+public class ManageIntroduction : MonoBehaviour
+{
+    [SerializeField] private Text textShowed;
+    [SerializeField] private UnityEvent OnIntroductionFinished;
+    [SerializeField] private UnityEvent OnLanguageChanged;
+    [SerializeField] private string fireButton2 = "Fire2";
+    [SerializeField] private string fireButton3 = "Fire3";
+    [SerializeField] private KeyCode keyS = KeyCode.S;
 
-	// UI
-	public Text textShowed;
+    [SerializeField] private string keyWelcome = "intro.welcome";
+    [SerializeField] private string keyTimeLabel = "intro.timeLabel";
 
-	// Public UI hooks for editor wiring
-	public UnityEvent OnIntroductionFinished;
-	public UnityEvent OnLanguageChanged;
+    [SerializeField] private float timeToStart = 30;
+    [SerializeField] private float timeWait = 1f;
+    private int timeCD;
+    private GameLanguage currentLang;
 
-	// Language-specific welcome text
-	[Tooltip("Welcome text for English")]
-	public string welcomeTextEng = "Welcome in the Freud2.0!";
-	[Tooltip("Welcome text for Polish")]
-	public string welcomeTextPl = "Witaj w Freud2.0!";
-
-	// Language-aware strings
-	[Tooltip("Time label when the game will start (English)")]
-	public string timeLabelENG = "Time to level begin: ";
-	[Tooltip("Time label when the game will start (Polish)")]
-	public string timeLabelPL = "Czas do rozpoczęcia poziomu: ";
-
-	// Timing controls
-	public float timeToStart = 30;
-	public float timeWait = 1f;
-	int timeCD;
-	string txtTime = "";
-	// language tracking
-	UserManager.LanguageOption lang;
- 
-	[SerializeField] public LanguageOption currentLang;
-	[System.Serializable]
-	public enum LanguageOption { English, Polish }
-	// Expose a couple of helper for editor wiring
-	public UnityEvent OnCalibrationSkip;
-
-	[SerializeField] public string txtTimePL;
-	[SerializeField] public string txtTimeENG;
-
-	[Tooltip("Welcome text shown on startup")]
-	public string welcomeTextLabelENG = "Welcome in the Freud2.0!";
-	[Tooltip("Welcome text shown on startup (Polish)")]
-	public string welcomeTextLabelPL = "Witaj w Freud2.0!";
-
-	// A small reference to a language manager if you have one
-	// (we'll keep existing behavior and just expose hooks)
-
-	public float timeCalibrationCheck = 0.5f;
-
-	void Awake()
+    void Start()
     {
         timeCD = (int)timeToStart;
-	    StartCoroutine(LoseTime());
+        StartCoroutine(LoseTime());
 
-        // Log start load
-        LogManager.logManager.AddEvent(Time.time, "Scene;Load;" + SceneManager.GetActiveScene().buildIndex);
-
-        // initial language
-        lang = UserManager.lang;
+        currentLang = LocalizationManager.Instance.CurrentLanguage;
         ChangeLanguage();
     }
 
-    void Update() 
+    void Update()
     {
-        if(Input.GetButtonDown ("Fire2"))
+        if (Input.GetButtonDown(fireButton2))
         {
-            LogManager.logManager.AddEvent(Time.time, "Key;X");
-            lang = UserManager.LanguageOption._English;
-            UserManager.lang = lang;
+            LocalizationManager.Instance.SetLanguage(GameLanguage.English);
             ChangeLanguage();
             OnLanguageChanged?.Invoke();
         }
 
-        if(Input.GetButtonDown ("Fire3"))
+        if (Input.GetButtonDown(fireButton3))
         {
-            LogManager.logManager.AddEvent(Time.time, "Key;O");
-            lang = UserManager.LanguageOption._Polish;
-            UserManager.lang = lang;
+            LocalizationManager.Instance.SetLanguage(GameLanguage.Polish);
             ChangeLanguage();
             OnLanguageChanged?.Invoke();
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
-		{
-            LogManager.logManager.AddEvent(Time.time, "Key;S");
-			LoadLvl0();
-		}
+        if (Input.GetKeyDown(keyS)) LoadLvl0();
 
-        // Auto-load into lvl 0 after countdown
-        if (CheckIfTimeToStartElapsed()) LoadLvl0();
+        if (timeToStart < Time.timeSinceLevelLoad) LoadLvl0();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			LogManager.logManager.AddEvent(Time.time, "Key;Escape");
-			Application.Quit(); // ignored in UnityEditor
-			// EditorApplication.isPlaying = false;
-		}
-
-        if (lang != UserManager.lang)
-        {
-            lang = UserManager.lang;
-            ChangeLanguage();
-            OnLanguageChanged?.Invoke();
-        }
+        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
     }
 
     void ChangeLanguage()
     {
-        switch(lang)
-        {
-            case UserManager.LanguageOption._English:
-            {
-                textShowed.text = welcomeTextLabelENG;
-                currentLang = UserManager.LanguageOption._English;
-                currentLang = UserManager.LanguageOption._English;
-                currentTimeLabel = timeLabelENG;
-                txtTimeENG = timeLabelENG;
-                // time label for countdown
-                // If you want to update any other UI texts, set them here
-                break;
-            }
-
-            case UserManager.LanguageOption._Polish:
-            {
-                textShowed.text = welcomeTextLabelPL;
-                currentLang = UserManager.LanguageOption._Polish;
-                currentTimeLabel = timeLabelPL;
-                txtTimePL = timeLabelPL;
-                break;
-            }
-        }
+        currentLang = LocalizationManager.Instance.CurrentLanguage;
+        string welcome = LocalizationManager.Instance.GetText(keyWelcome);
+        textShowed.text = welcome;
     }
 
-	// Call to advance to the gameplay after intro
-	public void LoadTutorial ()
+    public void LoadTutorial()
     {
-        TurnOffButtons();
-        StartCoroutine(Wait());
+        StartCoroutine(WaitAndLoad(SceneManager.GetActiveScene().buildIndex + 3));
         OnIntroductionFinished?.Invoke();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 3);
-	}
+    }
 
-	public void LoadLvl0 ()
+    public void LoadLvl0()
     {
-        TurnOffButtons();
-        StartCoroutine(Wait());
+        StartCoroutine(WaitAndLoad(SceneManager.GetActiveScene().buildIndex + 2));
         OnIntroductionFinished?.Invoke();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
-	}
+    }
 
-	// Helpers
-    bool CheckIfTimeToStartElapsed() { return timeToStart < Time.timeSinceLevelLoad; }
-    void TurnOffButtons () { /* keep; minimal cleanup placeholder for now */ }
-    IEnumerator Wait() { yield return new WaitForSeconds(timeWait); }
+    IEnumerator WaitAndLoad(int sceneIndex)
+    {
+        yield return new WaitForSeconds(timeWait);
+        SceneManager.LoadScene(sceneIndex);
+    }
 
-	// Coroutine for countdown display
-	IEnumerator LoseTime()
-	{
-		while(true)
-		{
-            string toShow = txtTime + timeCD.ToString() + "s";
-            LogManager.logManager.AddEvent(Time.time, "Game;Introduction;CountDown;Text;ChangeTo;" + toShow);
-			textShowed.text = toShow;
-			timeCD -= 1;
-			yield return new WaitForSeconds(1);
-		}
-	}
+    IEnumerator LoseTime()
+    {
+        while (true)
+        {
+            string txt = LocalizationManager.Instance.GetText(keyTimeLabel) + timeCD + "s";
+            textShowed.text = txt;
+            timeCD -= 1;
+            yield return new WaitForSeconds(1);
+        }
+    }
 }

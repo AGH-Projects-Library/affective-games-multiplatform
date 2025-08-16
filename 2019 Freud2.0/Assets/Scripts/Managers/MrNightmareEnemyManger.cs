@@ -2,162 +2,110 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class MrNightmareEnemyManager : MonoBehaviour
+{
+    public static MrNightmareEnemyManager Instance { get; private set; }
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private EnemyHealth mrNightmareHealth;
+    [SerializeField] private AffectiveEnemyManager affectiveEnemyManager;
+    [SerializeField] private GameObject[] enemy;
+    [SerializeField] private Transform[] spawnPoints;
 
-public class MrNightmareEnemyManger : MonoBehaviour {
+    [SerializeField] private int[] healthLevels = { 900, 600, 300, 30 };
+    [SerializeField] private bool[] usedLevels = new bool[4];
 
-	public PlayerHealth playerHealth;
-	public EnemyHealth mrNightmareHealth;
-	public AffectiveEnemyManager affectiveEnemyManager;
-	public GameObject[] enemy;
-    public Transform[] spawnPoints;
+    [SerializeField] private int[] helpNumbers = { 5, 7, 9, 11 };
+    [SerializeField] private List<float> helpWaits = new List<float> { 3f, 2f, 4f, 1f };
 
-	public int healthLvlOne = 900;
-	public int healthLvlTwo = 600;
-	public int healthLvlThree = 300;
-	public int healthLvlFour = 30;
+    [SerializeField] private float alertTime = 5f;
+    [SerializeField] private string keyNightmareSupportAlert = "alert.nightmareSupport";
 
-	bool usedLvlOne = false;
-	bool usedLvlTwo = false;
-	bool usedLvlThree = false;
-	bool usedLvlFour = false;
+    private List<float> timers = new List<float> { 0f, 0f, 0f, 0f };
+    private bool enemySpeedFlag, affectiveSpawnMediumFlag, affectiveSpawnHardFlag;
 
-	
-	public int hellpNumberLvlOne = 5;
-	public int hellpNumberLvlTwo = 7;
-	public int hellpNumberLvlThree = 9;
-	public int hellpNumberLvlFour = 11;
-	public float hellpWaitLvlOne = 3f;
-	public float hellpWaitLvlTwo = 2f;
-	public float hellpWaitLvlThree = 4f;
-	public float hellpWaitLvlFour = 1f;
-
-	float alertTime = 5f;
-	string alertMessagePl = "Przyzwano sojuszników! Uważaj!";
-	string alertMessageEng = "Supporters are coming! Watch out!";
-
-	string alertMessage = "";
-
-	float timerLvlThree = 0f;
-	float timerLvlTwo = 0f;
-	float timerLvlFour = 0f;
-	bool enemySpeedFlag = false;
-	bool affectiveSpawnMediumFlag = false;
-	bool affectiveSpawnHardFlag = false;
-
-
-	void Awake()
-	{
-		if(UserManager.lang.Equals(UserManager.LanguageOption._English))
-		{
-			alertMessage = alertMessageEng;
-		}
-
-		else if(UserManager.lang.Equals(UserManager.LanguageOption._Polish))
-		{
-			alertMessage = alertMessagePl;
-		}
-	}
-
-	void Update ()
-	{
-		Spawn();
-	}
-
-
-    void Spawn ()
+    private void Awake()
     {
-		if (usedLvlFour)
-		{
-			timerLvlFour += Time.deltaTime;
-		}
-		else if (usedLvlThree)
-		{
-			timerLvlThree += Time.deltaTime;
-		}
-		else if (usedLvlTwo)
-		{
-			timerLvlTwo += Time.deltaTime;
-		}
+        MakeThisTheOnlyMrNightmareEnemyManager();
+    }
 
-
-        if(playerHealth.currentHealth <= 0f || mrNightmareHealth.currentHealth > healthLvlOne || mrNightmareHealth.currentHealth <= 0f)
-        {
-            return;
-        }
-
-		else if (usedLvlFour && timerLvlFour > (hellpWaitLvlFour + 1f) && !affectiveSpawnHardFlag)
-		{
-			affectiveSpawnHardFlag = true;
-			affectiveEnemyManager.invokeTime = 0f;
-			affectiveEnemyManager.affectiveSpawnTimeHard = (int)Time.timeSinceLevelLoad;
-			affectiveEnemyManager.affectiveSpawnTimeHardMax = (int)Time.timeSinceLevelLoad + 20;
-		}
-
-		else if (mrNightmareHealth.currentHealth <= healthLvlFour && !usedLvlFour)
-		{
-			usedLvlFour = true;
-			StartCoroutine(CallForHellp(hellpNumberLvlFour, hellpWaitLvlFour));
-
-			LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessage.Replace("\n", ""));
-			StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessage));
-		}
-
-		else if (usedLvlThree && timerLvlThree > (hellpWaitLvlThree + 1f) && !enemySpeedFlag)
-		{
-			enemySpeedFlag = true;
-			// playerHealth.enemyMovementChangeTime = Time.timeSinceLevelLoad; //?
-		}
-
-		else if (mrNightmareHealth.currentHealth <= healthLvlThree && !usedLvlThree)
-		{
-			usedLvlThree = true;
-			timerLvlThree = 0f;
-			StartCoroutine(CallForHellp(hellpNumberLvlThree, hellpWaitLvlThree));
-
-			LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessage.Replace("\n", ""));
-			StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessage));
-		}
-
-		else if (usedLvlTwo && timerLvlTwo > (hellpWaitLvlTwo + 1f) && !affectiveSpawnMediumFlag)
-		{
-			affectiveSpawnMediumFlag = true;
-			affectiveEnemyManager.invokeTime = 0f;
-			affectiveEnemyManager.affectiveSpawnTimeMedium = (int)Time.timeSinceLevelLoad;
-			affectiveEnemyManager.affectiveSpawnTimeMediumMax = (int)Time.timeSinceLevelLoad + 20;
-		}
-
-		else if (mrNightmareHealth.currentHealth <= healthLvlTwo && !usedLvlTwo)
-		{
-			usedLvlTwo = true;
-			StartCoroutine(CallForHellp(hellpNumberLvlTwo, hellpWaitLvlTwo));
-
-			LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessage.Replace("\n", ""));
-			StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessage));
-		}
-
-		else if (mrNightmareHealth.currentHealth <= healthLvlOne && !usedLvlOne)
-		{
-			usedLvlOne = true;
-			StartCoroutine(CallForHellp(hellpNumberLvlOne, hellpWaitLvlOne));
-
-			LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessage.Replace("\n", ""));
-			StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessage));
-		}
-	}
-
-	IEnumerator CallForHellp(int number, float waitTime)
+    private void MakeThisTheOnlyMrNightmareEnemyManager()
     {
-        int i = 0;
-        while(i < number)
-        {
-			i++;
-	        int enemyIndex = Random.Range (0, enemy.Length);
-			int spawnPointIndex = Random.Range (0, spawnPoints.Length);
-            
-			Instantiate (enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-			LogManager.logManager.AddEvent(Time.time, "Enemy;Spawn;Type;" + enemyIndex + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "MrNightmareSpawn");
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
 
-			yield return new WaitForSeconds(waitTime);
+    private void Update()
+    {
+        if (ShouldSpawnEnemy())
+        {
+            UpdateTimers();
+            if (ShouldSpawnHardEnemies()) { SpawnHardEnemies(); }
+            else if (ShouldSpawnEnemiesAtLevel3()) { SpawnEnemiesAtLevel(3); }
+            else if (ShouldSpeedUpEnemies()) { SpeedUpEnemies(); }
+            else if (ShouldSpawnEnemiesAtLevel2()) { SpawnEnemiesAtLevel(2); }
+            else if (ShouldSpawnMediumEnemies()) { SpawnMediumEnemies(); }
+            else if (ShouldSpawnEnemiesAtLevel1()) { SpawnEnemiesAtLevel(1); }
+            else if (ShouldSpawnEnemiesAtLevel0()) { SpawnEnemiesAtLevel(0); }
         }
+    }
+
+    private bool ShouldSpawnEnemy()
+    {
+        return playerHealth.currentHealth > 0f &&
+               mrNightmareHealth.currentHealth <= healthLevels[0] &&
+               mrNightmareHealth.currentHealth > 0f &&
+               ((!usedLevels[3] && mrNightmareHealth.currentHealth <= healthLevels[3]) ||
+                (!usedLevels[2] && mrNightmareHealth.currentHealth <= healthLevels[2]) ||
+                (!usedLevels[1] && mrNightmareHealth.currentHealth <= healthLevels[1]) ||
+                (!usedLevels[0] && mrNightmareHealth.currentHealth <= healthLevels[0]));
+    }
+
+    private void SpawnEnemiesAtLevel(int level)
+    {
+        usedLevels[level] = true;
+        StartCoroutine(CallForHelp(helpNumbers[level], helpWaits[level], "MrNightmareSpawn"));
+        StartCoroutine(ImportantAlertManager.Instance.ShowAlertAndLerp(alertTime, LocalizationManager.Instance.GetText(keyNightmareSupportAlert)));
+    }
+
+    private IEnumerator CallForHelp(int number, float waitTime, string mechanic)
+    {
+        for (int i = 0; i < number; i++)
+        {
+            int enemyIndex = Random.Range(0, enemy.Length);
+            int spawnPointIndex = Random.Range(0, spawnPoints.Length);
+            Instantiate(enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+            yield return new WaitForSeconds(waitTime);
+        }
+    }
+
+    private bool ShouldSpawnHardEnemies() => usedLevels[3] && timers[3] > (helpWaits[3] + 1f) && !affectiveSpawnHardFlag;
+    private void SpawnHardEnemies()
+    {
+        affectiveSpawnHardFlag = true;
+        affectiveEnemyManager.invokeTime = 0f;
+        affectiveEnemyManager.affectiveSpawnTimeHard = (int)Time.timeSinceLevelLoad;
+        affectiveEnemyManager.affectiveSpawnTimeHardMax = (int)Time.timeSinceLevelLoad + 20;
+    }
+
+    private bool ShouldSpawnEnemiesAtLevel3() => !usedLevels[3] && mrNightmareHealth.currentHealth <= healthLevels[3];
+    private bool ShouldSpeedUpEnemies() => usedLevels[2] && timers[2] > (helpWaits[2] + 1f) && !enemySpeedFlag;
+    private void SpeedUpEnemies() => enemySpeedFlag = true;
+    private bool ShouldSpawnEnemiesAtLevel2() => !usedLevels[2] && mrNightmareHealth.currentHealth <= healthLevels[2];
+    private bool ShouldSpawnMediumEnemies() => usedLevels[1] && timers[1] > (helpWaits[1] + 1f) && !affectiveSpawnMediumFlag;
+    private void SpawnMediumEnemies()
+    {
+        affectiveSpawnMediumFlag = true;
+        affectiveEnemyManager.invokeTime = 0f;
+        affectiveEnemyManager.affectiveSpawnTimeMedium = (int)Time.timeSinceLevelLoad;
+        affectiveEnemyManager.affectiveSpawnTimeMediumMax = (int)Time.timeSinceLevelLoad + 20;
+    }
+    private bool ShouldSpawnEnemiesAtLevel1() => !usedLevels[1] && mrNightmareHealth.currentHealth <= healthLevels[1];
+    private bool ShouldSpawnEnemiesAtLevel0() => !usedLevels[0] && mrNightmareHealth.currentHealth <= healthLevels[0];
+
+    private void UpdateTimers()
+    {
+        for (int i = 0; i < usedLevels.Length; i++)
+            if (usedLevels[i]) timers[i] += Time.deltaTime;
     }
 }

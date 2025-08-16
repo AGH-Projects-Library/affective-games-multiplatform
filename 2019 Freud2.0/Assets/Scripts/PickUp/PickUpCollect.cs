@@ -4,54 +4,46 @@ using UnityEngine;
 
 public class PickUpCollect : MonoBehaviour {
 
-	int scoreValue = 2;
-	bool collected;
+    [SerializeField] private int scoreValue = 2;
+    [SerializeField] private float speedUp = 2f;
+    [SerializeField] private float transformPoint = 8f;
+    private AudioSource pickUpAudio;
+    private bool isCollected;
 
-	int speedUp = 2;
-	int transformPoint = 8;
+    private void Awake() {
+        isCollected = false;
+        pickUpAudio = GetComponent<AudioSource>();
+    }
 
-	AudioSource pickUpAudio;
-
-
-	void Awake() {
-		collected = false;
-		pickUpAudio = GetComponent <AudioSource> ();
-	}
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-		if(collected)
-		{
-			transform.Translate(Vector3.up * speedUp * Time.deltaTime, Space.World);
-			if (transform.position.y >= transformPoint)
-			{
-				LogManager.logManager.AddEvent(Time.time, "PickUp;Destroyed;ID;" + gameObject.GetInstanceID());
-				Destroy(gameObject);
-			}
-		}	
-	}
-
-	void OnTriggerEnter(Collider col)
-	// void OnCollisionEnter(Collision col)
-    {
-        if(col.gameObject.name == "Player" && !collected)
+    private void Update() {
+        if (IsCollected())
         {
-			pickUpAudio.Play();
-			
-			ScoreManager.score += scoreValue;
-			LogManager.logManager.AddEvent(Time.time, "Score;Update;Value;" + scoreValue);
-
-			LogManager.logManager.AddEvent(Time.time, "PickUp;Collected;ID;" + gameObject.GetInstanceID());
-
-			collected = true;
-
+            transform.Translate(Vector3.up * speedUp * Time.deltaTime, Space.World);
+            if (transform.position.y >= transformPoint)
+            {
+                LogManager.Instance.AddEvent(Time.time, "PickUp;Destroyed;ID;" + gameObject.GetInstanceID());
+                Destroy(gameObject);
+            }
         }
     }
-	
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.name == "Player" && !IsCollected())
+        {
+            pickUpAudio.Play();
+            ScoreManager.score += scoreValue;
+            LogManager.Instance.AddEvent(Time.time, "Score;Update;Value;" + scoreValue);
+            LogManager.Instance.AddEvent(Time.time, "PickUp;Collected;ID;" + gameObject.GetInstanceID());
+            SetCollected(true);
+        }
+    }
+
+    private bool IsCollected() {
+        return isCollected;
+    }
+
+    private void SetCollected(bool value) {
+        isCollected = value;
+    }
 }

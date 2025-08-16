@@ -65,3 +65,31 @@ Thumbs.db
 *.unitypackage
 *.mat
 *.json
+*.anim
+*.controller
+*.mixer
+*.unity
+*.prefab
+*.asset
+*.giparams
+*.physicmaterial
+*.pdf
+*.overrideController
+*.mp3
+*.ttf
+*.csv
+*.wlt
+*.prefab (Unity prefab files)
+*.mat (Unity material files)
+*.fbx (3D model files)
+*.wav (audio files)
+*.ttf (font files)
+*.png (image files)
+*.jpg (image files)
+*.meta (Unity metadata files)
+*.asset (Unity asset files)
+*.anim (Unity animation files)
+*.controller (Unity animator controller files)
+*.physicsMaterial (Unity physics material files)
+*.dll (dynamic link library files)
+*.json (JSON data files)

@@ -3,29 +3,37 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-	public float spawnTime = 3f;
-	public float invokeTime = 5f;
-	public PlayerHealth playerHealth;
-	public GameObject enemy;
-	public Transform[] spawnPoints;
+    public static EnemyManager Instance { get; private set; }
+    public float spawnTime = 3f;
+    public float invokeTime = 5f;
+    public PlayerHealth playerHealth;
+    public GameObject enemy;
+    public Transform[] spawnPoints;
 
-	public static int maxEnemies = 8;
-
-	string persDataPath;
-
-	// Pilot: keep existing behavior, but expose maxEnemies in inspector for tweaking
-	// and keep existing file I/O logic intact for now.
- 
-
-    void Start ()
+    private void Awake()
     {
-        persDataPath = Application.persistentDataPath;
- 
+        MakeThisTheOnlyEnemyManager();
+    }
 
+    [SerializeField] private int _maxEnemies = 8;
+    public int maxEnemies
+    {
+        get => maxEnemies;
+        set => maxEnemies = value;
+    }
+    
+    private void MakeThisTheOnlyEnemyManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
 
-        if (File.Exists(persDataPath + "\\enemiesAmount.txt")) 
+    void Start()
+    {
+        if (File.Exists(Application.persistentDataPath + "\\enemiesAmount.txt"))
         {
-            StreamReader readtext = new StreamReader(persDataPath + "\\enemiesAmount.txt");
+            StreamReader readtext = new StreamReader(Application.persistentDataPath + "\\enemiesAmount.txt");
             maxEnemies = int.Parse(readtext.ReadLine());
             readtext.Close();
         }
@@ -34,22 +42,17 @@ public class EnemyManager : MonoBehaviour
             maxEnemies = 8;
         }
 
-        InvokeRepeating("Spawn", invokeTime, spawnTime);
+        InvokeRepeating(nameof(Spawn), invokeTime, spawnTime);
     }
 
-
-    void Spawn()
+    private void Spawn()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        if (playerHealth.currentHealth <= 0f || enemies.Length >= maxEnemies)
-        {
+        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= maxEnemies)
             return;
-        }
 
         int spawnPointIndex = Random.Range(0, spawnPoints.Length);
 
         Instantiate(enemy, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        LogManager.logManager.AddEvent(Time.time, "Enemy;Spawn;Type;" + "-1" + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "RegularSpawn");
+        LogManager.Instance.AddEvent(Time.time, "Enemy;Spawn;Type;" + "-1" + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "RegularSpawn");
     }
 }

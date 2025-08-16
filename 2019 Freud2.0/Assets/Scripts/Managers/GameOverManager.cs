@@ -5,84 +5,70 @@ using UnityEngine.UI;
 
 public class GameOverManager : MonoBehaviour
 {
-    public PlayerHealth playerHealth;
+    public static GameOverManager Instance { get; private set; }
+    [SerializeField] private PlayerHealth playerHealth;
+    [SerializeField] private Text textGO;
+    [SerializeField] private string keyGameOverText = "gameover.text";
+    [SerializeField] private string nameScoreBoard = "ScoreBoard";
 
-    public Text textGO;
-    float timeCD = 3.0f;
+    [SerializeField] private float timeCD = 3.0f;
+    [SerializeField] private string animationName = "GameOver";
 
-    string textGOv;
-    string textGOvPL = "Przegrałeś!\nRestart poziomu za: ";
-    string textGOvENG = "You lost!\nThe level will restart in: ";
+    private Animator anim;
+    private bool flagUsed = false;
 
-    UserManager.LanguageOption lang;
-
-    Animator anim;
-    string nameAnimation = "GameOver";
-    
-    string nameScoreBoard = "ScoreBoard";
-
-    bool flagUsed = false;
+    private void MakeThisTheOnlyGameOverManager()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
 
     void Awake()
     {
+        MakeThisTheOnlyGameOverManager();
         anim = GetComponent<Animator>();
-
-        lang = UserManager.lang;
-
-        if(lang.Equals(UserManager.LanguageOption._Polish))
-        {
-            textGOv = textGOvPL; 
-        }
-
-        else if(lang.Equals(UserManager.LanguageOption._English))
-        {
-            textGOv = textGOvENG; 
-        }
-
-        textGO.text = textGOv;
-
+        textGO.text = LocalizationManager.Instance.GetText(keyGameOverText);
     }
-
 
     void Update()
     {
-        if (playerHealth.currentHealth <= 0)
-        {
-            if (timeCD < 0)
-            {
-                UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
-                LogManager.logManager.AddEvent(Time.time, "Score;PlayerDeath;Level;" + SceneManager.GetActiveScene().buildIndex + ";Value;" + ScoreManager.score);
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);   
-            }
-
-            if(!flagUsed)
-            {
-                flagUsed = true;
-                anim.SetTrigger(nameAnimation);
-                LogManager.logManager.AddEvent(Time.time, "Game;Over;Animation;PlayerDeath");
-                timeCD = 4.0f;
-	            StartCoroutine("LoseTime");
-            }
-
-            if (Input.GetKey(KeyCode.B))
-            {
-                UserManager.userManager.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
-                LogManager.logManager.AddEvent(Time.time, "Key;B");
-                SceneManager.LoadScene(nameScoreBoard);
-            }
-
-        }
+        if (IsPlayerDead() && IsTimeUp()) RestartLevel();
+        else if (IsPlayerDead() && !flagUsed) HandleGameOver();
+        else if (Input.GetKey(KeyCode.B)) GoToScoreBoard();
     }
 
-    IEnumerator LoseTime()
-	{
-		while(true)
-		{
-            string txt = textGOv + timeCD.ToString() + "s";
-            LogManager.logManager.AddEvent(Time.time, "Game;Over;CountDown;Text;ChangeTo;" + txt.Replace("\n", ""));
+    private bool IsPlayerDead() => playerHealth.currentHealth <= 0;
+    private bool IsTimeUp() => timeCD <= 0;
+
+    private void RestartLevel()
+    {
+        // UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void HandleGameOver()
+    {
+        flagUsed = true;
+        anim.SetTrigger(animationName);
+        timeCD = 4.0f;
+        StartCoroutine(LoseTime());
+    }
+
+    private void GoToScoreBoard()
+    {
+        // UserManager.Instance.ScoreUpdate(SceneManager.GetActiveScene().buildIndex, ScoreManager.score);
+        SceneManager.LoadScene(nameScoreBoard);
+    }
+
+    private IEnumerator LoseTime()
+    {
+        while (true)
+        {
+            string txt = LocalizationManager.Instance.GetText(keyGameOverText) + timeCD + "s";
+            textGO.text = txt;
             yield return new WaitForSeconds(1);
-			textGO.text = txt;
-			timeCD -= 1;
-		}
-	}
+            timeCD -= 1;
+        }
+    }
 }

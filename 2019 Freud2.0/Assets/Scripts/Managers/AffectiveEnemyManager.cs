@@ -1,250 +1,67 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AffectiveEnemyManager : MonoBehaviour 
+public class AffectiveEnemyManager : MonoBehaviour
 {
+    public static AffectiveEnemyManager Instance { get; private set; }
+    [SerializeField] public int affectiveSpawnTimeMedium = 60;
+    [SerializeField] public int affectiveSpawnTimeMediumMax = 80;
+    [SerializeField] public int affectiveSpawnTimeHard = 90;
+    [SerializeField] public int affectiveSpawnTimeHardMax = 180;
+    [SerializeField] public int preparationTime = 5;
+    [SerializeField] public float spawnTime = 3f;
+    [SerializeField] public float invokeTime = 5f;
+    [SerializeField] public PlayerHealth playerHealth;
+    [SerializeField] public GameObject[] enemy;
+    [SerializeField] public Transform[] spawnPoints;
 
-	public int affectiveSpawnTimeMedium = 60;
-    public int affectiveSpawnTimeMediumMax = 80;
-	public int affectiveSpawnTimeHard = 90;
-    public int affectiveSpawnTimeHardMax = 180;
-    public int preparationTime = 5;
+    [SerializeField] public float alertTime = 5f;
+    [SerializeField] public string keyAlertNonAffective = "alert.moreMonsters";
 
-    // F2
-    // public int neccessaryTimes = 3;
+    public bool checkedMedium = false;
+    public bool checkedHard = false;
+    public float timerSpawnMax = 0f;
+    public float remainTime = 5f;
 
-	public float spawnTime = 3f;
-	public float invokeTime = 5f;
-    public PlayerHealth playerHealth;
-    public GameObject[] enemy;
-    public Transform[] spawnPoints;
-
-    // F2    
-    // bool bitalinoUseFlag;
-    // bool boredom = false;
-
-    bool checkedMedium = false;
-    bool checkedHard = false;
-
-    // F2
-    // int spawnMax;
-
-    float timerSpawnMax = 0f;
-    float remainTime = 5f;
-
-    float alertTime = 5f;
-
-    string alertMessageNonAffectivePl = "Nadchodzą kolejne potwory!\nUważaj!";
-    
-    // F2
-    // string alertMessageAffectiveEng = "Your emotions has lured monsters!\nThey are coming! Watch out!";
-    // string alertMessageAffectivePl = "Twoje emocje zwabiły potwory!\nNadchodzą posiłki! Uważaj!";
-    
-    string alertMessageNonAffectiveEng = "More and more monsters are coming!\nWatch out!";
-
-    // F2
-    // string alertMessageAffective = "";
-
-    string alertMessageNonAffective = "";
-
-    void Awake()
+    private void Awake()
     {
-        if(UserManager.lang.Equals(UserManager.LanguageOption._English))
-		{
-            // F2
-			// alertMessageAffective = alertMessageAffectiveEng;
-			alertMessageNonAffective = alertMessageNonAffectiveEng;
-		}
-
-		else if(UserManager.lang.Equals(UserManager.LanguageOption._Polish))
-		{
-            // F2
-            // alertMessageAffective = alertMessageAffectivePl;
-			alertMessageNonAffective = alertMessageNonAffectivePl;
-		}
-
-        // bitalinoUseFlag = BitalinoController.bitalinoController.bitalinoUse;
+        MakeThisTheOnlyAffectiveEnemyManager();
     }
 
-
-    void Start ()
+    private void MakeThisTheOnlyAffectiveEnemyManager()
     {
-        InvokeRepeating ("Spawn", invokeTime, spawnTime);
+        Instance = this;
     }
 
+    private void Start() => InvokeRepeating("Spawn", invokeTime, spawnTime);
 
-    void Update()
+    private void Update()
     {
-        if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - remainTime))
-        {
-            timerSpawnMax += Time.deltaTime;
-        }
-
-        // F2
-        // if (!bitalinoUseFlag)
-        // {
-            if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - preparationTime) && !checkedMedium)
-            {
-                LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessageNonAffective.Replace("\n", ""));
-                StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessageNonAffective));
-                checkedMedium = true;
-            }
-
-            else if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeHard - preparationTime) && !checkedHard)
-            {
-                LogManager.logManager.AddEvent(Time.time, "Alert;Show;Time;" + alertTime + ";Content;" + alertMessageNonAffective.Replace("\n", ""));
-                StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessageNonAffective));
-                checkedHard = true;
-            }
-        // }
-
-
-        // F2
-        // if (bitalinoUseFlag)
-        // {
-        //     if((Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - remainTime)) &&  timerSpawnMax > remainTime)
-        //     {
-        //         float HRAverage = BitalinoController.bitalinoController.HRAverage;
-        //         float HRMax = BitalinoController.bitalinoController.HRMax;
-        //         float HRMin = BitalinoController.bitalinoController.HRMin;
-        //         float HRMean = (HRMax + HRMin) / 2;
-
-        //         float EDAAverage = BitalinoController.bitalinoController.EDAAverage;
-        //         float EDAMax = BitalinoController.bitalinoController.EDAMax;
-        //         float EDAMin = BitalinoController.bitalinoController.EDAMin;
-        //         float EDAMean = (EDAMax + EDAMin) / 2;
-
-        //         if ((HRAverage >= HRMean) && (EDAAverage >= EDAMean))
-        //         {
-        //             spawnMax = 0;
-        //         }
-
-        //         else if (((HRAverage < HRMean) && (EDAAverage >= EDAMean)) || ((HRAverage >= HRMean) && (EDAAverage < EDAMean)))
-        //         {
-        //             spawnMax = 2;
-        //         }
-
-        //         else if ((HRAverage < HRMean) && (EDAAverage < EDAMean))
-        //         {
-        //             spawnMax = 5;
-        //         }
-                
-        //         LogManager.logManager.AddEvent(Time.time, "AffectiveSpawn;SpawnMax;SetTo;" + spawnMax);
-
-        //         timerSpawnMax = 0f;
-        //     }
-
-        //     if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - preparationTime) && !checkedMedium)
-        //     {
-        //         checkedMedium = true;
-        //         boredom = false;
-        //         StartCoroutine(CheckBoredom(0));
-        //     }
-
-        //     else if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeHard - preparationTime) && !checkedHard)
-        //     {
-        //         checkedHard = true;
-        //         boredom = false;
-        //         StartCoroutine(CheckBoredom(1));
-        //     }
-        // }   
+        if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - remainTime)) timerSpawnMax += Time.deltaTime;
+        if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeMedium - preparationTime) && !checkedMedium)
+            ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), checkedMedium = true);
+        else if (Time.timeSinceLevelLoad >= (affectiveSpawnTimeHard - preparationTime) && !checkedHard)
+            ShowAlert(LocalizationManager.Instance.GetText(keyAlertNonAffective), checkedHard = true);
     }
 
-    // F2
-    // IEnumerator CheckBoredom(int x)
-    // {
-    //     int sum = 0;
-    //     for (int i = 0; i < preparationTime; i++)
-    //     {
-    //         if ((BitalinoController.bitalinoController.EDAAverage < BitalinoController.bitalinoController.EDAMax) && (BitalinoController.bitalinoController.HRAverage <= ((BitalinoController.bitalinoController.HRMax + BitalinoController.bitalinoController.HRMax) / 2)))
-    //         {
-    //             sum++;
-    //         }
-
-    //         yield return new WaitForSeconds(1f);
-    //     }
-
-    //     if (sum >= neccessaryTimes)
-    //     {
-    //         boredom = true;
-    //         checkedMedium = true;
-    //         LogManager.logManager.AddEvent(Time.time, "Alert;AffectiveSpawn;Activation");
-    //         LogManager.logManager.AddEvent(Time.time, "AffectiveSpawn;Active;Sum;" + sum);
-    //         StartCoroutine(ImportantAlertManager.importantAlertManager.ShowAlertAndLerp(alertTime, alertMessageAffective));
-    //     }
-
-    //     else
-    //     {
-    //         LogManager.logManager.AddEvent(Time.time, "AffectiveSpawn;NotActive;Sum;" + sum);
-    //         if (x == 0)
-    //         {
-    //             affectiveSpawnTimeMedium += preparationTime;
-    //             if (affectiveSpawnTimeMedium < affectiveSpawnTimeMediumMax)
-    //             {
-    //                 checkedMedium = false;
-    //             }
-    //         }
-            
-    //         else if (x == 1)
-    //         {
-    //             affectiveSpawnTimeHard += preparationTime;
-    //             if (affectiveSpawnTimeHard < affectiveSpawnTimeHardMax)
-    //             {
-    //                 checkedMedium = false;
-    //             }
-    //         }
-    //     }
-    // }
-    
-
-    void Spawn ()
+    private void Spawn()
     {
-        GameObject [] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        
-        if(playerHealth.currentHealth <= 0f || enemies.Length >= EnemyManager.maxEnemies)
-        {
-            return;
-        }
+        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= EnemyManager.Instance.maxEnemies) return;
+        int enemyIndex = Random.Range(0, enemy.Length);
+        if (Time.timeSinceLevelLoad >= affectiveSpawnTimeMedium)
+            SpawnEnemy(enemyIndex, Random.Range(0, spawnPoints.Length), "AdditionalMediumSpawn");
+        if (Time.timeSinceLevelLoad >= affectiveSpawnTimeHard)
+            SpawnEnemy(enemyIndex, Random.Range(0, spawnPoints.Length), "AdditionalHardSpawn");
+    }
 
-        int enemyIndex = Random.Range (0, enemy.Length);
+    private void SpawnEnemy(int enemyIndex, int spawnPointIndex, string mechanic)
+    {
+        Instantiate(enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+        LogManager.Instance.AddEvent(Time.time, $"Enemy;Spawn;Type;{enemyIndex};SpawnPoint;{spawnPoints[spawnPointIndex].name};Mechanic;{mechanic}");
+    }
 
-        // without biofeedback
-        if((Time.timeSinceLevelLoad >= affectiveSpawnTimeMedium)) // && !bitalinoUseFlag)     // F2
-        {
-            int spawnPointIndex = Random.Range (0, (int)(spawnPoints.Length / Random.Range (1, 3)));
-            Instantiate (enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-            LogManager.logManager.AddEvent(Time.time, "Enemy;Spawn;Type;" + enemyIndex + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "AdditionalMediumSpawn");
-        }
-
-        if((Time.timeSinceLevelLoad >= affectiveSpawnTimeHard)) // && !bitalinoUseFlag)     // F2
-        {
-            int spawnPointIndex = Random.Range (0, (int)(spawnPoints.Length / Random.Range (1, 2)));
-            Instantiate (enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-            LogManager.logManager.AddEvent(Time.time, "Enemy;Spawn;Type;" + enemyIndex + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "AdditionalHardSpawn");
-        }
-
-        // F2
-        // with biofeedback
-        // if((Time.timeSinceLevelLoad >= affectiveSpawnTimeMedium) && bitalinoUseFlag)
-        // {
-        //     if (boredom)
-        //     {
-        //         int spawnPointIndex = Random.Range (0, spawnMax);
-        //         Instantiate (enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        //         LogManager.logManager.AddEvent(Time.time, "Enemy;" + enemyIndex + ";AffectiveSpawn;AtSpawnPoint;" + spawnPointIndex);
-        //     }
-        // }
-
-        // if((Time.timeSinceLevelLoad >= affectiveSpawnTimeHard) && bitalinoUseFlag)
-        // {
-        //     if (boredom)
-        //     {
-        //         int spawnPointIndex = Random.Range (0, spawnMax);
-        //         Instantiate (enemy[enemyIndex], spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        //         LogManager.logManager.AddEvent(Time.time, "Enemy;" + enemyIndex + ";AffectiveSpawn;AtSpawnPoint;" + spawnPointIndex);
-        //     }
-        // }
-
+    private void ShowAlert(string message, bool checkedFlag)
+    {
+        StartCoroutine(ImportantAlertManager.Instance.ShowAlertAndLerp(alertTime, message));
     }
 }
