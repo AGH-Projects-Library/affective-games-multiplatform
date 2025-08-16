@@ -2,17 +2,15 @@
 
 namespace Localization
 {
-    public class LocalizationManager : MonoBehaviour
+    public class LocalizationManager : iSingleton<LocalizationManager>
     {
-        private static LocalizationManager Instance { get; set; }
 
         [SerializeField] private LocalizationData localizationData;
         public GameLanguage CurrentLanguage { get; private set; } = GameLanguage.English;
 
-        void Awake()
+        private new void Awake()
         {
-            if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-            Instance = this;
+            InitInstance();
             DontDestroyOnLoad(gameObject);
         }
         
@@ -22,15 +20,13 @@ namespace Localization
             Instance.CurrentLanguage = lang;
             Debug.Log($"Language set to: {lang}");
         }
- 
-        //for everyone else
-        public static void SetLanguageEnglish() => SetLanguage(GameLanguage.English);
-        public static void SetLanguagePolish() => SetLanguage(GameLanguage.Polish);
-        // public static string GetText(string key) => localizationData.GetText(key, CurrentLanguage);
-        public static string GetText(string key)
+        
+        public static bool TryGetText(string key, out string text)
         {
-            if (Instance == null) { Debug.LogError("LocalizationManager instance is not initialized."); return $"[MISSING:{key}]"; }
-            return Instance.localizationData.GetText(key, Instance.CurrentLanguage);
+            if (!InstanceExists()) {
+                text = "NO LOCALIZATION MANAGER";
+                return false; }
+            return Instance.localizationData.TryGetText(key, Instance.CurrentLanguage, out text);
         }
     }
 }

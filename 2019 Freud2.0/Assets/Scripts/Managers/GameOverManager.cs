@@ -21,8 +21,8 @@ public class GameOverManager : iSingleton<GameOverManager>
     private void Awake()
     {
         InitInstance();
-        if(!anim) anim = GetComponent<Animator>();
-        textGO.text = LocalizationManager.GetText(keyGameOverText);
+        if (!anim) anim = GetComponent<Animator>();
+        textGO.text = LocalizationManager.TryGetText(keyGameOverText, out string localizedText) ? localizedText : keyGameOverText;
     }
 
     void Update()
@@ -59,7 +59,7 @@ public class GameOverManager : iSingleton<GameOverManager>
     {
         while (true)
         {
-            string txt = LocalizationManager.GetText(keyGameOverText) + timeCD + "s";
+            string txt = (LocalizationManager.TryGetText(keyGameOverText, out string localizedText) ? localizedText : keyGameOverText) + timeCD + "s";
             textGO.text = txt;
             yield return new WaitForSeconds(1);
             timeCD -= 1;

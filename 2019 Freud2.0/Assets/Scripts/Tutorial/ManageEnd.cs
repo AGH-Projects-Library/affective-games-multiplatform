@@ -45,7 +45,7 @@ public class ManageEnd : MonoBehaviour
     {
         while (true)
         {
-            string txt = LocalizationManager.GetText(keyTimeLabel) + timeCD + "s";
+            string txt = LocalizationManager.TryGetText(keyTimeLabel, out var t) ? t + timeCD + "s" : keyTimeLabel + ": " + timeCD + "s";
             textCD.text = txt;
             timeCD -= 1;
             yield return new WaitForSeconds(1);

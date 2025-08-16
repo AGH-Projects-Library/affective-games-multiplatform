@@ -29,15 +29,15 @@ public class ManageZeroLvl : MonoBehaviour
         for (int idx = 1; ; idx++)
         {
             string key = $"{keyAlertPrefix}{idx}";
-            string localized = LocalizationManager.GetText(key);
-            if (localized.StartsWith("[MISSING:]"))
+            string localized;
+            if (!LocalizationManager.TryGetText(key, out localized))
             {
                 LogManager.Log(Time.time, $"Found {idx - 1} alerts for zero level tutorial.");
                 break;
             }
             alerts.Add(localized);
         }
-
+        
         elementsHUD = GameObject.FindGameObjectsWithTag("TurnOff");
         foreach (var el in elementsHUD)
             el.SetActive(false);

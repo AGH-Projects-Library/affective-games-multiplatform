@@ -17,12 +17,13 @@ namespace Localization
     public partial class LocalizationData : ScriptableObject
     {
         [SerializeField] public List<LocalizationEntry> entries = new List<LocalizationEntry>();
-
-        public string GetText(string key, GameLanguage lang)
+        
+        public bool TryGetText(string key, GameLanguage lang, out string text)
         {
             var entry = entries.Find(e => e.key == key);
-            if (entry == null) return $"[MISSING:{key}]";
-            return lang == GameLanguage.English ? entry.english : entry.polish;
+            if (entry == null) { text = $"[MISSING:{key}]"; return false; }
+            text = lang == GameLanguage.English ? entry.english : entry.polish;
+            return true;
         }
 
         public void AddOrUpdate(string key, string polish, string english)

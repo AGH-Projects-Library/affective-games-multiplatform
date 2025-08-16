@@ -2,7 +2,6 @@
 using Localization;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class ManageIntroduction : MonoBehaviour
@@ -14,6 +13,8 @@ public class ManageIntroduction : MonoBehaviour
     [SerializeField] private string fireButton2 = "Fire2";
     [SerializeField] private string fireButton3 = "Fire3";
     [FormerlySerializedAs("keyS")] [SerializeField] private KeyCode skipKey = KeyCode.S;
+    [SerializeField] private KeyCode quitKey = KeyCode.Escape;
+    [SerializeField] private KeyCode startCountdownKey = KeyCode.Space;
 
     [Header("Localization Keys")]
     [SerializeField] private string keyWelcome = "intro.welcome";
@@ -22,67 +23,70 @@ public class ManageIntroduction : MonoBehaviour
     [Header("Timing Settings")]
     [SerializeField] private float timeToStart = 30f;
     [SerializeField] private float timeWait = 1f;
+    [SerializeField] private float countdownStep = 1f;
 
     private int timeCD;
+    private Coroutine countdownRoutine;
 
-    private void Start()
-    {
-        timeCD = Mathf.CeilToInt(timeToStart);
+    private void Start(){
+        timeCD=Mathf.CeilToInt(timeToStart);
         UpdateWelcomeText();
-        StartCoroutine(LoseTimeCoroutine());
+        // StartCountdown();
     }
 
-    private void Update()
-    {
+    private void Update(){
         HandleLanguageInput();
-        HandleSkipOrTimeout();
+        HandleSkip();
         HandleQuit();
+        HandleStartCountdownInput();
     }
 
-    private void HandleLanguageInput()
-    {
+    private void HandleLanguageInput(){
         if (Input.GetButtonDown(fireButton2)) SetLanguage(GameLanguage.English);
         if (Input.GetButtonDown(fireButton3)) SetLanguage(GameLanguage.Polish);
     }
 
-    private void HandleSkipOrTimeout()
-    {
-        if (Input.GetKeyDown(skipKey) || Time.timeSinceLevelLoad >= timeToStart) LoadLvl0();
-    }
+    public void SetLanguageEnglish()=>SetLanguage(GameLanguage.English);
+    public void SetLanguagePolish()=>SetLanguage(GameLanguage.Polish);
 
-    private void HandleQuit()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape)) Application.Quit();
-    }
-
-    private void SetLanguage(GameLanguage lang)
-    {
+    private void SetLanguage(GameLanguage lang){
         LocalizationManager.SetLanguage(lang);
-        UpdateWelcomeText();
+        RefreshText();
     }
 
+    private void RefreshText(){if (countdownRoutine==null) UpdateWelcomeText(); else SetCountdownText();}
+    private void HandleSkip(){if (countdownRoutine!=null && Input.GetKeyDown(skipKey)) LoadLvl_0();}
+    private void HandleQuit(){if (Input.GetKeyDown(quitKey)) Application.Quit();}
+    private void HandleStartCountdownInput(){if (Input.GetKeyDown(startCountdownKey)) StartCountdown();}
     private void UpdateWelcomeText()
     {
-        textShowed.text = LocalizationManager.GetText(keyWelcome);
+        if (LocalizationManager.TryGetText(keyWelcome, out var text)) textShowed.text = text;
+        else textShowed.text = keyWelcome;
     }
+    public void LoadLvl_0()=>StartCoroutine(WaitAndLoad(SceneSwapper.MainMenuSceneIndex+2));
 
-    public void LoadTutorial() => StartCoroutine(WaitAndLoad(SceneManager.GetActiveScene().buildIndex + 3));
-
-    public void LoadLvl0() => StartCoroutine(WaitAndLoad(SceneSwapper.MainMenuSceneIndex + 2));
-
-    private IEnumerator WaitAndLoad(int sceneIndex)
-    {
+    private IEnumerator WaitAndLoad(int sceneIndex){
         yield return new WaitForSeconds(timeWait);
-        SceneManager.LoadScene(sceneIndex);
+        SceneSwapper.LoadScene(sceneIndex);
     }
 
-    private IEnumerator LoseTimeCoroutine()
-    {
-        while (true)
-        {
-            textShowed.text = $"{LocalizationManager.GetText(keyTimeLabel)}{timeCD}s";
+    public void StartCountdown(){
+        if (countdownRoutine!=null) StopCoroutine(countdownRoutine);
+        timeCD=Mathf.CeilToInt(timeToStart);
+        countdownRoutine=StartCoroutine(Countdown());
+    }
+
+    private IEnumerator Countdown(){
+        while (timeCD>=0){
+            SetCountdownText();
             timeCD--;
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(countdownStep);
         }
+        LoadLvl_0();
+    }
+
+    private void SetCountdownText()
+    {
+        textShowed.text = LocalizationManager.TryGetText(keyTimeLabel, out var label) ? $"{label} {timeCD}s" : $"{keyTimeLabel} {timeCD}s";
     }
 }

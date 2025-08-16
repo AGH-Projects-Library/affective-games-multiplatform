@@ -5,7 +5,7 @@ using UnityEngine;
 public class LogManager : iSingleton<LogManager>
 {
     [SerializeField] private string _fileName = "events.csv";
-
+    [SerializeField] private bool doNotSaveLogs = true;
     private double _startTime;
     
     public struct LogEvent
@@ -27,6 +27,7 @@ public class LogManager : iSingleton<LogManager>
     
     private void OnDestroy()
     {
+        if (doNotSaveLogs) return;
         StreamWriter writer = File.AppendText(_fileName);
         writer.WriteLine(_startTime.ToString() + ";" + "UnixTime");
         foreach (var e in _events) { writer.WriteLine(e.Time + ";" + e.eventType); }

@@ -12,4 +12,329 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45c78dfed53f4022b31bed338c31f6c6, type: 3}
   m_Name: LocalizationData
   m_EditorClassIdentifier: 
-  entries: []
+  entries:
+  - key: tutorial.timeLabel
+    english: 'Time to level begin: '
+    polish: "Czas do rozpocz\u0119cia poziomu: "
+  - key: tutorial.button.next
+    english: Next
+    polish: "Nast\u0119pny"
+  - key: tutorial.button.prev
+    english: Previous
+    polish: Poprzedni
+  - key: tutorial.button.play
+    english: Play!
+    polish: Graj!
+  - key: tutorial.level1.line0
+    english: 'Welcome to the next session.
+
+      Why so agitated?
+
+      You do
+      not recognize us...
+
+      That is alright.
+
+      We will start from the beginning.'
+    polish: "Witamy na kolejnej sesji.\nCo tak niewyra\u017Anie wygl\u0105dasz?\nNie
+      poznajesz nas. Ok, w porz\u0105dku. Zaczniemy od pocz\u0105tku."
+  - key: tutorial.level1.line1
+    english: 'You have come here because of your troubles with memory,
+
+      and
+      we are your therapists.
+
+      Sounds familiar? No?
+
+      Have a look at this,
+      then.'
+    polish: "Przyszed\u0142e\u015B tutaj ze wzgl\u0119du na problemy z pami\u0119ci\u0105,
+      a my jeste\u015Bmy Twoimi terapeutami.\nBrzmi znajomo? Nie? No, dobra."
+  - key: tutorial.level1.line2
+    english: 'Here is our agreement, and this is your signature. We have highlighed
+      the most important part.
+
+
+      "I hereby agree for
+
+      unconventional
+      methods of
+
+      psychological treatment.'
+    polish: "Tutaj jest nasza umowa, a tutaj Tw\xF3j podpis. Zaznaczyli\u015Bmy najwa\u017Cniejszy
+      fragment.\n\n\"Zgadzam si\u0119 na niekonwencjonalne metody terapii psychologicznej."
+  - key: tutorial.level1.line3
+    english: 'Ok, if everything is clear now,
+
+      let''s remind you of some
+
+      psychological
+      basics.
+
+      Our therapy is grounded in psychoanalisys, developed by Sigmund
+      Freud'
+    polish: "Ok, skoro ju\u017C wszystko jasne, przypomnimy Ci kilka zagadnie\u0144
+      z psychologii.\nNasza terapia opiera si\u0119 na psychoanalizie, kt\xF3rej
+      autorem jest Zygmunt Freud."
+  - key: tutorial.level1.line4
+    english: 'According to his theory, human psychology works on three levels: conscious,
+      preconscious,
+
+      and unconscious.
+
+      The greatest influence on later
+      life comes from one''s childhood.'
+    polish: "W jego koncepcji psychika dzia\u0142a na trzech poziomach. \u015Awiadomo\u015Bci,
+      przed\u015Bwiadomo\u015Bci i nie\u015Bwiadomo\u015Bci.\nNajwi\u0119kszy wp\u0142yw
+      na p\xF3\u017Aniejsze \u017Cycie ma dzieci\u0144stwo."
+  - key: tutorial.level1.line5
+    english: 'So, this is where we are heading now.
+
+      To the childhood,
+
+      through
+      all three levels.
+
+      Get your gear and get going,
+
+      there is no time
+      to waste!'
+    polish: "No, wi\u0119c w\u0142a\u015Bnie tam sie udajemy.\nDo dzieci\u0144stwa
+      poprzez wszystkie trzy poziomy.\nOdpalaj sprz\u0119t i lecimy, nie ma czasu!"
+  - key: tutorial.level1.line6
+    english: 'We will be in touch all the time.
+
+      Worry not, we have been doing
+      this
+
+      a million times.'
+    polish: "Przez ca\u0142y czas b\u0119dziemy w kontakcie.\nNie b\xF3j si\u0119,
+      robili\u015Bmy to miliony razy."
+  - key: tutorial.level3.line0
+    english: 'Hello again!
+
+      Well, next time better hurry up, will you?
+
+      You
+      know, these therapies are expensive these days.
+
+      This time you''ll go
+      to the consciousness.
+
+      It is the outermost level.
+
+      This means that
+      your control will be least impaired.
+
+      On this level, you''ll meet your
+      favourite bunnies,
+
+      which you fed lettuce so willingly.
+
+      We don''t
+      know, what happened to them.
+
+      It''s your head, after all.
+
+      Anyway,
+      regular lettuce won''t work on them now.
+
+      Remember that your health regenerates!'
+    polish: "Witaj ponownie!\nNo, nast\u0119pnym razem lepiej si\u0119 pospiesz.\nWiesz
+      ile te terapie kosztuj\u0105 w dzisiejszych czasach.\nTym razem udasz si\u0119
+      do \u015Bwiadomo\u015Bci.\nJest to najbardziej zewn\u0119trzny poziom.\nOznacza
+      to, \u017Ce twoja kontrola b\u0119dzie najwi\u0119ksza.\nNa tym poziomie znowu
+      spotkasz swoje ulubione zaj\u0105czki,\nkt\xF3re tak ch\u0119tnie dokarmia\u0142e\u015B
+      sa\u0142at\u0105.\nNie wiemy, co im si\u0119 sta\u0142o.\nTo Twoja g\u0142owa.\nW
+      ka\u017Cdym razie zwyk\u0142\u0105 sa\u0142at\u0105 na pewno ich nie przekupisz.\nPami\u0119taj,
+      \u017Ce twoje zdrowie si\u0119 regeneruje!"
+  - key: tutorial.level5.line0
+    english: 'Well, well, congratulations!
+
+      "We have to go deeper!"
+
+      Remember
+      that movie, Inception? Ah, right. You have memory issues.
+
+      We have to
+      write this down.
+
+      Now it''s time for the preconsciousness. This is everything,
+      that you suppress.
+
+      Every tear, every need of consolation in your favourite
+      teddybear''s embrace.
+
+      But those teddys aren''t that cute anymore.
+
+      But
+      you have your Superpower! You just have to press L2 (left trigger)!
+
+      For
+      a few seconds, 5 tops.
+
+      The longer, the more enemies you''ll strike down.
+
+      Sadly,
+      every use of Superpower will tire you for a bit.
+
+      You won''t be able
+      to shoot that fast and hard.
+
+      It will go back to normal after a while,
+      though. Let''s begin!'
+    polish: "No, no, gratulacje!\n\"Musimy zej\u015B\u0107 g\u0142\u0119biej!\"\nPami\u0119tasz
+      Incepcj\u0119? A, no fakt. Masz probelmy z pami\u0119ci\u0105.\nMusimy to sobie
+      gdzie\u015B zapisa\u0107.\nTeraz pora na przed\u015Bwiadomo\u015B\u0107. Czyli
+      wszystko, co t\u0142umisz.\nKa\u017Cdy p\u0142acz, szukanie pocieszenia w obj\u0119ciach
+      ulubionego misia.\nTylko, \u017Ce teraz te misie nie s\u0105 ju\u017C takie
+      s\u0142odkie.\nAle masz Supermoc! Wystarczy, \u017Ce przytrzymasz przycisk
+      L2 z ty\u0142u pada (lewy trigger)!\nPrzez kilka sekund, maksymalnie pi\u0119\u0107.\nIm
+      d\u0142u\u017Cej, tym wi\u0119cej wrog\xF3w powalisz.\nNiestety, u\u017Cycie
+      supermocy na pewno Ci\u0119 troch\u0119 zm\u0119czy.\nNie b\u0119dziesz mie\u0107
+      si\u0142y na takie szybkie i mocne strza\u0142y.\nPo czasie, wszystko wr\xF3ci
+      do normy. Zaczynajmy!"
+  - key: tutorial.level7.line0
+    english: 'Wow, that was amazing! You''re making progress!
+
+      It''s time for
+      the unsconsciousness.
+
+      Here lay all the events, that you pushed away
+      from the upper levels.
+
+      Including your encounter with elephants.
+
+      Good
+      thing that you got out alright that time. That was close.
+
+      Elephants
+      went wild a bit from that time. They''re very dangerous.
+
+      It''s the unconsciousness,
+      after all.
+
+      Remember that your Superpower regenerates!
+
+      Good luck!'
+    polish: "Wow, to by\u0142o wspania\u0142e! Robisz post\u0119py!\nChyba pora na
+      nie\u015Bwiadomo\u015B\u0107.\nS\u0105 tutaj wszystkie zdarzenia, kt\xF3re
+      wypar\u0142e\u015B z g\xF3rnych warstw.\nW\u015Br\xF3d nich Twoje spotkanie
+      ze s\u0142oniami.\nDobrze, \u017Ce nic Ci si\u0119 wtedy nie sta\u0142o. By\u0142o
+      blisko.\nS\u0142onie troch\u0119 zdzicza\u0142y od tego czasu. S\u0105 bardzo
+      niebezpieczne.\nTo w ko\u0144cu nie\u015Bwiadomo\u015B\u0107.\nPami\u0119taj
+      o tym, \u017Ce Supermoc si\u0119 regeneruje!\nPowodzenia!"
+  - key: tutorial.level9.line0
+    english: "Somebody wants to fight his fears!\nAnd that's the attitude we like!\nYes,
+      yes! You got it right.\nYour memory troubles are related directly \nto your
+      biggest phobias.\nYou know what it means.\nMister Nightmare.\nHe's been sitting
+      there for a long time.\nIt's time to drive him out once and for all, and get
+      some peace.\nRemember, all other monsters support his reign.\nIf you hurt him,
+      they will rush to his aid."
+    polish: "Kto\u015B tu chce pozby\u0107 si\u0119 swoich l\u0119k\xF3w!\nI to nam
+      si\u0119 podoba!\nTak, tak! Dobrze rozumiesz,\nTwoje problemy z pami\u0119ci\u0105
+      wi\u0105\u017C\u0105 si\u0119 bezpo\u015Brednio\nz Twoimi najwi\u0119kszym
+      l\u0119kami.\nWiesz, co to oznacza.\nPan Koszmarek.\nSiedzi tam ju\u017C od
+      d\u0142u\u017Cszego czasu.\nPora wykurzy\u0107 go z mieszkania i zazna\u0107
+      troch\u0119 spokoju.\nPamietaj, \u017Ce wszystkie potworki popieraj\u0105 jego
+      rz\u0105dy.\nJe\u015Bli go skrzywdzisz, przyb\u0119d\u0105 mu na pomoc."
+  - key: zeroLvl.alert1
+    english: "Hello, it's us again! \nWe'll explain some things to you."
+    polish: "Cze\u015B\u0107, to znowu my!\nWyja\u015Bnimy Ci kilka kwestii."
+  - key: zeroLvl.alert2
+    english: This element indicates your health.
+    polish: "Ten element wskazuje Twoje \u017Cycie."
+  - key: zeroLvl.alert3
+    english: This one shows your score.
+    polish: "Ten poka\u017Ce Ci Tw\xF3j wynik."
+  - key: zeroLvl.alert4
+    english: 'And here you can see your Superpower level.
+
+      But more on this
+      later.'
+    polish: "A tutaj widzisz SuperMoc.\nAle o tym b\u0119dzie p\xF3\u017Aniej."
+  - key: zeroLvl.alert5
+    english: 'We now unlock your movement.
+
+      Use the analogue sticks!'
+    polish: "Odblokowujemy mo\u017Cliwo\u015B\u0107 poruszania si\u0119.\nU\u017Cyj
+      joystick\xF3w kontrolera!"
+  - key: zeroLvl.alert6
+    english: "Left stick is for movement, \nright is for turning around."
+    polish: "Lewy joystick to ruch,\nprawy joystick to obr\xF3t."
+  - key: zeroLvl.alert7
+    english: "Go on, get moving! \nJust don't break anything!"
+    polish: "No, \u015Bmia\u0142o, ruszaj si\u0119!\nTylko niczego nie zepsuj!"
+  - key: zeroLvl.alert8
+    english: "In order to collect points you can pick up\n yellow shiny stars. \nJust
+      walk through them."
+    polish: "Aby zdobywa\u0107 punkty mo\u017Cesz zbiera\u0107\n \u017C\xF3\u0142te,
+      \u015Bwiec\u0105ce gwiazdki.\nPo prostu w nie wejd\u017A."
+  - key: zeroLvl.alert9
+    english: You can also kill the enemies.
+    polish: "Mo\u017Cesz te\u017C zabija\u0107 przeciwnik\xF3w."
+  - key: zeroLvl.alert10
+    english: "Just press \nR2 on the back of the game pad (right trigger). \nTo finish
+      them off, shoot a few times."
+    polish: "Po prostu naci\u015Bnij\nprzycisk R2 z ty\u0142u pada (prawy trigger).\nAby
+      ich wyko\u0144czy\u0107, strzel kilka razy."
+  - key: zeroLvl.alert11
+    english: "Remember, it's all in your head. \nYou'll never run out of ammo."
+    polish: "Pami\u0119taj, \u017Ce to Twoja g\u0142owa.\nAmunicja nie sko\u0144czy
+      si\u0119 nigdy."
+  - key: zeroLvl.alert12
+    english: "You get less points for stars than \nfor killing the enemies."
+    polish: "Za gwiazdki dostaniesz mniej punkt\xF3w ni\u017C\nza eliminowanie przeciwnik\xF3w."
+  - key: zeroLvl.alert13
+    english: "And pay attention to the score. \nIt keeps changing, you know."
+    polish: "I zwr\xF3\u0107 uwag\u0119 na informacj\u0119 o punktach.\nBo wiesz,
+      ona si\u0119 zmienia."
+  - key: zeroLvl.alert14
+    english: "To get to the next level, \nyou need to collect required points."
+    polish: "Aby awansowa\u0107 na kolejne poziomy\nmusisz zebra\u0107 wystarczaj\u0105c\u0105
+      liczb\u0119 punkt\xF3w."
+  - key: zeroLvl.alert15
+    english: We won't tell you how many exactly, though.
+    polish: Ale nie powiemy Ci ile.
+  - key: zeroLvl.alert16
+    english: "To complete the training, collect all stars \nor kill all enemies."
+    polish: "Aby zako\u0144czy\u0107 szkolenie zbierz wszystkie gwiazdki\nlub zniszcz
+      wszystkich przeciwnik\xF3w."
+  - key: zeroLvl.alert17
+    english: "These ones are harmless. \nBut you better watch out for the real ones!"
+    polish: "Ci tutaj s\u0105 niegro\u017Ani.\nAle na prawdziwych lepiej uwa\u017Caj!"
+  - key: zeroLvl.alert18
+    english: 'The darker they are,
+
+      the stronger they hit you.'
+    polish: "Im s\u0105 ciemniejsi,\ntym s\u0105 silniejsi."
+  - key: zeroLvl.alert19
+    english: Good luck and see you soon!
+    polish: "Powodzenia i do zobaczenia nied\u0142ugo!"
+  - key: intro.welcome
+    english: Welcome in the Freud2.0!
+    polish: Witaj w Freud2.0!
+  - key: intro.timeLabel
+    english: 'Time to level begin: '
+    polish: "Czas do rozpocz\u0119cia poziomu: "
+  - key: end.timeLabel
+    english: 'Time to show results: '
+    polish: "Czas za jaki poka\u017Cemy Ci wyniki: "
+  - key: gameover.text
+    english: 'You lost!
+
+      The level will restart in: '
+    polish: "Przegra\u0142e\u015B!\nRestart poziomu za: "
+  - key: alert.moreMonsters
+    english: 'More and more monsters are coming!
+
+      Watch out!'
+    polish: "Nadchodz\u0105 kolejne potwory!\nUwa\u017Caj!"
+  - key: alert.nightmareSupport
+    english: Supporters are coming! Watch out!
+    polish: "Przyzwano sojusznik\xF3w! Uwa\u017Caj!"
+  - key: scoreboard.close
+    english: "<color=red>Your name: {0}.\n Your score: {1}.\n</color> The game will
+      end in: "
+    polish: "<color=red>Twoja nazwa: {0}.\n Tw\xF3j wynik: {1}.\n</color> Gra zako\u0144czy
+      si\u0119 za: "
