@@ -11,27 +11,29 @@ public class HudPopupText_AnimatorAndDestuctor : MonoBehaviour
     
     public void DisplayAlert(string message, float duration)
     {
-        _alertText.enabled = true;
         _alertText.text = message;
         _duration = duration;
         _startTime = Time.time;
+        UpdateAlertTextColor();
     }
 
     private float ElapsedTime => Time.time - _startTime;
 
     private void Update()
     {
-        if (_alertText.enabled)
-        {
-            var color = _alertText.color;
-            color.a = _transparencyCurve.Evaluate(ElapsedTime / _duration);
-            _alertText.color = color;
+        UpdateAlertTextColor();
 
-            if (ElapsedTime >= _duration)
-            {
-                Destroy(gameObject, 0.1f);
-                _alertText.enabled = false;
-            }
+        if (ElapsedTime >= _duration)
+        {
+            Destroy(gameObject, 0.1f);
+            _alertText.enabled = false;
         }
+    }
+
+    private void UpdateAlertTextColor()
+    {
+        var color = _alertText.color;
+        color.a = _transparencyCurve.Evaluate(ElapsedTime / _duration);
+        _alertText.color = color;
     }
 }
