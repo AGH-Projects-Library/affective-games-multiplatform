@@ -1,0 +1,55 @@
+@startuml
+skinparam linetype polyline
+skinparam linetype ortho
+
+' Arrange layout in three rows
+' top to bottom direction
+
+' Row 2 (base classes)
+' package "Base Classes" {
+    class SingletonBase
+    class LocalizationManager
+' }
+
+' Row 1 (derived classes)
+' package "Derived from SingletonBase" {
+    class EnemyManager
+    class GameOverManager
+    class GameStateManager
+    class LogManager
+    class MrNightmareEnemyManager
+    class HudPopupTextManager
+' }
+
+' Row 3 (classes depending on LocalizationManager)
+' package "Depends on LocalizationManager" {
+    class AffectiveEnemyManager
+    class GameOverManagerDep
+    class MrNightmareEnemyManagerDep
+    class ManageEnd
+    class ManageIntroduction
+    class ManageScoreBoard
+    class ManageTutorials
+    class ManageZeroLvl
+' }
+
+LocalizationManager -r-|> SingletonBase
+' Inheritance relationships (row 1 -> row 2)
+EnemyManager -d-|> SingletonBase
+GameOverManager -d-|> SingletonBase
+GameStateManager -d-|> SingletonBase
+LogManager -d-|> SingletonBase
+MrNightmareEnemyManager -d-|> SingletonBase
+HudPopupTextManager -d-|> SingletonBase
+
+' Dependency relationships (row 3 -> LocalizationManager)
+AffectiveEnemyManager .u.> LocalizationManager
+GameOverManagerDep .u.> LocalizationManager
+MrNightmareEnemyManagerDep .u.> LocalizationManager
+ManageEnd .u.> LocalizationManager
+ManageIntroduction .u.> LocalizationManager
+ManageScoreBoard .u.> LocalizationManager
+ManageTutorials .u.> LocalizationManager
+ManageZeroLvl .u.> LocalizationManager
+
+@enduml

@@ -26,15 +26,18 @@ namespace Localization {
         +bool TryGetText(string key, out string text)
     }
 
-    class SingletonBase<T: MonoBehaviour> {
-        -static T _instance
-        +void InitInstance()
-        +static bool InstanceExists()
-    }
+}
 
-    LocalizationData o-- LocalizationEntry
-    LocalizationManager *-- LocalizationData
-    LocalizationManager  .r.|> SingletonBase
-    LocalizationManager -l-> GameLanguage
+class SingletonBase<T: MonoBehaviour> {
+
+    -static T _instance
+    +void InitInstance()
+    +static bool InstanceExists()
+}
+
+LocalizationData o-l- LocalizationEntry
+LocalizationManager *-- LocalizationData
+LocalizationManager --|> SingletonBase
+LocalizationManager -l-> GameLanguage
 
 @enduml
