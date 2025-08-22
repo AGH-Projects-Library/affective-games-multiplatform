@@ -207,7 +207,7 @@ public class CameraChange : MonoBehaviour {
 		string camerName = fps ? "FPS" : "Izomorphic";
 
 		// LogManager.logManager.AddEvent(Time.time, "Camera;ChangeTo;" + camerName);
-
+	
 		usedFirst = false;
 		usedSecond = false;
 		usedThird = false;
