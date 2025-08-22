@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class iSingleton<T> : MonoBehaviour where T : MonoBehaviour
+public abstract class SingletonBase<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance;
-    public static T Instance => _instance;
 
     public void Awake()
     {

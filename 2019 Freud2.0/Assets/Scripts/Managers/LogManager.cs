@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-public class LogManager : iSingleton<LogManager>
+public class LogManager : SingletonBase<LogManager>
 {
     [SerializeField] private string _fileName = "events.csv";
     [SerializeField] private bool doNotSaveLogs = true;

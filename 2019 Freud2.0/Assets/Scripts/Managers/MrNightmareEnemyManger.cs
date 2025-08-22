@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Localization;
 
-public class MrNightmareEnemyManager : iSingleton<MrNightmareEnemyManager>
+public class MrNightmareEnemyManager : SingletonBase<MrNightmareEnemyManager>
 {
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private EnemyHealth mrNightmareHealth;

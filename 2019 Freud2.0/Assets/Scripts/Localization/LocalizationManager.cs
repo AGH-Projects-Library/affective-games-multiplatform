@@ -2,7 +2,7 @@
 
 namespace Localization
 {
-    public class LocalizationManager : iSingleton<LocalizationManager>
+    public class LocalizationManager : SingletonBase<LocalizationManager>
     {
 
         [SerializeField] private LocalizationData localizationData;

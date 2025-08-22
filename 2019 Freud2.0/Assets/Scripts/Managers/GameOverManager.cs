@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverManager : iSingleton<GameOverManager>
+public class GameOverManager : SingletonBase<GameOverManager>
 {
     [SerializeField] private PlayerHealth playerHealth;
     [SerializeField] private Text textGO;

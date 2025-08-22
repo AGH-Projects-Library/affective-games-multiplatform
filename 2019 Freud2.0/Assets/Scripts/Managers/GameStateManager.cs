@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameStateManager : iSingleton<GameStateManager>
+public class GameStateManager : SingletonBase<GameStateManager>
 {
     [SerializeField] private int zeroLevel = 2;
     [SerializeField] private float zeroLevelWait = 105f;

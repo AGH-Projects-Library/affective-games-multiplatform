@@ -51,7 +51,7 @@
     <Compile Include="Assets\Scripts\Managers\AffectiveEnemyManager.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino C# SDK\BITalinoFrameDecoder.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
-    <Compile Include="Assets\Scripts\Managers\iSingleton.cs" />
+    <Compile Include="Assets\Scripts\Managers\SingletonBase.cs" />
     <Compile Include="Assets\Scripts\PickUp\PickUpCollect.cs" />
     <Compile Include="Assets\BITalino\Scripts\BITalino Unity\GUIBitalino.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyAttack.cs" />

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public class EnemyManager : iSingleton<EnemyManager>
+public class EnemyManager : SingletonBase<EnemyManager>
 {
     public float spawnTime = 3f;
     public float invokeTime = 5f;

@@ -1,0 +1,40 @@
+@startuml localization
+
+namespace Localization {
+
+    class LocalizationEntry {
+        +string key
+        +string english
+        +string polish
+    }
+
+    class LocalizationData {
+        -List<LocalizationEntry> entries
+        +bool TryGetText(string key, GameLanguage lang, out string text)
+        +void AddOrUpdate(string key, string polish, string english)
+    }
+
+    enum GameLanguage {
+        English
+        Polish
+    }
+
+    class LocalizationManager<MonoBehaviour> {
+        -LocalizationData localizationData
+        -GameLanguage CurrentLanguage
+        +void SetLanguage(GameLanguage lang)
+        +bool TryGetText(string key, out string text)
+    }
+
+    class SingletonBase<T: MonoBehaviour> {
+        -static T _instance
+        +void InitInstance()
+        +static bool InstanceExists()
+    }
+
+    LocalizationData o-- LocalizationEntry
+    LocalizationManager *-- LocalizationData
+    LocalizationManager  .r.|> SingletonBase
+    LocalizationManager -l-> GameLanguage
+
+@enduml

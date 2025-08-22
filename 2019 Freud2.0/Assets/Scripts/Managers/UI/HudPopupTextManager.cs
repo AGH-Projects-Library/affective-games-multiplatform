@@ -4,7 +4,7 @@ using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HudPopupTextManager : iSingleton<HudPopupTextManager>
+public class HudPopupTextManager : SingletonBase<HudPopupTextManager>
 {
     public GameObject prefab_alertDisplayer;
     public RectTransform parentCanvas;
