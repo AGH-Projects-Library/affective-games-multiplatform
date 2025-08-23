@@ -24,8 +24,8 @@ skinparam linetype ortho
 ' Row 3 (classes depending on LocalizationManager)
 ' package "Depends on LocalizationManager" {
     class AffectiveEnemyManager
-    class GameOverManagerDep
-    class MrNightmareEnemyManagerDep
+    class GameOverManager
+    class MrNightmareEnemyManager
     class ManageEnd
     class ManageIntroduction
     class ManageScoreBoard
@@ -33,7 +33,7 @@ skinparam linetype ortho
     class ManageZeroLvl
 ' }
 
-LocalizationManager -r-|> SingletonBase
+LocalizationManager ----|> SingletonBase
 ' Inheritance relationships (row 1 -> row 2)
 EnemyManager -d-|> SingletonBase
 GameOverManager -d-|> SingletonBase
@@ -44,8 +44,8 @@ HudPopupTextManager -d-|> SingletonBase
 
 ' Dependency relationships (row 3 -> LocalizationManager)
 AffectiveEnemyManager .u.> LocalizationManager
-GameOverManagerDep .u.> LocalizationManager
-MrNightmareEnemyManagerDep .u.> LocalizationManager
+GameOverManager .u.> LocalizationManager
+MrNightmareEnemyManager .u.> LocalizationManager
 ManageEnd .u.> LocalizationManager
 ManageIntroduction .u.> LocalizationManager
 ManageScoreBoard .u.> LocalizationManager
