@@ -23,9 +23,7 @@ public class EnemyManager : SingletonBase<EnemyManager>
 
     void Start()
     {
-        if (!InstanceExists())
-            return;
-        InvokeRepeating(nameof(Spawn), invokeTime, spawnTime);
+        if(hasInstance) InvokeRepeating(nameof(Spawn), invokeTime, spawnTime);
     }
 
     private void Spawn()

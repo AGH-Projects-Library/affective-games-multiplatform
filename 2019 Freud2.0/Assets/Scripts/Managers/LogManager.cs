@@ -17,16 +17,11 @@ public class LogManager : SingletonBase<LogManager>
 
     private System.Collections.Generic.List<LogEvent> _events = new System.Collections.Generic.List<LogEvent>();
 
-    private new void Awake()
-    {
-        base.Awake();
-        DontDestroyOnLoad(gameObject);
-    }
+    private new void Awake() => InitInstance(dontDestroyOnLoad: true);
     
     public static void Log(float time,string eventType)
     {
-        if(!InstanceExists()) return;
-        Instance.AddEvent(time, eventType);
+        if(hasInstance) Instance.AddEvent(time, eventType);
     }
     
     private void AddEvent(float time, string eventType) =>_events.Add(new LogEvent(time * 1000, eventType));

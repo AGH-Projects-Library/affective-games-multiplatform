@@ -10,7 +10,7 @@ public class HudPopupTextManager : SingletonBase<HudPopupTextManager>
     public RectTransform parentCanvas;
     public static void ShowAlert(string message, float duration)
     {
-        if (!InstanceExists()) return; 
+        if (!hasInstance) return; 
         GameObject alertDisplayer = Instantiate(Instance.prefab_alertDisplayer, Instance.parentCanvas);
         alertDisplayer.GetComponent<HudPopupText_AnimatorAndDestuctor>().DisplayAlert(message, duration);
         DontDestroyOnLoad(alertDisplayer);
