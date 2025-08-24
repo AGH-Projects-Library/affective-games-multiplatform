@@ -1,39 +1,23 @@
-﻿using System.IO;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class EnemyManager : SingletonBase<EnemyManager>
+public abstract class EnemySpawner : SingletonBase<EnemySpawner>
 {
-    public float spawnTime = 3f;
-    public float invokeTime = 5f;
-    public PlayerHealth playerHealth;
-    public GameObject enemy;
-    public Transform[] spawnPoints;
+    [SerializeField] protected float spawnInterval = 3f;
+    [SerializeField] protected float invokeDelay = 5f;
+    [SerializeField] protected PlayerHealth playerHealth;
+    [SerializeField] protected Transform[] spawnPoints;
+    [SerializeField] public int maxEnemies = 8;
 
-    [SerializeField] private int _maxEnemies = 8;
-    public int maxEnemies
-    {
-        get => maxEnemies;
-        set => maxEnemies = value;
-    }
-    
-    private void Awake()
-    {
-        InitInstance();
-    }
+    protected virtual void Start(){ if (hasInstance) InvokeRepeating(nameof(SpawnTick), invokeDelay, spawnInterval); }
+    void SpawnTick(){ if (CanSpawn()) Spawn(CreateEnemy(), PickPoint()); } 
+    protected bool CanSpawn()=> playerHealth.currentHealth>0f && GameObject.FindGameObjectsWithTag("Enemy").Length<maxEnemies; // one-liner
+    protected Transform PickPoint()=> spawnPoints[Random.Range(0, spawnPoints.Length)];
+    protected abstract GameObject CreateEnemy(); // factory method
+    protected virtual void Spawn(GameObject prefab, Transform p){ Instantiate(prefab, p.position, p.rotation); LogManager.Log(Time.time,$"Enemy;Spawn;Type;{-1};ID;{gameObject.GetInstanceID()};SpawnPoint;{p.name};Mechanic;RegularSpawn"); }
+}
 
-    void Start()
-    {
-        if(hasInstance) InvokeRepeating(nameof(Spawn), invokeTime, spawnTime);
-    }
-
-    private void Spawn()
-    {
-        if (playerHealth.currentHealth <= 0f || GameObject.FindGameObjectsWithTag("Enemy").Length >= maxEnemies)
-            return;
-
-        int spawnPointIndex = Random.Range(0, spawnPoints.Length);
-
-        Instantiate(enemy, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        LogManager.Log(Time.time, "Enemy;Spawn;Type;" + "-1" + ";ID;" + gameObject.GetInstanceID() + ";SpawnPoint;" + spawnPoints[spawnPointIndex].name + ";Mechanic;" + "RegularSpawn");
-    }
+public class EnemyManager : EnemySpawner
+{
+    [SerializeField] private GameObject enemyPrefab;
+    protected override GameObject CreateEnemy()=> enemyPrefab; // one-liner
 }
