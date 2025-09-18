@@ -18,14 +18,11 @@ namespace Localization
         {
             if (!hasInstance) { Debug.LogError("LocalizationManager instance is not initialized."); return; }
             Instance.CurrentLanguage = lang;
-            Debug.Log($"Language set to: {lang}");
         }
         
         public static bool TryGetText(string key, out string text)
         {
-            if (!hasInstance) {
-                text = "NO LOCALIZATION MANAGER";
-                return false; }
+            if (!hasInstance) {text = "NO LOCALIZATION MANAGER"; return false; }
             return Instance.localizationData.TryGetText(key, Instance.CurrentLanguage, out text);
         }
     }
